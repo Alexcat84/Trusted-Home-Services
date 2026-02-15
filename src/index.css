@@ -88,6 +88,17 @@ a:hover {
   margin: 0 auto;
   padding: 0.75rem 1.25rem;
   min-height: 72px;
+  gap: 1rem;
+}
+@media (min-width: 769px) {
+  .header-inner .nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .header-inner .lang-switcher {
+    margin-left: auto;
+  }
 }
 
 .logo-wrap {
@@ -172,23 +183,42 @@ a:hover {
   gap: 0.5rem;
 }
 
-.nav-list a {
+.nav-list a,
+.nav-link {
   color: var(--color-text-on-dark);
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 0.85rem;
   border-radius: var(--radius);
   font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  display: inline-block;
 }
-.nav-list a:hover {
+/* Hover: estilo suave (fondo claro + borde) cuando el cursor pasa por encima */
+.nav-list a:hover,
+.nav-link:hover {
   color: var(--color-text-on-dark);
-  background: rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
-.nav-cta {
+/* Activo: mismo aspecto que el botón Free Quote (naranja) */
+.nav-link--active {
   background: var(--color-accent) !important;
   color: var(--color-text-on-dark) !important;
 }
-.nav-cta:hover {
+.nav-link--active:hover {
   background: var(--color-accent-hover) !important;
   color: var(--color-text-on-dark) !important;
+  transform: translateY(-1px);
+}
+/* Free Quote mismo estilo base que el resto; naranja solo cuando es la opción activa */
+.nav-cta.nav-link--active {
+  background: var(--color-accent) !important;
+  color: var(--color-text-on-dark) !important;
+}
+.nav-cta.nav-link--active:hover {
+  background: var(--color-accent-hover) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 @media (max-width: 768px) {

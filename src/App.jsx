@@ -31,10 +31,20 @@ function AnimatedSection({ id, className, children }) {
   );
 }
 
+const NAV_KEYS = ['home', 'about', 'services', 'how', 'quote'];
+
 function Header() {
   const { lang, setLang, t } = useLang();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentHash, setCurrentHash] = useState('');
   const hash = (key) => getSectionHash(lang, key);
+
+  useEffect(() => {
+    const updateHash = () => setCurrentHash((window.location.hash || '').slice(1).toLowerCase());
+    updateHash();
+    window.addEventListener('hashchange', updateHash);
+    return () => window.removeEventListener('hashchange', updateHash);
+  }, []);
 
   return (
     <header className="header" id="header">
@@ -42,6 +52,26 @@ function Header() {
         <a href={`#${hash('home')}`} className="logo-wrap" aria-label="Trusted Home Services - Home">
           <img src="/images/logo v1.0.jpg" alt="Trusted Home Services" className="logo-img" />
         </a>
+        <nav className={`nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
+          <ul className="nav-list">
+            {NAV_KEYS.map((key) => {
+              const sectionHash = hash(key);
+              const isActive = currentHash === sectionHash.toLowerCase() || (key === 'home' && !currentHash);
+              const isCta = key === 'quote';
+              return (
+                <li key={key}>
+                  <a
+                    href={`#${sectionHash}`}
+                    className={`nav-link ${isCta ? 'nav-cta' : ''} ${isActive ? 'nav-link--active' : ''}`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {t(`nav.${key}`)}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
         <div className="lang-switcher" role="group" aria-label="Language">
           {['en', 'fr', 'es'].map((l) => (
             <button
@@ -66,15 +96,6 @@ function Header() {
           <span></span>
           <span></span>
         </button>
-        <nav className={`nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
-          <ul className="nav-list">
-            <li><a href={`#${hash('home')}`} onClick={() => setMenuOpen(false)}>{t('nav.home')}</a></li>
-            <li><a href={`#${hash('about')}`} onClick={() => setMenuOpen(false)}>{t('nav.about')}</a></li>
-            <li><a href={`#${hash('services')}`} onClick={() => setMenuOpen(false)}>{t('nav.services')}</a></li>
-            <li><a href={`#${hash('how')}`} onClick={() => setMenuOpen(false)}>{t('nav.how')}</a></li>
-            <li><a href={`#${hash('quote')}`} className="nav-cta" onClick={() => setMenuOpen(false)}>{t('nav.quote')}</a></li>
-          </ul>
-        </nav>
       </div>
     </header>
   );
@@ -85,21 +106,9 @@ const HERO_BG_INTERVAL_MS = 7000;
 function Hero() {
   const { t, lang } = useLang();
   const [bgActive, setBgActive] = useState('image');
-  const [isHomeSection, setIsHomeSection] = useState(true);
   const videoRef = useRef(null);
   const heroRef = useRef(null);
   const heroInView = useInView(heroRef, { margin: '-1px' });
-  const homeHash = getSectionHash(lang, 'home');
-
-  useEffect(() => {
-    const checkHash = () => {
-      const hash = window.location.hash.slice(1).toLowerCase();
-      setIsHomeSection(!hash || hash === homeHash.toLowerCase());
-    };
-    checkHash();
-    window.addEventListener('hashchange', checkHash);
-    return () => window.removeEventListener('hashchange', checkHash);
-  }, [homeHash]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -117,8 +126,8 @@ function Hero() {
     }
   }, [bgActive]);
 
-  /* Ocultar fondo al cambiar de sección (hash) o al hacer scroll y salir del hero */
-  const outOfView = !isHomeSection || !heroInView;
+  /* Ocultar fondo solo cuando el hero sale del viewport (scroll). Si vuelves a subir, se ve de nuevo */
+  const outOfView = !heroInView;
 
   return (
     <section ref={heroRef} id={getSectionHash(lang, 'home')} className="hero">
