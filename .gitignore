@@ -1,3 +1,6 @@
+# Carpeta local solo para pasar imágenes (el sitio usa public/images)
+images/
+
 # Dependencies
 node_modules/
 
