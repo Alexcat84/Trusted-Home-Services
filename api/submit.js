@@ -70,6 +70,7 @@ export default async function handler(req, res) {
     _at: new Date().toISOString(),
   };
 
+  let stored = false;
   const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
   if (dbUrl) {
     try {
@@ -87,11 +88,12 @@ export default async function handler(req, res) {
           size: body.size ?? null,
         },
       });
+      stored = true;
     } catch (e) {
       console.error('Prisma error:', e.message);
-      return res.status(500).json({ error: 'Storage error' });
     }
-  } else {
+  }
+  if (!stored) {
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
     if (kvUrl && kvToken) {
@@ -99,11 +101,14 @@ export default async function handler(req, res) {
         const { kv } = await import('@vercel/kv');
         await kv.lpush(KV_KEY, JSON.stringify(record));
         await kv.ltrim(KV_KEY, 0, MAX_SUBMISSIONS - 1);
+        stored = true;
       } catch (e) {
         console.error('KV error:', e.message);
-        return res.status(500).json({ error: 'Storage error' });
       }
     }
+  }
+  if (!stored) {
+    return res.status(500).json({ error: 'Storage error. Configure POSTGRES_URL (and run: npx prisma db push) or KV in Vercel.' });
   }
 
   await sendAdminEmail(type, body);
