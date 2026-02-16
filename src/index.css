@@ -2026,6 +2026,8 @@ a:hover {
 .admin-test-push-hint { margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--color-text-muted); max-width: 42rem; }
 .admin-test-push p:last-child { margin: 0.35rem 0 0; font-size: 0.875rem; }
 .admin-push-ok { color: var(--color-accent); font-weight: 600; }
+.admin-push-ok-block { display: block; }
+.admin-push-sync-hint { display: block; margin-top: 0.35rem; font-size: 0.8rem; color: var(--color-text-muted); font-weight: normal; max-width: 32rem; }
 .admin-error { color: #c00; margin-bottom: 1rem; }
 .admin-error--block { background: #fff2f2; padding: 0.75rem 1rem; border-radius: var(--radius); border: 1px solid #fcc; }
 .admin-push-loading { color: var(--color-text-muted); font-size: 0.875rem; margin-left: 0.5rem; }

@@ -1192,112 +1192,78 @@ function AdminPage() {
     return () => clearInterval(interval);
   }, [token]);
 
+  // Inicializar OneSignal al cargar el admin (solo init; el worker se registra aquí). optIn() se llama al hacer clic.
+  const appId = (import.meta.env.VITE_ONESIGNAL_APP_ID || '').trim();
+  useEffect(() => {
+    if (!appId || typeof document === 'undefined') return;
+    if (document.querySelector('script[src*="OneSignalSDK"]')) return;
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async (OneSignal) => {
+      try {
+        await OneSignal.init({
+          appId,
+          serviceWorkerPath: '/OneSignalSDKWorker.js',
+        });
+      } catch (_) { /* init puede fallar si ya está inicializado; optIn lo manejará */ }
+    });
+    const script = document.createElement('script');
+    script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+    script.async = true;
+    document.head.appendChild(script);
+  }, [appId]);
+
   const enablePush = async () => {
     setPushError(null);
     setPushLoading(true);
-    const appId = import.meta.env.VITE_ONESIGNAL_APP_ID;
-    if (!appId || appId.trim() === '') {
-      setPushError('VITE_ONESIGNAL_APP_ID no está configurado. Añádelo en Vercel → Environment Variables y haz Redeploy.');
+    if (!appId) {
+      setPushError('VITE_ONESIGNAL_APP_ID no está configurado. Añádelo en Vercel y haz Redeploy.');
       setPushLoading(false);
       return;
     }
-    const appIdTrim = appId.trim();
-    const runOptIn = async (OneSignal) => {
+    const doOptIn = async (OneSignal) => {
       try {
         await OneSignal.init({
-          appId: appIdTrim,
+          appId,
           serviceWorkerPath: '/OneSignalSDKWorker.js',
         });
-        await OneSignal.User.PushSubscription.optIn();
-        setPushEnabled(true);
+      } catch (e) {
+        if (!(e?.message || '').includes('already initialized')) throw e;
+      }
+      await OneSignal.User.PushSubscription.optIn();
+      setPushEnabled(true);
+    };
+    const run = async () => {
+      try {
+        if (typeof window.OneSignal !== 'undefined') {
+          await doOptIn(window.OneSignal);
+        } else {
+          await new Promise((resolve, reject) => {
+            const done = (OS) => doOptIn(OS).then(resolve).catch(reject);
+            window.OneSignalDeferred = window.OneSignalDeferred || [];
+            window.OneSignalDeferred.push(done);
+            const t = setInterval(() => {
+              if (typeof window.OneSignal !== 'undefined') {
+                clearInterval(t);
+                doOptIn(window.OneSignal).then(resolve).catch(reject);
+              }
+            }, 100);
+            setTimeout(() => { clearInterval(t); reject(new Error('OneSignal no cargó. Recarga la página (F5).')); }, 12000);
+          });
+        }
       } catch (e) {
         const msg = e?.message || '';
-        if (msg.includes('already initialized')) {
-          try {
-            await OneSignal.User.PushSubscription.optIn();
-            setPushEnabled(true);
-          } catch (e2) {
-            setPushError(e2?.message || 'Error al solicitar permiso.');
-          }
-        } else if (msg.includes('not configured for web push')) {
-          setPushError('OneSignal aún no tiene la Web configurada. En el panel: Settings → Web → Custom Code, Site URL exacta, luego Save. Espera 2–3 min y recarga esta página.');
+        if (msg.includes('not configured for web push')) {
+          setPushError('OneSignal: configura Web en Settings → Web (Site URL exacta) y guarda.');
         } else if (msg.includes('Service Worker') || msg.includes('service worker')) {
-          setPushError('Error al registrar el Service Worker. Abre en otra pestaña: ' + window.location.origin + '/OneSignalSDKWorker.js — si ves código (importScripts...), recarga esta página (F5) e inténtalo de nuevo. Si ves la web en lugar del código, haz Redeploy en Vercel y espera 2 min.');
+          setPushError('Service Worker falló. Abre ' + window.location.origin + '/OneSignalSDKWorker.js en otra pestaña; si no ves código JS, haz Redeploy en Vercel.');
         } else {
-          setPushError(msg || 'Error al activar notificaciones. Prueba en otro navegador o en modo no incógnito.');
+          setPushError(msg || 'Error al activar. Recarga (F5) e inténtalo de nuevo.');
         }
       } finally {
         setPushLoading(false);
       }
     };
-
-    const runOrQueue = () => {
-      if (typeof window.OneSignal !== 'undefined') {
-        runOptIn(window.OneSignal);
-      } else {
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        window.OneSignalDeferred.push(runOptIn);
-      }
-    };
-
-    try {
-      const scriptAlreadyThere = document.querySelector('script[src*="OneSignalSDK"]');
-      if (scriptAlreadyThere) {
-        // Script ya cargado: ejecutar runOptIn directamente si OneSignal existe; si no, cola + timeout de seguridad
-        if (typeof window.OneSignal !== 'undefined') {
-          runOptIn(window.OneSignal);
-        } else {
-          runOrQueue();
-          let resolved = false;
-          const safety = setTimeout(() => {
-            if (resolved) return;
-            resolved = true;
-            clearInterval(check);
-            setPushLoading(false);
-            setPushError('OneSignal no respondió. Recarga la página (F5) y pulsa de nuevo "Enable push notifications".');
-          }, 12000);
-          const check = setInterval(() => {
-            if (typeof window.OneSignal !== 'undefined') {
-              resolved = true;
-              clearInterval(check);
-              clearTimeout(safety);
-              runOptIn(window.OneSignal);
-            }
-          }, 300);
-        }
-        return;
-      }
-
-      runOrQueue();
-      const script = document.createElement('script');
-      script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
-      script.defer = true;
-      script.onerror = () => {
-        setPushError('No se pudo cargar OneSignal. Comprueba tu conexión o bloqueadores.');
-        setPushLoading(false);
-      };
-      script.onload = () => {
-        let cleared = false;
-        const t = setInterval(() => {
-          if (typeof window.OneSignal !== 'undefined') {
-            cleared = true;
-            clearInterval(t);
-            runOptIn(window.OneSignal);
-          }
-        }, 100);
-        setTimeout(() => {
-          if (!cleared) {
-            clearInterval(t);
-            setPushLoading(false);
-            setPushError('OneSignal no cargó a tiempo. Recarga la página (F5) e inténtalo de nuevo.');
-          }
-        }, 10000);
-      };
-      document.head.appendChild(script);
-    } catch (e) {
-      setPushError(e?.message || 'Error inesperado.');
-      setPushLoading(false);
-    }
+    run();
   };
 
   const sendTestPush = async () => {
@@ -1352,7 +1318,12 @@ function AdminPage() {
                 {pushLoading ? 'Cargando…' : 'Enable push notifications'}
               </button>
               {pushLoading && <span className="admin-push-loading"> → Espera la ventana del navegador para permitir notificaciones.</span>}
-              {pushEnabled && <span className="admin-push-ok">✓ Notifications enabled</span>}
+              {pushEnabled && (
+                <span className="admin-push-ok-block">
+                  <span className="admin-push-ok">✓ Notifications enabled</span>
+                  <span className="admin-push-sync-hint">Espera 10–15 segundos y luego envía la notificación de prueba (OneSignal sincroniza la suscripción).</span>
+                </span>
+              )}
               {pushError && <p className="admin-error admin-error--block" role="alert">{pushError}</p>}
               <div className="admin-test-push">
                 <p className="admin-test-push-label">Probar que el servidor envía notificaciones:</p>
@@ -1366,7 +1337,7 @@ function AdminPage() {
                     </p>
                     {!testPushResult.ok && (
                       <p className="admin-test-push-hint">
-                        En OneSignal (onesignal.com) → tu app → <strong>Audience</strong>: comprueba que haya al menos 1 suscriptor web. La suscripción solo cuenta si aceptaste notificaciones en <strong>esta misma URL</strong> (trusted-home-services.vercel.app).
+                        Si acabas de activar notificaciones, espera 10–15 segundos y vuelve a enviar. En Vercel, <strong>ONE_SIGNAL_APP_ID</strong> y <strong>VITE_ONESIGNAL_APP_ID</strong> deben ser exactamente el mismo valor (OneSignal → Settings → Keys &amp; IDs). En OneSignal → <strong>Audience</strong>: comprueba que aparezca al menos 1 suscriptor web en esta URL.
                       </p>
                     )}
                   </div>
