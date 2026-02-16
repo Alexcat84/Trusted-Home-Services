@@ -18,7 +18,10 @@ function cors(res) {
 async function sendOneSignalPush(type, payload) {
   const appId = process.env.ONE_SIGNAL_APP_ID;
   const apiKey = process.env.ONE_SIGNAL_API_KEY;
-  if (!appId || !apiKey) return;
+  if (!appId || !apiKey) {
+    console.error('OneSignal: missing ONE_SIGNAL_APP_ID or ONE_SIGNAL_API_KEY');
+    return;
+  }
 
   const isRealtor = type === 'realtor';
   const title = isRealtor ? 'Nuevo contacto (agente)' : 'Nueva solicitud de cotización';
@@ -28,7 +31,7 @@ async function sendOneSignalPush(type, payload) {
     : `${name} – ${payload.work || 'cotización'}`;
 
   try {
-    await fetch('https://api.onesignal.com/notifications', {
+    const notifRes = await fetch('https://api.onesignal.com/notifications', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,6 +45,10 @@ async function sendOneSignalPush(type, payload) {
         contents: { en: body },
       }),
     });
+    if (!notifRes.ok) {
+      const errText = await notifRes.text();
+      console.error('OneSignal API error:', notifRes.status, errText);
+    }
   } catch (e) {
     console.error('OneSignal error:', e.message);
   }

@@ -1161,6 +1161,8 @@ function AdminPage() {
   const [pushEnabled, setPushEnabled] = useState(false);
   const [pushLoading, setPushLoading] = useState(false);
   const [pushError, setPushError] = useState(null);
+  const [testPushLoading, setTestPushLoading] = useState(false);
+  const [testPushResult, setTestPushResult] = useState(null);
 
   const saveToken = (t) => {
     setToken(t);
@@ -1249,6 +1251,21 @@ function AdminPage() {
     }
   };
 
+  const sendTestPush = async () => {
+    if (!token.trim()) return;
+    setTestPushResult(null);
+    setTestPushLoading(true);
+    try {
+      const res = await fetch(`/api/test-push?token=${encodeURIComponent(token)}`);
+      const data = await res.json();
+      setTestPushResult(data.ok ? { ok: true, message: data.message } : { ok: false, error: data.error });
+    } catch (e) {
+      setTestPushResult({ ok: false, error: e.message || 'Network error' });
+    } finally {
+      setTestPushLoading(false);
+    }
+  };
+
   const goHome = (e) => {
     e.preventDefault();
     window.location.hash = homeHash;
@@ -1288,6 +1305,16 @@ function AdminPage() {
               {pushLoading && <span className="admin-push-loading"> → Espera la ventana del navegador para permitir notificaciones.</span>}
               {pushEnabled && <span className="admin-push-ok">✓ Notifications enabled</span>}
               {pushError && <p className="admin-error admin-error--block" role="alert">{pushError}</p>}
+              <div className="admin-test-push">
+                <button type="button" className="btn btn-secondary" onClick={sendTestPush} disabled={testPushLoading || !token.trim()}>
+                  {testPushLoading ? 'Enviando…' : 'Enviar notificación de prueba'}
+                </button>
+                {testPushResult && (
+                  <p className={testPushResult.ok ? 'admin-push-ok' : 'admin-error'} role="status">
+                    {testPushResult.ok ? testPushResult.message : testPushResult.error}
+                  </p>
+                )}
+              </div>
             </div>
           ) : (
             <p className="admin-error">Push no configurado: añade VITE_ONESIGNAL_APP_ID en Vercel y haz Redeploy.</p>
