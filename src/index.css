@@ -2023,6 +2023,8 @@ a:hover {
 .admin-push-wrap { margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
 .admin-push-ok { color: var(--color-accent); font-weight: 600; }
 .admin-error { color: #c00; margin-bottom: 1rem; }
+.admin-error--block { background: #fff2f2; padding: 0.75rem 1rem; border-radius: var(--radius); border: 1px solid #fcc; }
+.admin-push-loading { color: var(--color-text-muted); font-size: 0.875rem; margin-left: 0.5rem; }
 .admin-updated { font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 0.75rem; }
 .admin-table-wrap { overflow-x: auto; }
 .admin-table {

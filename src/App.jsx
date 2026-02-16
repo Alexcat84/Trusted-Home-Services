@@ -1199,9 +1199,10 @@ function AdminPage() {
       setPushLoading(false);
       return;
     }
+    const appIdTrim = appId.trim();
     const runOptIn = async (OneSignal) => {
       try {
-        await OneSignal.init({ appId: appId.trim() });
+        await OneSignal.init({ appId: appIdTrim });
         await OneSignal.User.PushSubscription.optIn();
         setPushEnabled(true);
       } catch (e) {
@@ -1211,15 +1212,17 @@ function AdminPage() {
       }
     };
     try {
-      if (window.OneSignalDeferred) {
-        window.OneSignalDeferred.push(runOptIn);
-        return;
-      }
+      // Registrar el callback ANTES de cargar el script; así el SDK lo ejecuta al cargar
       window.OneSignalDeferred = window.OneSignalDeferred || [];
+      window.OneSignalDeferred.push(runOptIn);
+
+      if (document.querySelector('script[src*="OneSignalSDK"]')) {
+        return; // Ya cargado; el push anterior se ejecutará si el SDK ya procesó la cola
+      }
+
       const script = document.createElement('script');
       script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
       script.defer = true;
-      script.onload = () => { window.OneSignalDeferred.push(runOptIn); };
       script.onerror = () => {
         setPushError('No se pudo cargar OneSignal. Comprueba tu conexión o bloqueadores.');
         setPushLoading(false);
@@ -1267,8 +1270,9 @@ function AdminPage() {
               <button type="button" className="btn btn-primary" onClick={enablePush} disabled={pushLoading}>
                 {pushLoading ? 'Cargando…' : 'Enable push notifications'}
               </button>
+              {pushLoading && <span className="admin-push-loading"> → Espera la ventana del navegador para permitir notificaciones.</span>}
               {pushEnabled && <span className="admin-push-ok">✓ Notifications enabled</span>}
-              {pushError && <p className="admin-error" role="alert">{pushError}</p>}
+              {pushError && <p className="admin-error admin-error--block" role="alert">{pushError}</p>}
             </div>
           ) : (
             <p className="admin-error">Push no configurado: añade VITE_ONESIGNAL_APP_ID en Vercel y haz Redeploy.</p>
