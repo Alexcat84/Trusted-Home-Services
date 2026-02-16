@@ -1181,10 +1181,21 @@ function AdminPage() {
   const { lang } = useLang();
   const homeHash = getSectionHash(lang, 'home');
   const [token, setToken] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem(ADMIN_TOKEN_KEY) || '' : '');
+  const [showTokenInput, setShowTokenInput] = useState(() => !(typeof window !== 'undefined' && sessionStorage.getItem(ADMIN_TOKEN_KEY)));
   const [submissions, setSubmissions] = useState([]);
   const [error, setError] = useState(null);
   const [filterType, setFilterType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [filterDateFrom, setFilterDateFrom] = useState('');
+  const [filterDateTo, setFilterDateTo] = useState('');
+  const [filterName, setFilterName] = useState('');
+  const [filterEmail, setFilterEmail] = useState('');
+  const [filterPhone, setFilterPhone] = useState('');
+  const [filterPropertyType, setFilterPropertyType] = useState('');
+  const [filterWork, setFilterWork] = useState('');
+  const [filterAreas, setFilterAreas] = useState('');
+  const [filterSize, setFilterSize] = useState('');
+  const [filterMessage, setFilterMessage] = useState('');
 
   const saveToken = (t) => {
     setToken(t);
@@ -1203,6 +1214,7 @@ function AdminPage() {
       setError(null);
       const data = await res.json();
       setSubmissions(data.submissions || []);
+      setShowTokenInput(false);
     } catch (e) {
       setError('Network error');
       setSubmissions([]);
@@ -1218,6 +1230,17 @@ function AdminPage() {
   const filteredSubmissions = submissions.filter((s) => {
     if (filterType !== 'all' && s.type !== filterType) return false;
     if (filterStatus !== 'all' && (s.status || 'new') !== filterStatus) return false;
+    if (filterDateFrom && s._at && new Date(s._at) < new Date(filterDateFrom)) return false;
+    if (filterDateTo && s._at && new Date(s._at) > new Date(filterDateTo)) return false;
+    const match = (val, q) => !q.trim() || (val && String(val).toLowerCase().includes(q.trim().toLowerCase()));
+    if (!match(s.name, filterName)) return false;
+    if (!match(s.email, filterEmail)) return false;
+    if (!match(s.phone, filterPhone)) return false;
+    if (!match(s.propertyType, filterPropertyType)) return false;
+    if (!match(s.work, filterWork)) return false;
+    if (!match(s.areas, filterAreas)) return false;
+    if (!match(s.size, filterSize)) return false;
+    if (!match(s.message, filterMessage)) return false;
     return true;
   });
 
@@ -1300,23 +1323,30 @@ function AdminPage() {
         <div className="container privacy-content" style={{ paddingTop: '2rem' }}>
           <h1 className="privacy-hero-title" style={{ marginBottom: '1rem' }}>Admin – Leads &amp; Quotes</h1>
           <div className="admin-token-wrap">
-            <label>
-              <span>Access token (ADMIN_SECRET):</span>
-              <input
-                type="password"
-                value={token}
-                onChange={(e) => saveToken(e.target.value)}
-                placeholder="Enter token"
-                className="admin-token-input"
-              />
-            </label>
+            {showTokenInput ? (
+              <label>
+                <span>Access token (ADMIN_SECRET):</span>
+                <input
+                  type="password"
+                  value={token}
+                  onChange={(e) => saveToken(e.target.value)}
+                  placeholder="Enter token"
+                  className="admin-token-input"
+                  autoComplete="off"
+                />
+              </label>
+            ) : (
+              <p className="admin-token-saved">
+                Token saved.
+                <button type="button" className="admin-token-change" onClick={() => setShowTokenInput(true)}>Change token</button>
+              </p>
+            )}
           </div>
-          <p className="admin-push-sync-hint" style={{ marginBottom: '1rem' }}>Avisos por email: configura en Vercel <code>RESEND_API_KEY</code> y <code>ADMIN_EMAIL</code> para recibir un correo por cada envío de formulario. Esta página es instalable como app web (menú del navegador → «Instalar» o «Añadir a pantalla de inicio»).</p>
           {error && <p className="admin-error" role="alert">{error}</p>}
           <div className="admin-table-wrap">
-            <div className="admin-filters">
+            <div className="admin-filters-grid">
               <label className="admin-filter">
-                <span>Type:</span>
+                <span>Type</span>
                 <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
                   <option value="all">All</option>
                   <option value="realtor">Realtor</option>
@@ -1324,7 +1354,7 @@ function AdminPage() {
                 </select>
               </label>
               <label className="admin-filter">
-                <span>Status:</span>
+                <span>Status</span>
                 <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                   <option value="all">All</option>
                   {ADMIN_STATUS_OPTIONS.map((o) => (
@@ -1332,11 +1362,54 @@ function AdminPage() {
                   ))}
                 </select>
               </label>
+              <label className="admin-filter">
+                <span>Date from</span>
+                <input type="datetime-local" value={filterDateFrom} onChange={(e) => setFilterDateFrom(e.target.value)} />
+              </label>
+              <label className="admin-filter">
+                <span>Date to</span>
+                <input type="datetime-local" value={filterDateTo} onChange={(e) => setFilterDateTo(e.target.value)} />
+              </label>
+              <label className="admin-filter">
+                <span>Name</span>
+                <input type="text" placeholder="Contains…" value={filterName} onChange={(e) => setFilterName(e.target.value)} />
+              </label>
+              <label className="admin-filter">
+                <span>Email</span>
+                <input type="text" placeholder="Contains…" value={filterEmail} onChange={(e) => setFilterEmail(e.target.value)} />
+              </label>
+              <label className="admin-filter">
+                <span>Phone</span>
+                <input type="text" placeholder="Contains…" value={filterPhone} onChange={(e) => setFilterPhone(e.target.value)} />
+              </label>
+              <label className="admin-filter">
+                <span>Property type</span>
+                <input type="text" placeholder="Contains…" value={filterPropertyType} onChange={(e) => setFilterPropertyType(e.target.value)} />
+              </label>
+              <label className="admin-filter">
+                <span>Work</span>
+                <input type="text" placeholder="Contains…" value={filterWork} onChange={(e) => setFilterWork(e.target.value)} />
+              </label>
+              <label className="admin-filter">
+                <span>Areas</span>
+                <input type="text" placeholder="Contains…" value={filterAreas} onChange={(e) => setFilterAreas(e.target.value)} />
+              </label>
+              <label className="admin-filter">
+                <span>Size</span>
+                <input type="text" placeholder="Contains…" value={filterSize} onChange={(e) => setFilterSize(e.target.value)} />
+              </label>
+              <label className="admin-filter">
+                <span>Message</span>
+                <input type="text" placeholder="Contains…" value={filterMessage} onChange={(e) => setFilterMessage(e.target.value)} />
+              </label>
+            </div>
+            <div className="admin-filters-row">
+              <p className="admin-updated" style={{ margin: 0 }}>Updates every 5 seconds. Total: {filteredSubmissions.length} (of {submissions.length})</p>
               <button type="button" className="admin-download-csv btn btn-secondary" onClick={downloadCsv} disabled={filteredSubmissions.length === 0}>
                 Download CSV
               </button>
             </div>
-            <p className="admin-updated">Updates every 5 seconds. Total: {filteredSubmissions.length} (of {submissions.length})</p>
+            <p className="admin-csv-hint">Apply filters above (type, status, date range, or any text field). The CSV exports only the rows currently shown.</p>
             <table className="admin-table">
               <thead>
                 <tr>
@@ -1362,9 +1435,9 @@ function AdminPage() {
                     <td>{s.name || '–'}</td>
                     <td>{s.email || '–'}</td>
                     <td>{s.phone || '–'}</td>
-                    <td>{s.propertyType || '–'}</td>
-                    <td>{s.work || '–'}</td>
-                    <td>{s.areas || '–'}</td>
+                    <td className="admin-cell-wrap">{s.propertyType || '–'}</td>
+                    <td className="admin-cell-wrap">{s.work || '–'}</td>
+                    <td className="admin-cell-wrap">{s.areas || '–'}</td>
                     <td>{s.size || '–'}</td>
                     <td>
                       {s.id ? (
@@ -1381,7 +1454,7 @@ function AdminPage() {
                         <span>{s.status ? ADMIN_STATUS_OPTIONS.find((o) => o.value === s.status)?.label || s.status : 'New'}</span>
                       )}
                     </td>
-                    <td>{s.message || '–'}</td>
+                    <td className="admin-cell-wrap">{s.message || '–'}</td>
                     <td>
                       {s.id ? (
                         <button
