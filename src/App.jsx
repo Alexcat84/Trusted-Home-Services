@@ -1280,21 +1280,6 @@ function AdminPage() {
               />
             </label>
           </div>
-          <div className="admin-config-check" aria-live="polite">
-            <p className="admin-config-title">Comprobación rápida (match con OneSignal / Vercel)</p>
-            <ul className="admin-config-list">
-              <li>
-                <strong>VITE_ONESIGNAL_APP_ID (Vercel):</strong>{' '}
-                {import.meta.env.VITE_ONESIGNAL_APP_ID ? (
-                  <>Sí — empieza por <code>{String(import.meta.env.VITE_ONESIGNAL_APP_ID).trim().slice(0, 8)}…</code> (debe coincidir con el App ID de OneSignal en la URL del dashboard)</>
-                ) : (
-                  <span className="admin-config-missing">No definida — añádela en Vercel y haz Redeploy</span>
-                )}
-              </li>
-              <li><strong>OneSignal Site URL:</strong> debe ser exactamente <code>https://trusted-home-services.vercel.app</code></li>
-              <li><strong>OneSignal Default Icon:</strong> ya lo tienes (<code>…/images/logo%20v1.0.jpg</code>) ✓</li>
-            </ul>
-          </div>
           {import.meta.env.VITE_ONESIGNAL_APP_ID ? (
             <div className="admin-push-wrap">
               <button type="button" className="btn btn-primary" onClick={enablePush} disabled={pushLoading}>
