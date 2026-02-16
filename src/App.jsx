@@ -1311,9 +1311,16 @@ function AdminPage() {
                   {testPushLoading ? 'Enviando…' : 'Enviar notificación de prueba'}
                 </button>
                 {testPushResult && (
-                  <p className={testPushResult.ok ? 'admin-push-ok' : 'admin-error'} role="status">
-                    {testPushResult.ok ? testPushResult.message : testPushResult.error}
-                  </p>
+                  <div role="status">
+                    <p className={testPushResult.ok ? 'admin-push-ok' : 'admin-error'}>
+                      {testPushResult.ok ? testPushResult.message : testPushResult.error}
+                    </p>
+                    {!testPushResult.ok && (
+                      <p className="admin-test-push-hint">
+                        En OneSignal (onesignal.com) → tu app → <strong>Audience</strong>: comprueba que haya al menos 1 suscriptor web. La suscripción solo cuenta si aceptaste notificaciones en <strong>esta misma URL</strong> (trusted-home-services.vercel.app).
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
             </div>

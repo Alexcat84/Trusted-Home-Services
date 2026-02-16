@@ -45,7 +45,14 @@ export default async function handler(req, res) {
     if (!notifRes.ok) {
       return res.status(200).json({ ok: false, error: data.errors?.[0] || data.message || `OneSignal ${notifRes.status}` });
     }
-    return res.status(200).json({ ok: true, message: 'Test notification sent. Check your device for the push.' });
+    // Si OneSignal no devuelve "id", no había suscriptores en el segmento (nadie recibirá la notificación)
+    if (!data.id) {
+      return res.status(200).json({
+        ok: false,
+        error: 'No hay suscriptores: el segmento "Subscribed Users" está vacío. Entra en esta misma URL, pulsa "Enable push notifications", acepta en el navegador y vuelve a enviar la prueba. También revisa en OneSignal → Audience que aparezca al menos 1 suscriptor web.',
+      });
+    }
+    return res.status(200).json({ ok: true, message: 'Notificación enviada. Revisa la esquina de la pantalla o el centro de notificaciones de Windows.', id: data.id });
   } catch (e) {
     return res.status(200).json({ ok: false, error: e.message || 'Request failed' });
   }
