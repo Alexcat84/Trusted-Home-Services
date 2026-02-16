@@ -4,6 +4,21 @@ import { animate, stagger } from 'animejs';
 import { useLang } from './context/LangContext';
 import { getSectionHash } from './translations';
 
+/** Envía el payload a Formspree si existe VITE_FORMSPREE_* para ese tipo. Devuelve true si se envió y ok, false si no hay endpoint o falla. */
+async function submitToFormspree(formId, payload) {
+  if (!formId || typeof formId !== 'string') return false;
+  try {
+    const res = await fetch(`https://formspree.io/f/${formId.trim()}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 /** Título de sección animado con Anime.js: letras que aparecen al entrar en vista (se repite cada vez que pasas por la sección) */
 function AnimatedSectionTitle({ text }) {
   const wrapperRef = useRef(null);
@@ -104,12 +119,37 @@ function Header() {
   const [currentHash, setCurrentHash] = useState('');
   const hash = (key) => getSectionHash(lang, key);
 
+  // Sincronizar con el hash de la URL (clic en enlace)
   useEffect(() => {
     const updateHash = () => setCurrentHash((window.location.hash || '').slice(1).toLowerCase());
     updateHash();
     window.addEventListener('hashchange', updateHash);
     return () => window.removeEventListener('hashchange', updateHash);
   }, []);
+
+  // Scroll spy: la sección activa es la que contiene el punto de referencia (50% del viewport)
+  useEffect(() => {
+    const sectionIds = NAV_KEYS.map((key) => getSectionHash(lang, key));
+    const updateActiveFromScroll = () => {
+      const refY = window.innerHeight * 0.5; // línea al 50% de la pantalla
+      let activeId = sectionIds[0];
+      for (let i = 0; i < sectionIds.length; i++) {
+        const el = document.getElementById(sectionIds[i]);
+        if (!el) continue;
+        const { top, bottom } = el.getBoundingClientRect();
+        if (top <= refY && bottom >= refY) {
+          activeId = sectionIds[i];
+          break;
+        }
+        if (top <= refY) activeId = sectionIds[i];
+      }
+      setCurrentHash(activeId.toLowerCase());
+    };
+    const onScroll = () => window.requestAnimationFrame(updateActiveFromScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateActiveFromScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [lang]);
 
   return (
     <header className="header" id="header">
@@ -217,7 +257,7 @@ function Hero() {
         <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
         <motion.div className="hero-actions" variants={item}>
           <a href={`#${getSectionHash(lang, 'quote')}`} className="btn btn-primary">{t('hero.cta1')}</a>
-          <a href="tel:+16132048000" className="btn btn-secondary">{t('hero.cta2')}</a>
+          <span className="btn btn-secondary" aria-hidden="true">{t('hero.cta2')}</span>
         </motion.div>
       </motion.div>
     </section>
@@ -287,8 +327,14 @@ function About() {
             </ul>
           </motion.article>
         </motion.div>
-        <motion.div className="about-extra" initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.4 }}>
-          <p><Typewriter text={t('about.extra')} speed={38} /></p>
+        <motion.div className="about-extra-row" initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.4 }}>
+          <div className="about-extra-seal-large" aria-hidden="true">
+            <img src="/images/quality%20guarantee%20luxury.png" alt="" />
+          </div>
+          <div className="about-extra">
+            <p className="about-extra-title">{t('about.qualityGuaranteed')}</p>
+            <p className="about-extra-desc">{t('about.extra')}</p>
+          </div>
         </motion.div>
       </div>
     </AnimatedSection>
@@ -436,7 +482,7 @@ function RealtorFormModal({ open, onClose }) {
   const hasContact = (email.trim() !== '' || phone.trim() !== '');
   const canSubmit = name.trim() !== '' && hasContact && consent;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = [];
     if (name.trim() === '') errors.push('name');
@@ -453,9 +499,15 @@ function RealtorFormModal({ open, onClose }) {
       phone: data.get('phone') || '',
       message: data.get('message') || '',
     };
-    // TODO: enviar a tu endpoint; por ahora solo éxito local
-    console.log('Realtor lead:', payload);
-    setSubmitted(true);
+    const formId = import.meta.env.VITE_FORMSPREE_REALTOR;
+    if (formId) {
+      const ok = await submitToFormspree(formId, payload);
+      if (ok) setSubmitted(true);
+      else setValidationErrors(['submit']); // optional: show "try again" message
+    } else {
+      console.log('Realtor lead:', payload);
+      setSubmitted(true);
+    }
   };
 
   const handleClose = () => {
@@ -624,7 +676,7 @@ function QuoteForm() {
     return true;
   };
 
-  const handleSubmitStep5 = (e) => {
+  const handleSubmitStep5 = async (e) => {
     e.preventDefault();
     const errors = [];
     if (name.trim() === '') errors.push('name');
@@ -632,7 +684,37 @@ function QuoteForm() {
     if (!consent) errors.push('consent');
     setValidationErrors(errors);
     if (errors.length > 0) return;
-    setSubmitted(true);
+
+    const form = formRef.current;
+    const prop = form?.querySelector('input[name="tipo_propiedad"]:checked')?.value || '';
+    const size = form?.querySelector('select[name="tamano"]')?.value || '';
+    const areasEl = form?.querySelectorAll('input[name="areas"]:checked');
+    const workEl = form?.querySelectorAll('input[name="trabajo"]:checked');
+    const areas = areasEl ? [...areasEl].map((el) => el.value).join(', ') : '';
+    const work = workEl ? [...workEl].map((el) => el.value).join(', ') : '';
+    const message = form?.querySelector('textarea[name="mensaje"]')?.value || '';
+
+    const payload = {
+      type: 'quote',
+      wholeHouse,
+      propertyType: prop,
+      size,
+      areas: wholeHouse ? 'whole house' : areas,
+      work,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      message,
+    };
+
+    const formId = import.meta.env.VITE_FORMSPREE_QUOTE;
+    if (formId) {
+      const ok = await submitToFormspree(formId, payload);
+      if (ok) setSubmitted(true);
+      else setValidationErrors(['submit']);
+    } else {
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -793,10 +875,255 @@ function QuoteForm() {
 
         <p className="quote-alt">
           <span>{t('quote.alt')}</span>{' '}
-          <a href="https://wa.me/16132048000?text=Hi%2C%20I%20want%20a%20free%20quote." target="_blank" rel="noopener">{t('quote.altlink')}</a>
+          <a href="https://wa.me/16132048000?text=Hi%2C%20I%20want%20a%20free%20quote." target="_blank" rel="noopener" className="quote-alt-wa">
+            <svg className="quote-alt-wa-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            {t('quote.altlink')}
+          </a>
         </p>
       </div>
     </AnimatedSection>
+  );
+}
+
+function PrivacyPolicyPage() {
+  const { t, lang } = useLang();
+  const homeHash = getSectionHash(lang, 'home');
+  const goHome = (e) => {
+    e.preventDefault();
+    window.location.hash = homeHash;
+    setTimeout(() => window.scrollTo(0, 0), 50);
+  };
+  const renderList = (text) => text.split('\n').filter(Boolean).map((line, i) => <li key={i}>{line}</li>);
+  return (
+    <div className="privacy-page">
+      <header className="privacy-header">
+        <div className="container privacy-header-inner">
+          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Trusted Home Services - Home">
+            <img src="/images/logo v1.0.jpg" alt="" className="privacy-logo" />
+          </a>
+          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('privacy.backToHome')}</a>
+        </div>
+      </header>
+      <main className="privacy-main">
+        <div className="privacy-hero">
+          <div className="container">
+            <h1 className="privacy-hero-title">{t('privacy.title')}</h1>
+            <p className="privacy-hero-intro">{t('privacy.intro')}</p>
+          </div>
+        </div>
+        <div className="container privacy-content">
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('privacy.collectTitle')}</h2>
+            <div className="privacy-cards">
+              <div className="privacy-card">
+                <h3 className="privacy-card-title">{t('privacy.collectPersonalTitle')}</h3>
+                <ul className="privacy-list">{renderList(t('privacy.collectPersonal'))}</ul>
+              </div>
+              <div className="privacy-card">
+                <h3 className="privacy-card-title">{t('privacy.collectServiceTitle')}</h3>
+                <ul className="privacy-list">{renderList(t('privacy.collectService'))}</ul>
+              </div>
+              <div className="privacy-card">
+                <h3 className="privacy-card-title">{t('privacy.collectUsageTitle')}</h3>
+                <ul className="privacy-list">{renderList(t('privacy.collectUsage'))}</ul>
+              </div>
+            </div>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('privacy.useTitle')}</h2>
+            <ul className="privacy-use-list">
+              <li>{t('privacy.use1')}</li>
+              <li>{t('privacy.use2')}</li>
+              <li>{t('privacy.use3')}</li>
+              <li>{t('privacy.use4')}</li>
+              <li>{t('privacy.use5')}</li>
+            </ul>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('privacy.sharingTitle')}</h2>
+            <div className="privacy-cards privacy-cards--three">
+              <div className="privacy-card">
+                <h3 className="privacy-card-title">{t('privacy.sharing1Title')}</h3>
+                <p>{t('privacy.sharing1Desc')}</p>
+              </div>
+              <div className="privacy-card">
+                <h3 className="privacy-card-title">{t('privacy.sharing3Title')}</h3>
+                <p>{t('privacy.sharing3Desc')}</p>
+              </div>
+            </div>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('privacy.securityTitle')}</h2>
+            <div className="privacy-cards privacy-cards--three">
+              <div className="privacy-card">
+                <h3 className="privacy-card-title">{t('privacy.security1Title')}</h3>
+                <p>{t('privacy.security1Desc')}</p>
+              </div>
+              <div className="privacy-card">
+                <h3 className="privacy-card-title">{t('privacy.security2Title')}</h3>
+                <p>{t('privacy.security2Desc')}</p>
+              </div>
+              <div className="privacy-card">
+                <h3 className="privacy-card-title">{t('privacy.security3Title')}</h3>
+                <p>{t('privacy.security3Desc')}</p>
+              </div>
+            </div>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('privacy.cookiesTitle')}</h2>
+            <div className="privacy-cards">
+              <div className="privacy-card"><h3 className="privacy-card-title">{t('privacy.cookiesEssentialTitle')}</h3><p>{t('privacy.cookiesEssential')}</p></div>
+              <div className="privacy-card"><h3 className="privacy-card-title">{t('privacy.cookiesAnalyticsTitle')}</h3><p>{t('privacy.cookiesAnalytics')}</p></div>
+            </div>
+            <p className="privacy-cookies-control">{t('privacy.cookiesControl')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('privacy.rightsTitle')}</h2>
+            <ul className="privacy-use-list">
+              <li>{t('privacy.rights1')}</li>
+              <li>{t('privacy.rights2')}</li>
+              <li>{t('privacy.rights3')}</li>
+              <li>{t('privacy.rights5')}</li>
+            </ul>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('privacy.updatesTitle')}</h2>
+            <p>{t('privacy.updatesIntro')}</p>
+            <p className="privacy-last-updated"><strong>{t('privacy.lastUpdated')}:</strong> February 16, 2026</p>
+          </section>
+          <div className="privacy-back-wrap">
+            <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary">{t('privacy.backToHome')}</a>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function TermsOfServicePage() {
+  const { t, lang } = useLang();
+  const homeHash = getSectionHash(lang, 'home');
+  const goHome = (e) => {
+    e.preventDefault();
+    window.location.hash = homeHash;
+    setTimeout(() => window.scrollTo(0, 0), 50);
+  };
+  return (
+    <div className="privacy-page">
+      <header className="privacy-header">
+        <div className="container privacy-header-inner">
+          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Trusted Home Services - Home">
+            <img src="/images/logo v1.0.jpg" alt="" className="privacy-logo" />
+          </a>
+          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('terms.backToHome')}</a>
+        </div>
+      </header>
+      <main className="privacy-main">
+        <div className="privacy-hero">
+          <div className="container">
+            <h1 className="privacy-hero-title">{t('terms.title')}</h1>
+            <p className="privacy-hero-intro">{t('terms.intro')}</p>
+          </div>
+        </div>
+        <div className="container privacy-content">
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.scopeTitle')}</h2>
+            <p className="legal-section-body">{t('terms.scopeBody')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.quotesTitle')}</h2>
+            <p className="legal-section-body">{t('terms.quotesBody')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.paymentTitle')}</h2>
+            <p className="legal-section-body">{t('terms.paymentBody')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.schedulingTitle')}</h2>
+            <p className="legal-section-body">{t('terms.schedulingBody')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.changesTitle')}</h2>
+            <p className="legal-section-body">{t('terms.changesBody')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.warrantyTitle')}</h2>
+            <p className="legal-section-body">{t('terms.warrantyBody')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.liabilityTitle')}</h2>
+            <p className="legal-section-body">{t('terms.liabilityBody')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.cancellationTitle')}</h2>
+            <p className="legal-section-body">{t('terms.cancellationBody')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.governingTitle')}</h2>
+            <p className="legal-section-body">{t('terms.governingBody')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.contactTitle')}</h2>
+            <p className="legal-section-body">{t('terms.contactBody')}</p>
+          </section>
+          <section className="privacy-section">
+            <h2 className="privacy-section-title">{t('terms.updatesTitle')}</h2>
+            <p className="legal-section-body">{t('terms.updatesIntro')}</p>
+            <p className="privacy-last-updated"><strong>{t('terms.lastUpdated')}:</strong> February 16, 2026</p>
+          </section>
+          <div className="privacy-back-wrap">
+            <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary">{t('terms.backToHome')}</a>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function FAQPage() {
+  const { t, lang } = useLang();
+  const homeHash = getSectionHash(lang, 'home');
+  const goHome = (e) => {
+    e.preventDefault();
+    window.location.hash = homeHash;
+    setTimeout(() => window.scrollTo(0, 0), 50);
+  };
+  const qa = Array.from({ length: 12 }, (_, i) => ({ q: `faq.q${i + 1}`, a: `faq.a${i + 1}` }));
+  return (
+    <div className="privacy-page faq-page">
+      <header className="privacy-header">
+        <div className="container privacy-header-inner">
+          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Trusted Home Services - Home">
+            <img src="/images/logo v1.0.jpg" alt="" className="privacy-logo" />
+          </a>
+          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('faq.backToHome')}</a>
+        </div>
+      </header>
+      <main className="privacy-main">
+        <div className="privacy-hero">
+          <div className="container">
+            <h1 className="privacy-hero-title">{t('faq.title')}</h1>
+            <p className="privacy-hero-intro">{t('faq.intro')}</p>
+          </div>
+        </div>
+        <div className="container privacy-content">
+          {qa.map(({ q, a }, i) => (
+            <section key={i} className="privacy-section faq-item">
+              <h2 className="privacy-section-title">{t(q)}</h2>
+              <p className="legal-section-body faq-answer">{t(a)}</p>
+            </section>
+          ))}
+          <div className="privacy-back-wrap">
+            <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary">{t('faq.backToHome')}</a>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }
 
@@ -808,27 +1135,63 @@ function Footer() {
       <div className="container footer-inner">
         <div className="footer-brand">
           <img src="/images/logo v1.0.jpg" alt="Trusted Home Services" className="footer-logo" />
-          <p>{t('footer.desc')}</p>
+          <div className="footer-social" aria-label="Social media">
+            <span className="footer-social-link" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></span>
+            <span className="footer-social-link" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.54 0-.958.089-1.272.149-.225.043-.404.074-.539.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.051-.15-.051-.225-.015-.239.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-1.107-.435-1.257-.93-1.197-1.273.09-.479.674-.793 1.168-.793.146 0 .27.029.383.074.42.194.789.36 1.104.36.231 0 .384-.06.465-.105l-.046-.569c-.098-1.626-.225-3.651.307-4.837C7.392 1.077 10.739.807 11.727.807l.419-.015h.06z"/></svg></span>
+            <span className="footer-social-link" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></span>
+            <span className="footer-social-link" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C8.333.014 8.741 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></span>
+          </div>
         </div>
-        <div className="footer-contact">
-          <p><a href="tel:+16132048000">(613) 204-8000</a></p>
-          <p>Ottawa, Ontario</p>
+        <div className="footer-col footer-quicklinks">
+          <h3 className="footer-heading">{t('footer.quickLinks')}</h3>
+          <nav className="footer-nav" aria-label="Quick links">
+            <a href={`#${hash('home')}`}>{t('footer.home')}</a>
+            <a href={`#${hash('about')}`}>{t('footer.about')}</a>
+            <a href={`#${hash('services')}`}>{t('footer.services')}</a>
+            <a href={`#${hash('how')}`}>{t('footer.how')}</a>
+            <a href={`#${hash('quote')}`}>{t('footer.quote')}</a>
+          </nav>
         </div>
-        <nav className="footer-nav">
-          <a href={`#${hash('home')}`}>{t('footer.home')}</a>
-          <a href={`#${hash('about')}`}>{t('footer.about')}</a>
-          <a href={`#${hash('services')}`}>{t('footer.services')}</a>
-          <a href={`#${hash('quote')}`}>{t('footer.quote')}</a>
-        </nav>
+        <div className="footer-col footer-support">
+          <h3 className="footer-heading">{t('footer.support')}</h3>
+          <nav className="footer-nav" aria-label="Support and legal">
+            <a href="#faq">{t('footer.faq')}</a>
+            <a href="#privacy">{t('footer.privacyPolicy')}</a>
+            <a href="#terms">{t('footer.termsOfService')}</a>
+          </nav>
+        </div>
       </div>
       <div className="footer-bottom">
-        <p>{t('footer.rights')}</p>
+        <div className="container footer-bottom-inner">
+          <p className="footer-rights">{t('footer.rights')}</p>
+          <nav className="footer-legal" aria-label="Legal">
+            <a href="#privacy">{t('footer.privacyPolicy')}</a>
+            <a href="#terms">{t('footer.termsOfService')}</a>
+          </nav>
+        </div>
       </div>
     </footer>
   );
 }
 
 export default function App() {
+  const [legalPage, setLegalPage] = useState(null); // 'privacy' | 'terms' | 'faq' | null
+  useEffect(() => {
+    const hash = (window.location.hash || '').replace('#', '').toLowerCase();
+    setLegalPage(hash === 'privacy' ? 'privacy' : hash === 'terms' ? 'terms' : hash === 'faq' ? 'faq' : null);
+    const onHashChange = () => {
+      const h = (window.location.hash || '').replace('#', '').toLowerCase();
+      setLegalPage(h === 'privacy' ? 'privacy' : h === 'terms' ? 'terms' : h === 'faq' ? 'faq' : null);
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+  useEffect(() => {
+    if (legalPage) window.scrollTo(0, 0);
+  }, [legalPage]);
+  if (legalPage === 'privacy') return <PrivacyPolicyPage />;
+  if (legalPage === 'terms') return <TermsOfServicePage />;
+  if (legalPage === 'faq') return <FAQPage />;
   return (
     <>
       <Header />
