@@ -1228,21 +1228,68 @@ function AdminPage() {
         setPushLoading(false);
       }
     };
-    try {
-      // Registrar el callback ANTES de cargar el script; así el SDK lo ejecuta al cargar
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      window.OneSignalDeferred.push(runOptIn);
 
-      if (document.querySelector('script[src*="OneSignalSDK"]')) {
-        return; // Ya cargado; el push anterior se ejecutará si el SDK ya procesó la cola
+    const runOrQueue = () => {
+      if (typeof window.OneSignal !== 'undefined') {
+        runOptIn(window.OneSignal);
+      } else {
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        window.OneSignalDeferred.push(runOptIn);
+      }
+    };
+
+    try {
+      const scriptAlreadyThere = document.querySelector('script[src*="OneSignalSDK"]');
+      if (scriptAlreadyThere) {
+        // Script ya cargado: ejecutar runOptIn directamente si OneSignal existe; si no, cola + timeout de seguridad
+        if (typeof window.OneSignal !== 'undefined') {
+          runOptIn(window.OneSignal);
+        } else {
+          runOrQueue();
+          let resolved = false;
+          const safety = setTimeout(() => {
+            if (resolved) return;
+            resolved = true;
+            clearInterval(check);
+            setPushLoading(false);
+            setPushError('OneSignal no respondió. Recarga la página (F5) y pulsa de nuevo "Enable push notifications".');
+          }, 12000);
+          const check = setInterval(() => {
+            if (typeof window.OneSignal !== 'undefined') {
+              resolved = true;
+              clearInterval(check);
+              clearTimeout(safety);
+              runOptIn(window.OneSignal);
+            }
+          }, 300);
+        }
+        return;
       }
 
+      runOrQueue();
       const script = document.createElement('script');
       script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
       script.defer = true;
       script.onerror = () => {
         setPushError('No se pudo cargar OneSignal. Comprueba tu conexión o bloqueadores.');
         setPushLoading(false);
+      };
+      script.onload = () => {
+        let cleared = false;
+        const t = setInterval(() => {
+          if (typeof window.OneSignal !== 'undefined') {
+            cleared = true;
+            clearInterval(t);
+            runOptIn(window.OneSignal);
+          }
+        }, 100);
+        setTimeout(() => {
+          if (!cleared) {
+            clearInterval(t);
+            setPushLoading(false);
+            setPushError('OneSignal no cargó a tiempo. Recarga la página (F5) e inténtalo de nuevo.');
+          }
+        }, 10000);
       };
       document.head.appendChild(script);
     } catch (e) {
