@@ -1221,6 +1221,8 @@ function AdminPage() {
           }
         } else if (msg.includes('not configured for web push')) {
           setPushError('OneSignal aún no tiene la Web configurada. En el panel: Settings → Web → Custom Code, Site URL exacta, luego Save. Espera 2–3 min y recarga esta página.');
+        } else if (msg.includes('Service Worker') || msg.includes('service worker')) {
+          setPushError('Error al registrar el Service Worker. Abre en otra pestaña: ' + window.location.origin + '/OneSignalSDKWorker.js — si ves código (importScripts...), recarga esta página (F5) e inténtalo de nuevo. Si ves la web en lugar del código, haz Redeploy en Vercel y espera 2 min.');
         } else {
           setPushError(msg || 'Error al activar notificaciones. Prueba en otro navegador o en modo no incógnito.');
         }
