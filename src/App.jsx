@@ -1228,7 +1228,11 @@ function AdminPage() {
                   <th>Type</th>
                   <th>Name</th>
                   <th>Contact</th>
-                  <th>Details</th>
+                  <th>Property type</th>
+                  <th>Work</th>
+                  <th>Areas</th>
+                  <th>Size</th>
+                  <th>Message</th>
                 </tr>
               </thead>
               <tbody>
@@ -1238,9 +1242,11 @@ function AdminPage() {
                     <td>{s.type === 'realtor' ? 'Realtor' : 'Quote'}</td>
                     <td>{s.name || '–'}</td>
                     <td>{[s.email, s.phone].filter(Boolean).join(' · ') || '–'}</td>
-                    <td>
-                      {s.type === 'realtor' ? (s.message || '–') : [s.work, s.areas, s.propertyType, s.size].filter(Boolean).join(' · ') || '–'}
-                    </td>
+                    <td>{s.propertyType || '–'}</td>
+                    <td>{s.work || '–'}</td>
+                    <td>{s.areas || '–'}</td>
+                    <td>{s.size || '–'}</td>
+                    <td>{s.message || '–'}</td>
                   </tr>
                 ))}
               </tbody>
