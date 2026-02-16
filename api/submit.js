@@ -39,7 +39,7 @@ async function sendOneSignalPush(type, payload) {
       },
       body: JSON.stringify({
         app_id: appId,
-        included_segments: ['Subscribed Users'],
+        included_segments: ['Subscribed Users', 'Test Users'],
         target_channel: 'push',
         headings: { en: title },
         contents: { en: body },

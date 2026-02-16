@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: false, error: 'ONE_SIGNAL_APP_ID or ONE_SIGNAL_API_KEY not set in Vercel' });
   }
 
-  const sendToSegment = async (segment) => {
+  const sendToSegments = async (segments) => {
     const notifRes = await fetch('https://api.onesignal.com/notifications', {
       method: 'POST',
       headers: {
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         app_id: appId,
-        included_segments: [segment],
+        included_segments: segments,
         target_channel: 'push',
         headings: { en: 'Prueba Trusted Home Services' },
         contents: { en: 'Si ves esto, las notificaciones push están funcionando.' },
@@ -45,25 +45,18 @@ export default async function handler(req, res) {
   };
 
   try {
-    let data = await sendToSegment('Subscribed Users');
+    // Enviar a ambos segmentos a la vez: quien esté en Subscribed Users o en Test Users recibe la notificación
+    const data = await sendToSegments(['Subscribed Users', 'Test Users']);
     if (data.errors && data.errors.length) {
-      return res.status(200).json({ ok: false, error: data.errors[0] || 'OneSignal error' });
+      return res.status(200).json({
+        ok: false,
+        error: data.errors[0] + ' (El dashboard puede mostrar 1 suscriptor pero el segmento push puede estar vacío. Añade tu dispositivo a Test Subscriptions en OneSignal → Audience y prueba de nuevo.)',
+      });
     }
     if (!data.id) {
-      data = await sendToSegment('Test Users');
-      if (data.errors && data.errors.length) {
-        return res.status(200).json({ ok: false, error: data.errors[0] || 'OneSignal error' });
-      }
-      if (!data.id) {
-        return res.status(200).json({
-          ok: false,
-          error: 'No hay suscriptores en "Subscribed Users" ni en "Test Users". En OneSignal → Audience, localiza tu suscripción, clic en los 3 puntos → "Add to Test Subscriptions". Luego envía de nuevo la prueba.',
-        });
-      }
       return res.status(200).json({
-        ok: true,
-        message: 'Notificación enviada a Test Users. Revisa la esquina de la pantalla o el centro de notificaciones.',
-        id: data.id,
+        ok: false,
+        error: 'OneSignal no creó el envío. En Audience → tu suscripción → 3 puntos → Add to Test Subscriptions, luego envía de nuevo la prueba.',
       });
     }
     return res.status(200).json({ ok: true, message: 'Notificación enviada. Revisa la esquina de la pantalla o el centro de notificaciones.', id: data.id });
