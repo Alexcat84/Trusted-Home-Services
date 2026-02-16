@@ -1202,7 +1202,10 @@ function AdminPage() {
     const appIdTrim = appId.trim();
     const runOptIn = async (OneSignal) => {
       try {
-        await OneSignal.init({ appId: appIdTrim });
+        await OneSignal.init({
+          appId: appIdTrim,
+          serviceWorkerPath: '/OneSignalSDKWorker.js',
+        });
         await OneSignal.User.PushSubscription.optIn();
         setPushEnabled(true);
       } catch (e) {
