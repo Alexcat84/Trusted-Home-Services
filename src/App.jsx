@@ -1159,6 +1159,8 @@ function AdminPage() {
   const [submissions, setSubmissions] = useState([]);
   const [error, setError] = useState(null);
   const [pushEnabled, setPushEnabled] = useState(false);
+  const [pushLoading, setPushLoading] = useState(false);
+  const [pushError, setPushError] = useState(null);
 
   const saveToken = (t) => {
     setToken(t);
@@ -1188,32 +1190,45 @@ function AdminPage() {
     return () => clearInterval(interval);
   }, [token]);
 
-  const enablePush = () => {
+  const enablePush = async () => {
+    setPushError(null);
+    setPushLoading(true);
     const appId = import.meta.env.VITE_ONESIGNAL_APP_ID;
-    if (!appId) {
-      alert('Push not configured (VITE_ONESIGNAL_APP_ID).');
+    if (!appId || appId.trim() === '') {
+      setPushError('VITE_ONESIGNAL_APP_ID no está configurado. Añádelo en Vercel → Environment Variables y haz Redeploy.');
+      setPushLoading(false);
       return;
     }
-    if (window.OneSignalDeferred) {
-      window.OneSignalDeferred.push(async (OneSignal) => {
-        await OneSignal.init({ appId });
+    const runOptIn = async (OneSignal) => {
+      try {
+        await OneSignal.init({ appId: appId.trim() });
         await OneSignal.User.PushSubscription.optIn();
         setPushEnabled(true);
-      });
-      return;
-    }
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    const script = document.createElement('script');
-    script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
-    script.defer = true;
-    script.onload = () => {
-      window.OneSignalDeferred.push(async (OneSignal) => {
-        await OneSignal.init({ appId });
-        await OneSignal.User.PushSubscription.optIn();
-        setPushEnabled(true);
-      });
+      } catch (e) {
+        setPushError(e?.message || 'Error al activar notificaciones. Prueba en otro navegador o en modo no incógnito.');
+      } finally {
+        setPushLoading(false);
+      }
     };
-    document.head.appendChild(script);
+    try {
+      if (window.OneSignalDeferred) {
+        window.OneSignalDeferred.push(runOptIn);
+        return;
+      }
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      const script = document.createElement('script');
+      script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+      script.defer = true;
+      script.onload = () => { window.OneSignalDeferred.push(runOptIn); };
+      script.onerror = () => {
+        setPushError('No se pudo cargar OneSignal. Comprueba tu conexión o bloqueadores.');
+        setPushLoading(false);
+      };
+      document.head.appendChild(script);
+    } catch (e) {
+      setPushError(e?.message || 'Error inesperado.');
+      setPushLoading(false);
+    }
   };
 
   const goHome = (e) => {
@@ -1247,11 +1262,16 @@ function AdminPage() {
               />
             </label>
           </div>
-          {import.meta.env.VITE_ONESIGNAL_APP_ID && (
+          {import.meta.env.VITE_ONESIGNAL_APP_ID ? (
             <div className="admin-push-wrap">
-              <button type="button" className="btn btn-primary" onClick={enablePush}>Enable push notifications</button>
+              <button type="button" className="btn btn-primary" onClick={enablePush} disabled={pushLoading}>
+                {pushLoading ? 'Cargando…' : 'Enable push notifications'}
+              </button>
               {pushEnabled && <span className="admin-push-ok">✓ Notifications enabled</span>}
+              {pushError && <p className="admin-error" role="alert">{pushError}</p>}
             </div>
+          ) : (
+            <p className="admin-error">Push no configurado: añade VITE_ONESIGNAL_APP_ID en Vercel y haz Redeploy.</p>
           )}
           {error && <p className="admin-error" role="alert">{error}</p>}
           <div className="admin-table-wrap">
