@@ -1306,7 +1306,8 @@ function AdminPage() {
               {pushEnabled && <span className="admin-push-ok">✓ Notifications enabled</span>}
               {pushError && <p className="admin-error admin-error--block" role="alert">{pushError}</p>}
               <div className="admin-test-push">
-                <button type="button" className="btn btn-secondary" onClick={sendTestPush} disabled={testPushLoading || !token.trim()}>
+                <p className="admin-test-push-label">Probar que el servidor envía notificaciones:</p>
+                <button type="button" className="btn btn-primary admin-test-push-btn" onClick={sendTestPush} disabled={testPushLoading || !token.trim()}>
                   {testPushLoading ? 'Enviando…' : 'Enviar notificación de prueba'}
                 </button>
                 {testPushResult && (
