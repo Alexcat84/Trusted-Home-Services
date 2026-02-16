@@ -1403,9 +1403,9 @@ function AdminPage() {
                 <input type="text" placeholder="Contains…" value={filterMessage} onChange={(e) => setFilterMessage(e.target.value)} />
               </label>
             </div>
-            <div className="admin-filters-row">
-              <p className="admin-updated" style={{ margin: 0 }}>Updates every 5 seconds. Total: {filteredSubmissions.length} (of {submissions.length})</p>
-              <button type="button" className="admin-download-csv btn btn-secondary" onClick={downloadCsv} disabled={filteredSubmissions.length === 0}>
+            <div className="admin-toolbar">
+              <p className="admin-updated">Updates every 5 seconds. Total: {filteredSubmissions.length} (of {submissions.length})</p>
+              <button type="button" className="admin-download-csv btn btn-primary" onClick={downloadCsv} disabled={filteredSubmissions.length === 0}>
                 Download CSV
               </button>
             </div>

@@ -2036,6 +2036,9 @@ a:hover {
 .admin-error--block { background: #fff2f2; padding: 0.75rem 1rem; border-radius: var(--radius); border: 1px solid #fcc; }
 .admin-push-loading { color: var(--color-text-muted); font-size: 0.875rem; margin-left: 0.5rem; }
 .admin-filters-row { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-bottom: 0.75rem; align-items: center; }
+.admin-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+.admin-toolbar .admin-updated { margin: 0; }
+.admin-toolbar .admin-download-csv { margin: 0; }
 .admin-filters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem 1rem; margin-bottom: 1rem; padding: 1rem; background: var(--color-bg-alt); border-radius: var(--radius); border: 1px solid var(--color-border); }
 .admin-filters-grid .admin-filter { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
 .admin-filters-grid .admin-filter input { width: 100%; min-width: 0; padding: 0.35rem 0.5rem; border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-bg); color: var(--color-text); font-size: 0.875rem; }
