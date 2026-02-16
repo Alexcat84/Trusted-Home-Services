@@ -1192,24 +1192,18 @@ function AdminPage() {
     return () => clearInterval(interval);
   }, [token]);
 
-  // Inicializar OneSignal al cargar el admin (solo init; el worker se registra aquí). optIn() se llama al hacer clic.
   const appId = (import.meta.env.VITE_ONESIGNAL_APP_ID || '').trim();
   useEffect(() => {
-    if (!appId || typeof document === 'undefined') return;
-    if (document.querySelector('script[src*="OneSignalSDK"]')) return;
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async (OneSignal) => {
-      try {
-        await OneSignal.init({
-          appId,
-          serviceWorkerPath: '/OneSignalSDKWorker.js',
-        });
-      } catch (_) { /* init puede fallar si ya está inicializado; optIn lo manejará */ }
+    if (!appId || typeof window === 'undefined') return;
+    let cancelled = false;
+    import('react-onesignal').then(({ default: OneSignal }) => {
+      if (cancelled) return;
+      OneSignal.init({
+        appId,
+        notifyButton: { enable: true, size: 'small', position: 'bottom-right', showCredit: false, prenotify: false },
+      }).catch(() => {});
     });
-    const script = document.createElement('script');
-    script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
-    script.async = true;
-    document.head.appendChild(script);
+    return () => { cancelled = true; };
   }, [appId]);
 
   const enablePush = async () => {
@@ -1220,50 +1214,22 @@ function AdminPage() {
       setPushLoading(false);
       return;
     }
-    const doOptIn = async (OneSignal) => {
-      try {
-        await OneSignal.init({
-          appId,
-          serviceWorkerPath: '/OneSignalSDKWorker.js',
-        });
-      } catch (e) {
-        if (!(e?.message || '').includes('already initialized')) throw e;
-      }
+    try {
+      const { default: OneSignal } = await import('react-onesignal');
       await OneSignal.User.PushSubscription.optIn();
       setPushEnabled(true);
-    };
-    const run = async () => {
-      try {
-        if (typeof window.OneSignal !== 'undefined') {
-          await doOptIn(window.OneSignal);
-        } else {
-          await new Promise((resolve, reject) => {
-            const done = (OS) => doOptIn(OS).then(resolve).catch(reject);
-            window.OneSignalDeferred = window.OneSignalDeferred || [];
-            window.OneSignalDeferred.push(done);
-            const t = setInterval(() => {
-              if (typeof window.OneSignal !== 'undefined') {
-                clearInterval(t);
-                doOptIn(window.OneSignal).then(resolve).catch(reject);
-              }
-            }, 100);
-            setTimeout(() => { clearInterval(t); reject(new Error('OneSignal no cargó. Recarga la página (F5).')); }, 12000);
-          });
-        }
-      } catch (e) {
-        const msg = e?.message || '';
-        if (msg.includes('not configured for web push')) {
-          setPushError('OneSignal: configura Web en Settings → Web (Site URL exacta) y guarda.');
-        } else if (msg.includes('Service Worker') || msg.includes('service worker')) {
-          setPushError('Service Worker falló. Abre ' + window.location.origin + '/OneSignalSDKWorker.js en otra pestaña; si no ves código JS, haz Redeploy en Vercel.');
-        } else {
-          setPushError(msg || 'Error al activar. Recarga (F5) e inténtalo de nuevo.');
-        }
-      } finally {
-        setPushLoading(false);
+    } catch (e) {
+      const msg = e?.message || '';
+      if (msg.includes('not configured for web push')) {
+        setPushError('OneSignal: en el panel configura Web (Site URL: ' + window.location.origin + ') y guarda.');
+      } else if (msg.includes('Service Worker') || msg.includes('service worker')) {
+        setPushError('Service Worker falló. Abre ' + window.location.origin + '/OneSignalSDKWorker.js en otra pestaña.');
+      } else {
+        setPushError(msg || 'Error. Recarga (F5) e inténtalo de nuevo.');
       }
-    };
-    run();
+    } finally {
+      setPushLoading(false);
+    }
   };
 
   const sendTestPush = async () => {
@@ -1321,9 +1287,10 @@ function AdminPage() {
               {pushEnabled && (
                 <span className="admin-push-ok-block">
                   <span className="admin-push-ok">✓ Notifications enabled</span>
-                  <span className="admin-push-sync-hint">Espera 10–15 segundos y luego envía la notificación de prueba (OneSignal sincroniza la suscripción).</span>
+                  <span className="admin-push-sync-hint">Espera 10–15 s y envía la notificación de prueba. También puedes usar la campana OneSignal (esquina inferior derecha) para suscribirte.</span>
                 </span>
               )}
+              <p className="admin-push-sync-hint" style={{ marginTop: '0.25rem' }}>Usamos el SDK oficial de OneSignal (react-onesignal). Si no se registra la suscripción, suscríbete con la campana y luego envía la prueba.</p>
               {pushError && <p className="admin-error admin-error--block" role="alert">{pushError}</p>}
               <div className="admin-test-push">
                 <p className="admin-test-push-label">Probar que el servidor envía notificaciones:</p>
