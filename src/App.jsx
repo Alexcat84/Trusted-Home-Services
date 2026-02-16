@@ -57,7 +57,7 @@ function AnimatedSectionTitle({ text }) {
         el.style.transform = 'translateY(14px)';
       });
     }
-  }, [inView]);
+  }, [inView, text]);
 
   if (!text) return null;
   return (
@@ -435,7 +435,7 @@ function ServiceModal({ serviceKey, onClose }) {
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button type="button" className="service-modal-close" onClick={onClose} aria-label="Close">&times;</button>
+        <button type="button" className="service-modal-close" onClick={onClose} aria-label={t('realtors.form.close')}>&times;</button>
         <h2 className="service-modal-title">{t(`services.${serviceKey}.title`)}</h2>
         <div className="service-modal-body">{t(`services.${serviceKey}.text`)}</div>
         <a href={`#${getSectionHash(lang, 'quote')}`} className="btn btn-primary service-modal-cta" onClick={onClose}>{t('nav.quote')}</a>
