@@ -34,19 +34,39 @@ export const TRANSLATIONS = {
     steps: {
       title: 'How We Work',
       intro: 'Simple process in three steps.',
-      step1: { title: 'Quote', text: 'Request your free quote on this site or at (613) 204-8000. No obligation.' },
-      step2: { title: 'Coordination', text: 'We show up on time with equipment and materials. One contact for everything.' },
-      step3: { title: 'Result', text: 'Your property ready to compete. You pay when the work is delivered as agreed.' }
+      step1: { title: 'Quote', text: 'Request your free quote on this site or at (613) 204-8000.' },
+      step2: { title: 'Coordination', text: 'Once the quote is accepted, we show up on time with equipment and materials. One contact for everything.' },
+      step3: { title: 'Result', text: 'Your home, ready when you need it. You pay when the work is delivered as agreed.' }
     },
     realtors: {
       title: 'Are you a real estate agent?',
       text: 'We understand timelines and the pressure of preparing a home. We offer fast turnaround, bundled services and one point of contact so your listings stand out.',
-      cta: 'Get a quote'
+      cta: 'Get in touch',
+      form: {
+        title: 'Agent contact',
+        intro: 'Share your contact info so we can reach you. Optional: briefly describe what you need.',
+        name: 'Name',
+        email: 'Email',
+        emailOrPhone: 'at least one required',
+        phone: 'Phone',
+        message: 'What do you need? (optional)',
+        messagePlaceholder: 'e.g. listing prep, multiple properties, preferred turnaround…',
+        submit: 'Send my details',
+        success: 'Thank you. We have your contact and will get in touch soon. For a specific quote, use the form below.',
+        close: 'Close',
+        hint: 'Need a quote for a specific listing? Use the form below.',
+        consent: 'I consent to the use of my contact information for professional communication only, in accordance with applicable privacy laws.',
+        errors: {
+          name: 'Please enter your name.',
+          contact: 'Please enter at least one way to reach you (email or phone).',
+          consent: 'Please accept the consent to use your data.'
+        }
+      }
     },
     quote: {
       title: 'Free Quote',
       intro: 'Tell us what you need in a few steps. You can submit the form or open WhatsApp if you prefer.',
-      step1: { legend: 'What do you want to renovate or prepare?', whole: 'Whole house', part: 'Just one part' },
+      step1: { legend: 'What do you want to renovate or prepare?', whole: 'Whole unit', part: 'Just part of the unit' },
       step2prop: { legend: 'What type of property?', tip: 'This helps us give you an accurate quote.' },
       prop: { condo: 'Condominium', townhouse: 'Townhouse', single: 'Single family home', other: 'Other' },
       step2size: { legend: 'Home size (bedrooms)', tip: 'For example: 3.5 = 3 bedrooms + 1 half bath (Canadian standard)' },
@@ -62,7 +82,15 @@ export const TRANSLATIONS = {
       next: 'Next',
       back: 'Back',
       submit: 'Submit quote request',
-      success: { title: 'Thank you. We have received your request.', text: 'We will contact you soon with your quote. If you prefer, you can also reach us on WhatsApp.', wa: 'Open WhatsApp' },
+      success: { title: 'Thank you for your preference.', text: 'We will contact you as soon as possible.', closing: 'Remember — your home\'s new look is just one step away.' },
+      errors: {
+        propertySize: 'Please select a property type and size.',
+        areas: 'Please select at least one room or area.',
+        work: 'Please select at least one type of work.',
+        name: 'Please enter your name.',
+        contact: 'Please enter at least one way to reach you (email or phone).',
+        consent: 'Please accept the consent to use your data.'
+      },
       alt: 'Prefer to quote via WhatsApp?',
       altlink: 'Open chat with us'
     },
@@ -104,14 +132,38 @@ export const TRANSLATIONS = {
       title: 'Notre processus',
       intro: 'Processus simple en trois étapes.',
       step1: { title: 'Devis', text: 'Demandez votre devis gratuit sur ce site ou au (613) 204-8000.' },
-      step2: { title: 'Coordination', text: 'Nous nous présentons à l\'heure avec l\'équipement et les matériaux.' },
-      step3: { title: 'Résultat', text: 'Votre propriété prête. Vous payez lorsque le travail est livré.' }
+      step2: { title: 'Coordination', text: 'Une fois le devis accepté, nous nous présentons à l\'heure avec l\'équipement et les matériaux. Un seul interlocuteur.' },
+      step3: { title: 'Résultat', text: 'Votre maison prête, quand vous en avez besoin. Vous payez lorsque le travail est livré comme convenu.' }
     },
-    realtors: { title: 'Vous êtes agent immobilier?', text: 'Nous comprenons les délais et la pression de préparer une maison.', cta: 'Obtenir un devis' },
+    realtors: {
+      title: 'Vous êtes agent immobilier?',
+      text: 'Nous comprenons les délais et la pression de préparer une maison. Un seul interlocuteur pour vos annonces.',
+      cta: 'Restons en contact',
+      form: {
+        title: 'Coordonnées agent',
+        intro: 'Indiquez vos coordonnées pour que nous puissions vous contacter. Optionnel : décrivez brièvement vos besoins.',
+        name: 'Nom',
+        email: 'Courriel',
+        emailOrPhone: 'au moins un requis',
+        phone: 'Téléphone',
+        message: 'Que recherchez-vous? (optionnel)',
+        messagePlaceholder: 'ex. préparation annonce, plusieurs propriétés…',
+        submit: 'Envoyer mes coordonnées',
+        success: 'Merci. Nous avons vos coordonnées et vous recontacterons. Pour un devis précis, utilisez le formulaire ci-dessous.',
+        close: 'Fermer',
+        hint: 'Besoin d\'un devis pour une annonce? Utilisez le formulaire ci-dessous.',
+        consent: 'J\'accepte que mes coordonnées soient utilisées uniquement à des fins professionnelles, conformément aux lois applicables en matière de protection des données.',
+        errors: {
+          name: 'Veuillez indiquer votre nom.',
+          contact: 'Veuillez indiquer au moins un moyen de vous joindre (courriel ou téléphone).',
+          consent: 'Veuillez accepter l\'utilisation de vos données.'
+        }
+      }
+    },
     quote: {
       title: 'Devis gratuit',
       intro: 'Dites-nous ce dont vous avez besoin en quelques étapes.',
-      step1: { legend: 'Que souhaitez-vous rénover?', whole: 'Toute la maison', part: 'Une partie seulement' },
+      step1: { legend: 'Que souhaitez-vous rénover?', whole: 'Toute l\'unité', part: 'Juste une partie de l\'unité' },
       step2prop: { legend: 'Quel type de propriété?', tip: 'Cela nous aide à vous donner un devis précis.' },
       prop: { condo: 'Condominium', townhouse: 'Maison de ville', single: 'Maison unifamiliale', other: 'Autre' },
       step2size: { legend: 'Taille (chambres)', tip: 'Par exemple : 3,5 = 3 chambres + 1 demi-salle de bain' },
@@ -127,7 +179,15 @@ export const TRANSLATIONS = {
       next: 'Suivant',
       back: 'Retour',
       submit: 'Envoyer la demande',
-      success: { title: 'Merci. Nous avons bien reçu votre demande.', text: 'Nous vous contacterons bientôt.', wa: 'Ouvrir WhatsApp' },
+      success: { title: 'Merci pour votre confiance.', text: 'Nous vous contacterons le plus tôt possible.', closing: 'Votre intérieur tout neuf n\'est plus qu\'à un pas.' },
+      errors: {
+        propertySize: 'Veuillez choisir un type de propriété et une taille.',
+        areas: 'Veuillez sélectionner au moins une pièce ou zone.',
+        work: 'Veuillez sélectionner au moins un type de travail.',
+        name: 'Veuillez indiquer votre nom.',
+        contact: 'Veuillez indiquer au moins un moyen de vous joindre (courriel ou téléphone).',
+        consent: 'Veuillez accepter l\'utilisation de vos données.'
+      },
       alt: 'Vous préférez un devis par WhatsApp?',
       altlink: 'Ouvrir la conversation'
     },
@@ -169,14 +229,38 @@ export const TRANSLATIONS = {
       title: 'Cómo trabajamos',
       intro: 'Proceso simple en tres pasos.',
       step1: { title: 'Cotización', text: 'Pide tu cotización gratuita por esta web o al (613) 204-8000.' },
-      step2: { title: 'Coordinación', text: 'Llegamos a la hora, con equipo y materiales.' },
-      step3: { title: 'Resultado', text: 'Tu propiedad lista. Pagas cuando el trabajo esté entregado.' }
+      step2: { title: 'Coordinación', text: 'Una vez aceptada la cotización, llegamos a la hora con equipo y materiales. Un solo contacto para todo.' },
+      step3: { title: 'Resultado', text: 'Tu hogar listo cuando lo necesites. Pagas cuando el trabajo esté entregado como acordado.' }
     },
-    realtors: { title: '¿Eres agente inmobiliario?', text: 'Entendemos los plazos y la presión de preparar una casa.', cta: 'Pedir cotización' },
+    realtors: {
+      title: '¿Eres agente inmobiliario?',
+      text: 'Entendemos los plazos y la presión de preparar una casa. Un solo contacto para que tus anuncios destaquen.',
+      cta: 'Ponerse en contacto',
+      form: {
+        title: 'Datos del agente',
+        intro: 'Comparte tu contacto para que podamos escribirte. Opcional: describe brevemente qué necesitas.',
+        name: 'Nombre',
+        email: 'Email',
+        emailOrPhone: 'al menos uno requerido',
+        phone: 'Teléfono',
+        message: '¿Qué necesitas? (opcional)',
+        messagePlaceholder: 'ej. preparación de listado, varias propiedades…',
+        submit: 'Enviar mis datos',
+        success: 'Gracias. Tenemos tu contacto y te escribiremos pronto. Para una cotización concreta, usa el formulario de abajo.',
+        close: 'Cerrar',
+        hint: '¿Necesitas una cotización para un listado? Usa el formulario de abajo.',
+        consent: 'Acepto que mis datos de contacto se utilicen únicamente con fines profesionales, conforme a la legislación aplicable en materia de privacidad.',
+        errors: {
+          name: 'Debes ingresar tu nombre.',
+          contact: 'Debes ingresar al menos una forma de contacto (email o teléfono).',
+          consent: 'Debes aceptar el consentimiento de uso de tus datos.'
+        }
+      }
+    },
     quote: {
       title: 'Cotización gratuita',
       intro: 'Cuéntanos qué necesitas en pocos pasos.',
-      step1: { legend: '¿Qué parte deseas renovar?', whole: 'Toda la casa', part: 'Solo una parte' },
+      step1: { legend: '¿Qué parte deseas renovar?', whole: 'Toda la unidad', part: 'Solo parte de la unidad' },
       step2prop: { legend: '¿Qué tipo de propiedad?', tip: 'Así te damos una cotización más precisa.' },
       prop: { condo: 'Condominio', townhouse: 'Casa adosada', single: 'Casa unifamiliar', other: 'Otra' },
       step2size: { legend: 'Tamaño (habitaciones)', tip: 'Por ejemplo: 3.5 = 3 recámaras + 1 medio baño' },
@@ -192,7 +276,15 @@ export const TRANSLATIONS = {
       next: 'Siguiente',
       back: 'Atrás',
       submit: 'Enviar cotización',
-      success: { title: 'Gracias. Hemos recibido tu solicitud.', text: 'Te contactaremos pronto.', wa: 'Abrir WhatsApp' },
+      success: { title: 'Gracias por tu preferencia.', text: 'Nos contactaremos contigo lo más pronto posible.', closing: 'Recuerda: el nuevo look de tu hogar está a un solo paso.' },
+      errors: {
+        propertySize: 'Selecciona tipo de propiedad y tamaño.',
+        areas: 'Selecciona al menos una habitación o zona.',
+        work: 'Selecciona al menos un tipo de trabajo.',
+        name: 'Debes ingresar tu nombre.',
+        contact: 'Debes ingresar al menos una forma de contacto (email o teléfono).',
+        consent: 'Debes aceptar el consentimiento de uso de tus datos.'
+      },
       alt: '¿Prefieres cotizar por WhatsApp?',
       altlink: 'Abrir chat con nosotros'
     },

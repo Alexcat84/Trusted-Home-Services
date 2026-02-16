@@ -1,7 +1,72 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { animate, stagger } from 'animejs';
 import { useLang } from './context/LangContext';
 import { getSectionHash } from './translations';
+
+/** Título de sección animado con Anime.js: letras que aparecen al entrar en vista (se repite cada vez que pasas por la sección) */
+function AnimatedSectionTitle({ text }) {
+  const wrapperRef = useRef(null);
+  const inView = useInView(wrapperRef, { once: false, margin: '-20px' });
+
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+    const letters = wrapperRef.current.querySelectorAll('.section-title-letter');
+    if (!letters.length) return;
+
+    if (inView) {
+      animate(letters, {
+        opacity: [0, 1],
+        translateY: [14, 0],
+        duration: 900,
+        delay: stagger(62, { from: 'first' }),
+        ease: 'outExpo',
+      });
+    } else {
+      letters.forEach((el) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(14px)';
+      });
+    }
+  }, [inView]);
+
+  if (!text) return null;
+  return (
+    <span ref={wrapperRef} className="section-title-animated">
+      {text.split('').map((char, i) => (
+        <span key={i} className="section-title-letter">
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** Efecto de texto escribiéndose; arranca cuando el bloque entra en vista */
+function Typewriter({ text, speed = 42, showCursor = true }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-30px' });
+  const [length, setLength] = useState(0);
+
+  useEffect(() => {
+    setLength(0);
+  }, [text]);
+
+  useEffect(() => {
+    if (!inView || !text) return;
+    if (length >= text.length) return;
+    const t = setTimeout(() => setLength((n) => Math.min(n + 1, text.length)), speed);
+    return () => clearTimeout(t);
+  }, [inView, text, length, speed]);
+
+  if (!text) return null;
+  return (
+    <span ref={ref}>
+      {text.slice(0, length)}
+      {showCursor && length < text.length && <span className="typewriter-cursor" aria-hidden="true">|</span>}
+    </span>
+  );
+}
 
 const container = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
 const item = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
@@ -168,7 +233,7 @@ function About() {
   return (
     <AnimatedSection id={getSectionHash(lang, 'about')} className="section section-mvv">
       <div className="container">
-        <h2 className="section-title">{t('about.title')}</h2>
+        <h2 className="section-title"><AnimatedSectionTitle text={t('about.title')} /></h2>
         <p className="section-intro">{t('about.intro')}</p>
         <motion.div
           ref={ref}
@@ -177,17 +242,29 @@ function About() {
           animate={inView ? 'visible' : 'hidden'}
           variants={container}
         >
-          <motion.article className="mvv-card mvv-card--mission" variants={item}>
+          <motion.article
+            className="mvv-card mvv-card--mission"
+            variants={item}
+            whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
+          >
             <div className="mvv-icon">M</div>
             <h3>{t('about.mission.title')}</h3>
             <p>{t('about.mission.text')}</p>
           </motion.article>
-          <motion.article className="mvv-card mvv-card--vision" variants={item}>
+          <motion.article
+            className="mvv-card mvv-card--vision"
+            variants={item}
+            whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
+          >
             <div className="mvv-icon">V</div>
             <h3>{t('about.vision.title')}</h3>
             <p>{t('about.vision.text')}</p>
           </motion.article>
-          <motion.article className="mvv-card mvv-card--values" variants={item}>
+          <motion.article
+            className="mvv-card mvv-card--values"
+            variants={item}
+            whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
+          >
             <div className="mvv-icon">V</div>
             <h3>{t('about.values.title')}</h3>
             <ul className="mvv-values-list">
@@ -211,7 +288,7 @@ function About() {
           </motion.article>
         </motion.div>
         <motion.div className="about-extra" initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.4 }}>
-          <p>{t('about.extra')}</p>
+          <p><Typewriter text={t('about.extra')} speed={38} /></p>
         </motion.div>
       </div>
     </AnimatedSection>
@@ -234,7 +311,7 @@ function Services() {
   return (
     <AnimatedSection id={getSectionHash(lang, 'services')} className="section section-services">
       <div className="container container--wide">
-        <h2 className="section-title">{t('services.title')}</h2>
+        <h2 className="section-title"><AnimatedSectionTitle text={t('services.title')} /></h2>
         <p className="section-intro">{t('services.intro')}</p>
         <motion.div
           ref={ref}
@@ -254,6 +331,7 @@ function Services() {
                 <div className="service-card-front">
                   <div className="service-img-wrap">
                     <img src={s.img} alt="" className="service-img" />
+                    <span className="service-card-front-hint" aria-hidden="true">{t('services.learnMore')}</span>
                   </div>
                   <div className="service-card-front-text">
                     <h3>{t(`services.${s.key}.title`)}</h3>
@@ -317,24 +395,23 @@ function HowWeWork() {
   return (
     <AnimatedSection id={getSectionHash(lang, 'how')} className="section section-steps">
       <div className="container">
-        <h2 className="section-title">{t('steps.title')}</h2>
+        <h2 className="section-title"><AnimatedSectionTitle text={t('steps.title')} /></h2>
         <p className="section-intro">{t('steps.intro')}</p>
         <motion.div
           className="steps-grid"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.5, staggerChildren: 0.15 }}
+          transition={{ duration: 0.4 }}
         >
           {steps.map((s, i) => (
             <motion.div
               key={i}
               className="step-card"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -6 }}
+              transition={{ duration: 0.35, delay: i * 0.08 }}
             >
               <span className="step-num">{i + 1}</span>
               <h3>{t(s.title)}</h3>
@@ -347,31 +424,160 @@ function HowWeWork() {
   );
 }
 
+function RealtorFormModal({ open, onClose }) {
+  const { t, lang } = useLang();
+  const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
+
+  const hasContact = (email.trim() !== '' || phone.trim() !== '');
+  const canSubmit = name.trim() !== '' && hasContact && consent;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const errors = [];
+    if (name.trim() === '') errors.push('name');
+    if (!hasContact) errors.push('contact');
+    if (!consent) errors.push('consent');
+    setValidationErrors(errors);
+    if (errors.length > 0) return;
+    const form = e.target;
+    const data = new FormData(form);
+    const payload = {
+      type: 'realtor',
+      name: data.get('name'),
+      email: data.get('email'),
+      phone: data.get('phone') || '',
+      message: data.get('message') || '',
+    };
+    // TODO: enviar a tu endpoint; por ahora solo éxito local
+    console.log('Realtor lead:', payload);
+    setSubmitted(true);
+  };
+
+  const handleClose = () => {
+    setSubmitted(false);
+    setValidationErrors([]);
+    setName('');
+    setEmail('');
+    setPhone('');
+    setConsent(false);
+    onClose();
+  };
+
+  if (!open) return null;
+  return (
+    <motion.div
+      className="realtor-modal"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={(e) => { if (e.target === e.currentTarget || e.target.getAttribute('aria-hidden') === 'true') handleClose(); }}
+    >
+      <div className="realtor-modal-backdrop" aria-hidden="true" onClick={handleClose} />
+      <motion.div
+        className="realtor-modal-content"
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -16 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button type="button" className="realtor-modal-close" onClick={handleClose} aria-label={t('realtors.form.close')}>×</button>
+        <h2 className="realtor-modal-title">{t('realtors.form.title')}</h2>
+        {!submitted ? (
+          <>
+            <p className="realtor-modal-intro">{t('realtors.form.intro')}</p>
+            <form className="realtor-form" onSubmit={handleSubmit}>
+              <label>
+                <span>{t('realtors.form.name')}</span>
+                <input type="text" name="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder={t('quote.placeholders.name')} />
+              </label>
+              <label>
+                <span>{t('realtors.form.email')} <em className="realtor-form-optional">({t('realtors.form.emailOrPhone')})</em></span>
+                <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t('quote.placeholders.email')} />
+              </label>
+              <label>
+                <span>{t('realtors.form.phone')}</span>
+                <input type="tel" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t('quote.placeholders.phone')} />
+              </label>
+              <label>
+                <span>{t('realtors.form.message')}</span>
+                <textarea name="message" rows={3} placeholder={t('realtors.form.messagePlaceholder')} />
+              </label>
+              <label className="realtor-form-consent">
+                <input type="checkbox" name="consent" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="realtor-form-consent-input" />
+                <span className="realtor-form-consent-box" aria-hidden="true" />
+                <span className="realtor-form-consent-text">{t('realtors.form.consent')}</span>
+              </label>
+              {validationErrors.length > 0 && (
+                <div className="realtor-form-errors" role="alert">
+                  <ul>
+                    {validationErrors.map((key) => (
+                      <li key={key}>{t(`realtors.form.errors.${key}`)}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div className="realtor-form-actions">
+                <button type="submit" className="btn btn-primary">{t('realtors.form.submit')}</button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <div className="realtor-modal-success">
+            <p>{t('realtors.form.success')}</p>
+            <a href={`#${getSectionHash(lang, 'quote')}`} className="btn btn-primary" onClick={handleClose}>{t('nav.quote')}</a>
+            <button type="button" className="btn btn-secondary" onClick={handleClose}>{t('realtors.form.close')}</button>
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+}
+
 function Realtors() {
   const { t, lang } = useLang();
+  const [modalOpen, setModalOpen] = useState(false);
   return (
-    <AnimatedSection className="section section-realtors">
-      <div className="container">
-        <motion.div
-          className="realtors-inner"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2>{t('realtors.title')}</h2>
-          <p>{t('realtors.text')}</p>
-          <a href={`#${getSectionHash(lang, 'quote')}`} className="btn btn-primary">{t('realtors.cta')}</a>
-        </motion.div>
-      </div>
-    </AnimatedSection>
+    <>
+      <AnimatedSection className="section section-realtors">
+        <div className="container">
+          <motion.div
+            className="realtors-inner"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="section-title">{t('realtors.title')}</h2>
+            <p>{t('realtors.text')}</p>
+            <button type="button" className="btn btn-primary" onClick={() => setModalOpen(true)}>{t('realtors.cta')}</button>
+            <p className="realtors-hint">{t('realtors.form.hint')}</p>
+          </motion.div>
+        </div>
+      </AnimatedSection>
+      <RealtorFormModal open={modalOpen} onClose={() => setModalOpen(false)} />
+    </>
   );
 }
 
 function QuoteForm() {
   const { t, lang } = useLang();
+  const formRef = useRef(null);
   const [step, setStep] = useState(1);
   const [wholeHouse, setWholeHouse] = useState(true);
   const [submitted, setSubmitted] = useState(false);
+  const [stepError, setStepError] = useState(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
+
+  const hasContact = (email.trim() !== '' || phone.trim() !== '');
+  const canSubmit = name.trim() !== '' && hasContact && consent;
 
   const totalSteps = wholeHouse ? 4 : 5;
   const progressRaw = totalSteps > 1 ? ((step <= 2 ? step : step - (wholeHouse ? 0 : 1)) - 1) / (totalSteps - 1) * 100 : 0;
@@ -386,24 +592,73 @@ function QuoteForm() {
     else setStep(prev);
   };
 
+  const validateStep2 = () => {
+    const form = formRef.current;
+    const prop = form?.querySelector('input[name="tipo_propiedad"]:checked');
+    const size = form?.querySelector('select[name="tamano"]')?.value;
+    if (!prop?.value || !size?.trim()) {
+      setStepError('propertySize');
+      return false;
+    }
+    setStepError(null);
+    return true;
+  };
+  const validateStep3 = () => {
+    const form = formRef.current;
+    const areas = form?.querySelectorAll('input[name="areas"]:checked');
+    if (!areas?.length) {
+      setStepError('areas');
+      return false;
+    }
+    setStepError(null);
+    return true;
+  };
+  const validateStep4 = () => {
+    const form = formRef.current;
+    const work = form?.querySelectorAll('input[name="trabajo"]:checked');
+    if (!work?.length) {
+      setStepError('work');
+      return false;
+    }
+    setStepError(null);
+    return true;
+  };
+
+  const handleSubmitStep5 = (e) => {
+    e.preventDefault();
+    const errors = [];
+    if (name.trim() === '') errors.push('name');
+    if (!hasContact) errors.push('contact');
+    if (!consent) errors.push('consent');
+    setValidationErrors(errors);
+    if (errors.length > 0) return;
+    setSubmitted(true);
+  };
+
   return (
     <AnimatedSection id={getSectionHash(lang, 'quote')} className="section section-quote">
       <div className="container">
-        <h2 className="section-title">{t('quote.title')}</h2>
+        <h2 className="section-title"><AnimatedSectionTitle text={t('quote.title')} /></h2>
         <p className="section-intro">{t('quote.intro')}</p>
 
         <div className="quote-wizard">
           <div className="quote-progress quote-progress--dynamic" style={{ ['--progress']: progress }}>
             <div className="quote-progress-bar" style={{ width: `${progress}%` }} />
-            {[1, 2, 3, 4, 5].map((d) => (
-              <span key={d} className={`quote-step-dot ${wholeHouse && d === 3 ? 'hidden-dot' : ''} ${step === d ? 'active' : step > d ? 'done' : ''}`} data-dot={d}>{d}</span>
-            ))}
+            {[1, 2, 3, 4, 5].map((d) => {
+              const isSkipped = wholeHouse && d === 3;
+              const isActive = !isSkipped && step === d;
+              const isDone = step > d || isSkipped && step >= 4;
+              return (
+                <span key={d} className={`quote-step-dot ${isActive ? 'active' : isDone ? 'done' : ''}`} data-dot={d}>{d}</span>
+              );
+            })}
           </div>
 
           {!submitted ? (
             <form
+              ref={formRef}
               className="quote-form"
-              onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
+              onSubmit={handleSubmitStep5}
             >
               {step === 1 && (
                 <motion.fieldset className="quote-step active" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}>
@@ -451,9 +706,12 @@ function QuoteForm() {
                     </label>
                   </div>
                   <p className="quote-tip quote-tip--small">{t('quote.step2size.tip')}</p>
+                  {stepError === 'propertySize' && (
+                    <p className="quote-step-error" role="alert">{t('quote.errors.propertySize')}</p>
+                  )}
                   <div className="quote-actions">
-                    <button type="button" className="btn btn-secondary" onClick={() => setStep(1)}>{t('quote.back')}</button>
-                    <button type="button" className="btn btn-primary" onClick={() => handleNext(3)}>{t('quote.next')}</button>
+                    <button type="button" className="btn btn-secondary" onClick={() => { setStepError(null); setStep(1); }}>{t('quote.back')}</button>
+                    <button type="button" className="btn btn-primary" onClick={() => { if (validateStep2()) handleNext(3); }}>{t('quote.next')}</button>
                   </div>
                 </motion.fieldset>
               )}
@@ -466,9 +724,12 @@ function QuoteForm() {
                       <label key={a}><input type="checkbox" name="areas" value={a} /> <span>{t(`quote.area.${a}`)}</span></label>
                     ))}
                   </div>
+                  {stepError === 'areas' && (
+                    <p className="quote-step-error" role="alert">{t('quote.errors.areas')}</p>
+                  )}
                   <div className="quote-actions">
-                    <button type="button" className="btn btn-secondary" onClick={() => setStep(2)}>{t('quote.back')}</button>
-                    <button type="button" className="btn btn-primary" onClick={() => setStep(4)}>{t('quote.next')}</button>
+                    <button type="button" className="btn btn-secondary" onClick={() => { setStepError(null); setStep(2); }}>{t('quote.back')}</button>
+                    <button type="button" className="btn btn-primary" onClick={() => { if (validateStep3()) setStep(4); }}>{t('quote.next')}</button>
                   </div>
                 </motion.fieldset>
               )}
@@ -481,9 +742,12 @@ function QuoteForm() {
                       <label key={w}><input type="checkbox" name="trabajo" value={w} /> <span>{t(`quote.work.${w}`)}</span></label>
                     ))}
                   </div>
+                  {stepError === 'work' && (
+                    <p className="quote-step-error" role="alert">{t('quote.errors.work')}</p>
+                  )}
                   <div className="quote-actions">
-                    <button type="button" className="btn btn-secondary" onClick={() => setStep(wholeHouse ? 2 : 3)}>{t('quote.back')}</button>
-                    <button type="button" className="btn btn-primary" onClick={() => setStep(5)}>{t('quote.next')}</button>
+                    <button type="button" className="btn btn-secondary" onClick={() => { setStepError(null); setStep(wholeHouse ? 2 : 3); }}>{t('quote.back')}</button>
+                    <button type="button" className="btn btn-primary" onClick={() => { if (validateStep4()) setStep(5); }}>{t('quote.next')}</button>
                   </div>
                 </motion.fieldset>
               )}
@@ -492,11 +756,25 @@ function QuoteForm() {
                 <motion.fieldset className="quote-step active" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}>
                   <legend>{t('quote.step4.legend')}</legend>
                   <div className="quote-fields">
-                    <label><span>{t('quote.fields.name')}</span> <input type="text" name="nombre" required placeholder={t('quote.placeholders.name')} /></label>
-                    <label><span>{t('quote.fields.email')}</span> <input type="email" name="email" required placeholder={t('quote.placeholders.email')} /></label>
-                    <label><span>{t('quote.fields.phone')}</span> <input type="tel" name="telefono" placeholder={t('quote.placeholders.phone')} /></label>
+                    <label><span>{t('quote.fields.name')}</span> <input type="text" name="nombre" value={name} onChange={(e) => setName(e.target.value)} placeholder={t('quote.placeholders.name')} /></label>
+                    <label><span>{t('quote.fields.email')} <em className="realtor-form-optional">({t('realtors.form.emailOrPhone')})</em></span> <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t('quote.placeholders.email')} /></label>
+                    <label><span>{t('quote.fields.phone')}</span> <input type="tel" name="telefono" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t('quote.placeholders.phone')} /></label>
                     <label><span>{t('quote.fields.message')}</span> <textarea name="mensaje" rows={3} placeholder={t('quote.placeholders.message')} /></label>
                   </div>
+                  <label className="realtor-form-consent">
+                    <input type="checkbox" name="consent" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="realtor-form-consent-input" />
+                    <span className="realtor-form-consent-box" aria-hidden="true" />
+                    <span className="realtor-form-consent-text">{t('realtors.form.consent')}</span>
+                  </label>
+                  {validationErrors.length > 0 && (
+                    <div className="realtor-form-errors" role="alert">
+                      <ul>
+                        {validationErrors.map((key) => (
+                          <li key={key}>{t(`quote.errors.${key}`)}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   <div className="quote-actions">
                     <button type="button" className="btn btn-secondary" onClick={() => setStep(4)}>{t('quote.back')}</button>
                     <button type="submit" className="btn btn-primary">{t('quote.submit')}</button>
@@ -508,7 +786,7 @@ function QuoteForm() {
             <motion.div className="quote-success" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <p className="quote-success-title">{t('quote.success.title')}</p>
               <p>{t('quote.success.text')}</p>
-              <a href="https://wa.me/16132048000?text=Hi%2C%20I%20request%20a%20quote." className="btn btn-whatsapp" target="_blank" rel="noopener">{t('quote.success.wa')}</a>
+              <p className="quote-success-closing">{t('quote.success.closing')}</p>
             </motion.div>
           )}
         </div>

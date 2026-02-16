@@ -530,9 +530,6 @@ a:hover {
   right: 0.5rem;
 }
 
-.section-steps {
-  padding-top: 5.5rem;
-}
 
 .section-title {
   font-size: clamp(1.5rem, 3vw, 2rem);
@@ -540,6 +537,15 @@ a:hover {
   color: var(--color-primary);
   margin: 0 0 0.5rem;
   text-align: center;
+}
+.section-title-animated {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.section-title-letter {
+  opacity: 0;
+  display: inline-block;
 }
 
 .section-intro {
@@ -574,17 +580,19 @@ a:hover {
   margin-bottom: 2rem;
 }
 
+/* Misma animación que la galería de GemSpots: translateY(-10px) scale(1.02) + sombra + resaltado en hover */
 .mvv-card {
   background: var(--color-bg);
   padding: 2rem;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   border: 1px solid var(--color-border);
-  transition: transform var(--transition), box-shadow var(--transition);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
+/* Transform del hover va en Framer Motion (whileHover); resaltado por borde + sombra más marcada (sin cambiar fondo) */
 .mvv-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .mvv-icon {
@@ -599,6 +607,12 @@ a:hover {
   justify-content: center;
   font-weight: 700;
   font-size: 1.25rem;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.mvv-card:hover .mvv-icon {
+  background: #c96b1f;
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(201, 107, 31, 0.4);
 }
 
 .mvv-card h3 {
@@ -606,6 +620,10 @@ a:hover {
   color: var(--color-primary);
   margin: 0 0 0.5rem;
   text-align: center;
+  transition: color 0.2s ease;
+}
+.mvv-card:hover h3 {
+  color: #c96b1f;
 }
 .mvv-card p {
   margin: 0;
@@ -663,16 +681,33 @@ a:hover {
 .about-extra {
   text-align: center;
   padding: 1.5rem 2rem;
-  background: rgba(40, 53, 98, 0.06);
+  background: rgba(249, 119, 43, 0.07);
   border-radius: var(--radius-lg);
-  border-left: 4px solid var(--color-accent);
+  border: 1px solid rgba(249, 119, 43, 0.2);
   max-width: 640px;
   margin: 0 auto;
+  transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+.about-extra:hover {
+  background: rgba(249, 119, 43, 0.14);
+  border-color: rgba(249, 119, 43, 0.4);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2), 0 8px 20px -8px rgba(249, 119, 43, 0.15);
+  transform: translateY(-8px);
 }
 .about-extra p {
   margin: 0;
   font-style: italic;
   color: var(--color-text);
+}
+.typewriter-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--color-accent);
+  font-weight: 700;
+  animation: typewriter-blink 0.7s step-end infinite;
+}
+@keyframes typewriter-blink {
+  50% { opacity: 0; }
 }
 
 /* ---- Servicios (2 arriba, 2 abajo; click para más) ---- */
@@ -870,6 +905,32 @@ a:hover {
 .service-card-front-text p {
   padding: 0;
 }
+.service-card-front .service-img-wrap {
+  position: relative;
+}
+.service-card-front-hint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(34, 49, 81, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.service-card-flip:not(.flipped):hover .service-card-front-hint {
+  opacity: 1;
+}
 
 /* Ajustes flip en section-services */
 .section-services .service-card-flip {
@@ -972,12 +1033,204 @@ a:hover {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Modal formulario agentes (realtors) */
+.realtor-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.realtor-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+.realtor-modal-content {
+  position: relative;
+  max-width: 440px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 2rem;
+}
+.realtor-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+  font-size: 1.5rem;
+  line-height: 1;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.realtor-modal-close:hover {
+  background: var(--color-accent);
+  color: var(--color-text-on-dark);
+}
+.realtor-modal-title {
+  font-size: 1.35rem;
+  color: var(--color-primary);
+  margin: 0 0 0.5rem;
+  padding-right: 2.5rem;
+}
+.realtor-modal-intro {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  margin: 0 0 1.25rem;
+  line-height: 1.5;
+}
+.realtor-form label {
+  display: block;
+  margin-bottom: 1rem;
+}
+.realtor-form label span {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 0.35rem;
+}
+.realtor-form input,
+.realtor-form textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-family: inherit;
+}
+.realtor-form textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+.realtor-form-optional {
+  font-weight: normal;
+  font-style: normal;
+  color: var(--color-text-muted);
+  font-size: 0.8em;
+}
+/* Especificidad mayor que .realtor-form label para que no sobrescriba display: flex */
+.realtor-form label.realtor-form-consent,
+.realtor-form-consent {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0 !important;
+  cursor: pointer;
+}
+.realtor-form-consent-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+.realtor-form-consent .realtor-form-consent-box {
+  flex-shrink: 0;
+  align-self: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-bg);
+  position: relative;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.realtor-form-consent:hover .realtor-form-consent-box {
+  transform: scale(1.08);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(34, 49, 81, 0.15);
+}
+.realtor-form-consent-input:checked ~ .realtor-form-consent-box {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.realtor-form-consent-input:checked ~ .realtor-form-consent-box::after {
+  content: '✓';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.realtor-form-consent-text {
+  font-size: 0.8125rem !important;
+  color: var(--color-text-muted) !important;
+  line-height: 1.4;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 1;
+  min-width: 0;
+  text-align: justify;
+}
+.realtor-form-errors {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(200, 60, 50, 0.08);
+  border: 1px solid rgba(200, 60, 50, 0.3);
+  border-radius: var(--radius);
+}
+.realtor-form-errors ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  color: #b53c30;
+  line-height: 1.5;
+}
+.realtor-form-errors li {
+  margin-bottom: 0.25rem;
+}
+.realtor-form-errors li:last-child {
+  margin-bottom: 0;
+}
+.realtor-form-actions .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.realtor-form-actions {
+  margin-top: 1.25rem;
+}
+.realtor-modal-success {
+  padding-right: 2rem;
+}
+.realtor-modal-success p {
+  margin: 0 0 1rem;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+.realtor-modal-success .btn + .btn {
+  margin-left: 0.5rem;
+}
+.realtors-hint {
+  margin: 1rem 0 0 !important;
+  font-size: 0.875rem !important;
+  opacity: 0.9;
+}
+
 /* ---- Pasos (Cómo trabajamos) ---- */
 .steps-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   margin-top: 2rem;
+  min-height: 240px; /* Evita salto de layout al animar entrada */
 }
 
 @media (max-width: 768px) {
@@ -994,10 +1247,32 @@ a:hover {
   box-shadow: var(--shadow);
   border: 1px solid var(--color-border);
   position: relative;
-  transition: transform var(--transition);
+  overflow: visible;
+  isolation: isolate;
+}
+/* Contorno continuo iluminado (blanco–naranja), grueso y pronunciado en hover */
+.step-card::before {
+  content: '';
+  position: absolute;
+  inset: -11px;
+  border-radius: calc(var(--radius-lg) + 11px);
+  padding: 11px;
+  background: rgba(255, 242, 228, 0.95);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+  filter: drop-shadow(0 0 10px rgba(255, 218, 185, 0.65)) drop-shadow(0 0 18px rgba(255, 200, 160, 0.35));
+}
+.step-card:hover::before {
+  opacity: 1;
 }
 .step-card:hover {
-  transform: translateY(-4px);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
 }
 
 .step-num {
@@ -1012,6 +1287,17 @@ a:hover {
   font-weight: 700;
   font-size: 1.5rem;
   margin-bottom: 1rem;
+  transition: transform 0.25s ease;
+  position: relative;
+  z-index: 1;
+}
+.step-card:hover .step-num {
+  transform: scale(1.08);
+}
+.step-card h3,
+.step-card p {
+  position: relative;
+  z-index: 1;
 }
 
 .step-card h3 {
@@ -1061,6 +1347,8 @@ a:hover {
 /* ---- Cotización (wizard) ---- */
 .section-quote {
   background: var(--color-bg-alt);
+  padding-top: 1.25rem;
+  padding-bottom: 2rem;
 }
 
 .quote-wizard {
@@ -1298,12 +1586,32 @@ a:hover {
   border-color: var(--color-accent);
 }
 
+.quote-step-error {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(200, 60, 50, 0.08);
+  border-radius: 6px;
+  color: var(--color-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
 .quote-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
   justify-content: space-between;
   margin-top: 1.5rem;
+}
+/* Back visible en formulario claro */
+.quote-form .btn-secondary {
+  background: var(--color-bg);
+  color: var(--color-primary);
+  border: 2px solid var(--color-border);
+}
+.quote-form .btn-secondary:hover {
+  border-color: var(--color-primary);
+  background: rgba(34, 49, 81, 0.06);
+  color: var(--color-primary);
 }
 
 .quote-success {
@@ -1319,6 +1627,12 @@ a:hover {
 .quote-success p {
   margin: 0;
   color: var(--color-text-muted);
+}
+.quote-success-closing {
+  margin-top: 1.25rem !important;
+  font-size: 1rem;
+  color: var(--color-primary);
+  font-style: italic;
 }
 
 .quote-alt {
