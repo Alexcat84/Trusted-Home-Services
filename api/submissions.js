@@ -41,7 +41,8 @@ export default async function handler(req, res) {
 
   const limit = Math.min(parseInt(req.query.limit, 10) || DEFAULT_LIMIT, 500);
 
-  if (process.env.DATABASE_URL) {
+  const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+  if (dbUrl) {
     try {
       const { prisma } = await import('./lib/prisma.js');
       const rows = await prisma.submission.findMany({

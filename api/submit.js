@@ -70,7 +70,8 @@ export default async function handler(req, res) {
     _at: new Date().toISOString(),
   };
 
-  if (process.env.DATABASE_URL) {
+  const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+  if (dbUrl) {
     try {
       const { prisma } = await import('./lib/prisma.js');
       await prisma.submission.create({
