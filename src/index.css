@@ -2037,6 +2037,12 @@ a:hover {
 .admin-table th { background: var(--color-bg-alt); font-weight: 600; color: var(--color-primary); }
 .admin-table td { color: var(--color-text); }
 .admin-empty { font-size: 0.9375rem; color: var(--color-text-muted); margin-top: 1rem; }
+.admin-config-check { margin-bottom: 1.5rem; padding: 1rem 1.25rem; background: var(--color-bg-alt); border-radius: var(--radius); border: 1px solid var(--color-border); font-size: 0.875rem; }
+.admin-config-title { margin: 0 0 0.5rem; font-weight: 600; color: var(--color-primary); }
+.admin-config-list { margin: 0; padding-left: 1.25rem; }
+.admin-config-list li { margin-bottom: 0.35rem; }
+.admin-config-list code { background: rgba(0,0,0,0.06); padding: 0.1em 0.35em; border-radius: 3px; font-size: 0.85em; }
+.admin-config-missing { color: #c00; }
 @media (max-width: 768px) {
   .admin-table th, .admin-table td { padding: 0.4rem 0.5rem; font-size: 0.8125rem; }
 }
