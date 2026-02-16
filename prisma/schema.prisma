@@ -18,5 +18,6 @@ model Submission {
   areas        String?
   propertyType String?
   size         String?
+  status       String?  @default("new") // new | contacted | offer_sent | offer_accepted | offer_rejected | work_in_progress | work_done
   createdAt    DateTime @default(now())
 }

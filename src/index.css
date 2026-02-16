@@ -2031,6 +2031,14 @@ a:hover {
 .admin-error { color: #c00; margin-bottom: 1rem; }
 .admin-error--block { background: #fff2f2; padding: 0.75rem 1rem; border-radius: var(--radius); border: 1px solid #fcc; }
 .admin-push-loading { color: var(--color-text-muted); font-size: 0.875rem; margin-left: 0.5rem; }
+.admin-filters { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-bottom: 0.75rem; align-items: center; }
+.admin-filter { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
+.admin-filter select { padding: 0.35rem 0.5rem; border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-bg); color: var(--color-text); }
+.admin-download-csv { margin-left: 0.5rem; }
+.admin-download-csv:disabled { opacity: 0.6; cursor: not-allowed; }
+.admin-status-select { padding: 0.25rem 0.4rem; font-size: 0.8125rem; border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-bg); color: var(--color-text); min-width: 6rem; }
+.admin-delete-btn { padding: 0.35rem 0.6rem; font-size: 0.8125rem; border: 1px solid #c00; border-radius: var(--radius); background: transparent; color: #c00; cursor: pointer; }
+.admin-delete-btn:hover { background: #fff2f2; }
 .admin-updated { font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 0.75rem; }
 .admin-table-wrap { overflow-x: auto; }
 .admin-table {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { animate, stagger } from 'animejs';
 import { useLang } from './context/LangContext';
@@ -644,6 +644,7 @@ function QuoteForm() {
   const [phone, setPhone] = useState('');
   const [consent, setConsent] = useState(false);
   const [validationErrors, setValidationErrors] = useState([]);
+  const [quoteData, setQuoteData] = useState({ propertyType: '', size: '', areas: '', work: '' });
 
   const hasContact = (email.trim() !== '' || phone.trim() !== '');
   const canSubmit = name.trim() !== '' && hasContact && consent;
@@ -703,21 +704,15 @@ function QuoteForm() {
     if (errors.length > 0) return;
 
     const form = formRef.current;
-    const prop = form?.querySelector('input[name="tipo_propiedad"]:checked')?.value || '';
-    const size = form?.querySelector('select[name="tamano"]')?.value || '';
-    const areasEl = form?.querySelectorAll('input[name="areas"]:checked');
-    const workEl = form?.querySelectorAll('input[name="trabajo"]:checked');
-    const areas = areasEl ? [...areasEl].map((el) => el.value).join(', ') : '';
-    const work = workEl ? [...workEl].map((el) => el.value).join(', ') : '';
     const message = form?.querySelector('textarea[name="mensaje"]')?.value || '';
 
     const payload = {
       type: 'quote',
       wholeHouse,
-      propertyType: prop,
-      size,
-      areas: wholeHouse ? 'whole house' : areas,
-      work,
+      propertyType: quoteData.propertyType,
+      size: quoteData.size,
+      areas: wholeHouse ? 'whole house' : quoteData.areas,
+      work: quoteData.work,
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
@@ -815,7 +810,14 @@ function QuoteForm() {
                   )}
                   <div className="quote-actions">
                     <button type="button" className="btn btn-secondary" onClick={() => { setStepError(null); setStep(1); }}>{t('quote.back')}</button>
-                    <button type="button" className="btn btn-primary" onClick={() => { if (validateStep2()) handleNext(3); }}>{t('quote.next')}</button>
+                    <button type="button" className="btn btn-primary" onClick={() => {
+                      if (!validateStep2()) return;
+                      const form = formRef.current;
+                      const prop = form?.querySelector('input[name="tipo_propiedad"]:checked')?.value || '';
+                      const size = form?.querySelector('select[name="tamano"]')?.value || '';
+                      setQuoteData((prev) => ({ ...prev, propertyType: prop, size, ...(wholeHouse ? { areas: 'whole house' } : {}) }));
+                      handleNext(3);
+                    }}>{t('quote.next')}</button>
                   </div>
                 </motion.fieldset>
               )}
@@ -833,7 +835,14 @@ function QuoteForm() {
                   )}
                   <div className="quote-actions">
                     <button type="button" className="btn btn-secondary" onClick={() => { setStepError(null); setStep(2); }}>{t('quote.back')}</button>
-                    <button type="button" className="btn btn-primary" onClick={() => { if (validateStep3()) setStep(4); }}>{t('quote.next')}</button>
+                    <button type="button" className="btn btn-primary" onClick={() => {
+                      if (!validateStep3()) return;
+                      const form = formRef.current;
+                      const areasEl = form?.querySelectorAll('input[name="areas"]:checked');
+                      const areas = areasEl ? [...areasEl].map((el) => el.value).join(', ') : '';
+                      setQuoteData((prev) => ({ ...prev, areas }));
+                      setStep(4);
+                    }}>{t('quote.next')}</button>
                   </div>
                 </motion.fieldset>
               )}
@@ -851,7 +860,14 @@ function QuoteForm() {
                   )}
                   <div className="quote-actions">
                     <button type="button" className="btn btn-secondary" onClick={() => { setStepError(null); setStep(wholeHouse ? 2 : 3); }}>{t('quote.back')}</button>
-                    <button type="button" className="btn btn-primary" onClick={() => { if (validateStep4()) setStep(5); }}>{t('quote.next')}</button>
+                    <button type="button" className="btn btn-primary" onClick={() => {
+                      if (!validateStep4()) return;
+                      const form = formRef.current;
+                      const workEl = form?.querySelectorAll('input[name="trabajo"]:checked');
+                      const work = workEl ? [...workEl].map((el) => el.value).join(', ') : '';
+                      setQuoteData((prev) => ({ ...prev, work }));
+                      setStep(5);
+                    }}>{t('quote.next')}</button>
                   </div>
                 </motion.fieldset>
               )}
@@ -1151,45 +1167,123 @@ function FAQPage() {
 
 const ADMIN_TOKEN_KEY = 'th_admin_token';
 
+const ADMIN_STATUS_OPTIONS = [
+  { value: 'new', label: 'New' },
+  { value: 'contacted', label: 'Contacted' },
+  { value: 'offer_sent', label: 'Offer sent' },
+  { value: 'offer_accepted', label: 'Offer accepted' },
+  { value: 'offer_rejected', label: 'Offer rejected' },
+  { value: 'work_in_progress', label: 'Work in progress' },
+  { value: 'work_done', label: 'Work done' },
+];
+
 function AdminPage() {
   const { lang } = useLang();
   const homeHash = getSectionHash(lang, 'home');
   const [token, setToken] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem(ADMIN_TOKEN_KEY) || '' : '');
   const [submissions, setSubmissions] = useState([]);
   const [error, setError] = useState(null);
+  const [filterType, setFilterType] = useState('all');
+  const [filterStatus, setFilterStatus] = useState('all');
 
   const saveToken = (t) => {
     setToken(t);
     if (typeof window !== 'undefined') sessionStorage.setItem(ADMIN_TOKEN_KEY, t);
   };
 
-  useEffect(() => {
+  const fetchList = useCallback(async () => {
     if (!token.trim()) return;
-    const fetchList = async () => {
-      try {
-        const res = await fetch(`/api/submissions?token=${encodeURIComponent(token)}`);
-        if (res.status === 401) {
-          setError('Invalid token');
-          setSubmissions([]);
-          return;
-        }
-        setError(null);
-        const data = await res.json();
-        setSubmissions(data.submissions || []);
-      } catch (e) {
-        setError('Network error');
+    try {
+      const res = await fetch(`/api/submissions?token=${encodeURIComponent(token)}`);
+      if (res.status === 401) {
+        setError('Invalid token');
         setSubmissions([]);
+        return;
       }
-    };
+      setError(null);
+      const data = await res.json();
+      setSubmissions(data.submissions || []);
+    } catch (e) {
+      setError('Network error');
+      setSubmissions([]);
+    }
+  }, [token]);
+
+  useEffect(() => {
     fetchList();
     const interval = setInterval(fetchList, 5000);
     return () => clearInterval(interval);
-  }, [token]);
+  }, [fetchList]);
+
+  const filteredSubmissions = submissions.filter((s) => {
+    if (filterType !== 'all' && s.type !== filterType) return false;
+    if (filterStatus !== 'all' && (s.status || 'new') !== filterStatus) return false;
+    return true;
+  });
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const res = await fetch(`/api/submissions?token=${encodeURIComponent(token)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: newStatus }),
+      });
+      if (res.ok) {
+        setSubmissions((prev) => prev.map((s) => (s.id === id ? { ...s, status: newStatus } : s)));
+      }
+    } catch (e) {
+      console.error('Status update failed', e);
+    }
+  };
+
+  const handleDelete = async (id, name) => {
+    const confirmed = window.confirm(`Delete the record for "${name || 'this contact'}"? This action cannot be undone.`);
+    if (!confirmed) return;
+    try {
+      const res = await fetch(`/api/submissions?id=${encodeURIComponent(id)}&token=${encodeURIComponent(token)}`, { method: 'DELETE' });
+      if (res.ok) {
+        setSubmissions((prev) => prev.filter((s) => s.id !== id));
+      }
+    } catch (e) {
+      console.error('Delete failed', e);
+    }
+  };
 
   const goHome = (e) => {
     e.preventDefault();
     window.location.hash = homeHash;
     setTimeout(() => window.scrollTo(0, 0), 50);
+  };
+
+  const escapeCsvCell = (v) => {
+    const s = String(v ?? '').trim();
+    if (s.includes(',') || s.includes('"') || s.includes('\n')) return `"${s.replace(/"/g, '""')}"`;
+    return s || '';
+  };
+
+  const downloadCsv = () => {
+    const headers = ['Date', 'Type', 'Name', 'Email', 'Phone', 'Property type', 'Work', 'Areas', 'Size', 'Status', 'Message'];
+    const rows = filteredSubmissions.map((s) => [
+      s._at ? new Date(s._at).toLocaleString() : '',
+      s.type === 'realtor' ? 'Realtor' : 'Quote',
+      s.name || '',
+      s.email || '',
+      s.phone || '',
+      s.propertyType || '',
+      s.work || '',
+      s.areas || '',
+      s.size || '',
+      ADMIN_STATUS_OPTIONS.find((o) => o.value === (s.status || 'new'))?.label || (s.status || 'New'),
+      s.message || '',
+    ]);
+    const csvContent = [headers.map(escapeCsvCell).join(','), ...rows.map((r) => r.map(escapeCsvCell).join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `submissions-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -1220,38 +1314,93 @@ function AdminPage() {
           <p className="admin-push-sync-hint" style={{ marginBottom: '1rem' }}>Avisos por email: configura en Vercel <code>RESEND_API_KEY</code> y <code>ADMIN_EMAIL</code> para recibir un correo por cada envío de formulario. Esta página es instalable como app web (menú del navegador → «Instalar» o «Añadir a pantalla de inicio»).</p>
           {error && <p className="admin-error" role="alert">{error}</p>}
           <div className="admin-table-wrap">
-            <p className="admin-updated">Updates every 5 seconds. Total: {submissions.length}</p>
+            <div className="admin-filters">
+              <label className="admin-filter">
+                <span>Type:</span>
+                <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+                  <option value="all">All</option>
+                  <option value="realtor">Realtor</option>
+                  <option value="quote">Quote</option>
+                </select>
+              </label>
+              <label className="admin-filter">
+                <span>Status:</span>
+                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                  <option value="all">All</option>
+                  {ADMIN_STATUS_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+              </label>
+              <button type="button" className="admin-download-csv btn btn-secondary" onClick={downloadCsv} disabled={filteredSubmissions.length === 0}>
+                Download CSV
+              </button>
+            </div>
+            <p className="admin-updated">Updates every 5 seconds. Total: {filteredSubmissions.length} (of {submissions.length})</p>
             <table className="admin-table">
               <thead>
                 <tr>
                   <th>Date</th>
                   <th>Type</th>
                   <th>Name</th>
-                  <th>Contact</th>
+                  <th>Email</th>
+                  <th>Phone</th>
                   <th>Property type</th>
                   <th>Work</th>
                   <th>Areas</th>
                   <th>Size</th>
+                  <th>Status</th>
                   <th>Message</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {submissions.map((s, i) => (
-                  <tr key={i}>
+                {filteredSubmissions.map((s, i) => (
+                  <tr key={s.id || i}>
                     <td>{s._at ? new Date(s._at).toLocaleString() : '–'}</td>
                     <td>{s.type === 'realtor' ? 'Realtor' : 'Quote'}</td>
                     <td>{s.name || '–'}</td>
-                    <td>{[s.email, s.phone].filter(Boolean).join(' · ') || '–'}</td>
+                    <td>{s.email || '–'}</td>
+                    <td>{s.phone || '–'}</td>
                     <td>{s.propertyType || '–'}</td>
                     <td>{s.work || '–'}</td>
                     <td>{s.areas || '–'}</td>
                     <td>{s.size || '–'}</td>
+                    <td>
+                      {s.id ? (
+                        <select
+                          className="admin-status-select"
+                          value={s.status || 'nuevo'}
+                          onChange={(e) => handleStatusChange(s.id, e.target.value)}
+                        >
+                          {ADMIN_STATUS_OPTIONS.map((o) => (
+                            <option key={o.value} value={o.value}>{o.label}</option>
+                          ))}
+                        </select>
+                      ) : (
+                        <span>{s.status ? ADMIN_STATUS_OPTIONS.find((o) => o.value === s.status)?.label || s.status : 'New'}</span>
+                      )}
+                    </td>
                     <td>{s.message || '–'}</td>
+                    <td>
+                      {s.id ? (
+                        <button
+                          type="button"
+                          className="admin-delete-btn"
+                          onClick={() => handleDelete(s.id, s.name)}
+                          title="Delete record"
+                        >
+                          Delete
+                        </button>
+                      ) : (
+                        '–'
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            {submissions.length === 0 && !error && token && <p className="admin-empty">No submissions yet.</p>}
+            {filteredSubmissions.length === 0 && !error && token && <p className="admin-empty">No records match the current filters.</p>}
           </div>
         </div>
       </main>
