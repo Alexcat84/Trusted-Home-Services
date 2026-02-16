@@ -4,7 +4,21 @@ import { animate, stagger } from 'animejs';
 import { useLang } from './context/LangContext';
 import { getSectionHash } from './translations';
 
-/** Envía el payload a Formspree si existe VITE_FORMSPREE_* para ese tipo. Devuelve true si se envió y ok, false si no hay endpoint o falla. */
+/** Envía el payload a nuestra API (Vercel). Devuelve true si ok. */
+async function submitToOwnApi(payload) {
+  try {
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/** Envía el payload a Formspree si existe VITE_FORMSPREE_* para ese tipo. Devuelve true si se envió y ok. */
 async function submitToFormspree(formId, payload) {
   if (!formId || typeof formId !== 'string') return false;
   try {
@@ -499,14 +513,18 @@ function RealtorFormModal({ open, onClose }) {
       phone: data.get('phone') || '',
       message: data.get('message') || '',
     };
+    const ok = await submitToOwnApi(payload);
+    if (ok) {
+      setSubmitted(true);
+      return;
+    }
     const formId = import.meta.env.VITE_FORMSPREE_REALTOR;
     if (formId) {
-      const ok = await submitToFormspree(formId, payload);
-      if (ok) setSubmitted(true);
-      else setValidationErrors(['submit']); // optional: show "try again" message
+      const fallbackOk = await submitToFormspree(formId, payload);
+      if (fallbackOk) setSubmitted(true);
+      else setValidationErrors(['submit']);
     } else {
-      console.log('Realtor lead:', payload);
-      setSubmitted(true);
+      setValidationErrors(['submit']);
     }
   };
 
@@ -707,13 +725,18 @@ function QuoteForm() {
       message,
     };
 
+    const ok = await submitToOwnApi(payload);
+    if (ok) {
+      setSubmitted(true);
+      return;
+    }
     const formId = import.meta.env.VITE_FORMSPREE_QUOTE;
     if (formId) {
-      const ok = await submitToFormspree(formId, payload);
-      if (ok) setSubmitted(true);
+      const fallbackOk = await submitToFormspree(formId, payload);
+      if (fallbackOk) setSubmitted(true);
       else setValidationErrors(['submit']);
     } else {
-      setSubmitted(true);
+      setValidationErrors(['submit']);
     }
   };
 
@@ -1127,6 +1150,144 @@ function FAQPage() {
   );
 }
 
+const ADMIN_TOKEN_KEY = 'th_admin_token';
+
+function AdminPage() {
+  const { lang } = useLang();
+  const homeHash = getSectionHash(lang, 'home');
+  const [token, setToken] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem(ADMIN_TOKEN_KEY) || '' : '');
+  const [submissions, setSubmissions] = useState([]);
+  const [error, setError] = useState(null);
+  const [pushEnabled, setPushEnabled] = useState(false);
+
+  const saveToken = (t) => {
+    setToken(t);
+    if (typeof window !== 'undefined') sessionStorage.setItem(ADMIN_TOKEN_KEY, t);
+  };
+
+  useEffect(() => {
+    if (!token.trim()) return;
+    const fetchList = async () => {
+      try {
+        const res = await fetch(`/api/submissions?token=${encodeURIComponent(token)}`);
+        if (res.status === 401) {
+          setError('Invalid token');
+          setSubmissions([]);
+          return;
+        }
+        setError(null);
+        const data = await res.json();
+        setSubmissions(data.submissions || []);
+      } catch (e) {
+        setError('Network error');
+        setSubmissions([]);
+      }
+    };
+    fetchList();
+    const interval = setInterval(fetchList, 5000);
+    return () => clearInterval(interval);
+  }, [token]);
+
+  const enablePush = () => {
+    const appId = import.meta.env.VITE_ONESIGNAL_APP_ID;
+    if (!appId) {
+      alert('Push not configured (VITE_ONESIGNAL_APP_ID).');
+      return;
+    }
+    if (window.OneSignalDeferred) {
+      window.OneSignalDeferred.push(async (OneSignal) => {
+        await OneSignal.init({ appId });
+        await OneSignal.User.PushSubscription.optIn();
+        setPushEnabled(true);
+      });
+      return;
+    }
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    const script = document.createElement('script');
+    script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+    script.defer = true;
+    script.onload = () => {
+      window.OneSignalDeferred.push(async (OneSignal) => {
+        await OneSignal.init({ appId });
+        await OneSignal.User.PushSubscription.optIn();
+        setPushEnabled(true);
+      });
+    };
+    document.head.appendChild(script);
+  };
+
+  const goHome = (e) => {
+    e.preventDefault();
+    window.location.hash = homeHash;
+    setTimeout(() => window.scrollTo(0, 0), 50);
+  };
+
+  return (
+    <div className="privacy-page admin-page">
+      <header className="privacy-header">
+        <div className="container privacy-header-inner">
+          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Home">
+            <img src="/images/logo v1.0.jpg" alt="" className="privacy-logo" />
+          </a>
+          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">Back to Home</a>
+        </div>
+      </header>
+      <main className="privacy-main">
+        <div className="container privacy-content" style={{ paddingTop: '2rem' }}>
+          <h1 className="privacy-hero-title" style={{ marginBottom: '1rem' }}>Admin – Leads &amp; Quotes</h1>
+          <div className="admin-token-wrap">
+            <label>
+              <span>Access token (ADMIN_SECRET):</span>
+              <input
+                type="password"
+                value={token}
+                onChange={(e) => saveToken(e.target.value)}
+                placeholder="Enter token"
+                className="admin-token-input"
+              />
+            </label>
+          </div>
+          {import.meta.env.VITE_ONESIGNAL_APP_ID && (
+            <div className="admin-push-wrap">
+              <button type="button" className="btn btn-primary" onClick={enablePush}>Enable push notifications</button>
+              {pushEnabled && <span className="admin-push-ok">✓ Notifications enabled</span>}
+            </div>
+          )}
+          {error && <p className="admin-error" role="alert">{error}</p>}
+          <div className="admin-table-wrap">
+            <p className="admin-updated">Updates every 5 seconds. Total: {submissions.length}</p>
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Name</th>
+                  <th>Contact</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {submissions.map((s, i) => (
+                  <tr key={i}>
+                    <td>{s._at ? new Date(s._at).toLocaleString() : '–'}</td>
+                    <td>{s.type === 'realtor' ? 'Realtor' : 'Quote'}</td>
+                    <td>{s.name || '–'}</td>
+                    <td>{[s.email, s.phone].filter(Boolean).join(' · ') || '–'}</td>
+                    <td>
+                      {s.type === 'realtor' ? (s.message || '–') : [s.work, s.areas, s.propertyType, s.size].filter(Boolean).join(' · ') || '–'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {submissions.length === 0 && !error && token && <p className="admin-empty">No submissions yet.</p>}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
 function Footer() {
   const { t, lang } = useLang();
   const hash = (key) => getSectionHash(lang, key);
@@ -1175,13 +1336,13 @@ function Footer() {
 }
 
 export default function App() {
-  const [legalPage, setLegalPage] = useState(null); // 'privacy' | 'terms' | 'faq' | null
+  const [legalPage, setLegalPage] = useState(null); // 'privacy' | 'terms' | 'faq' | 'admin' | null
   useEffect(() => {
     const hash = (window.location.hash || '').replace('#', '').toLowerCase();
-    setLegalPage(hash === 'privacy' ? 'privacy' : hash === 'terms' ? 'terms' : hash === 'faq' ? 'faq' : null);
+    setLegalPage(hash === 'privacy' ? 'privacy' : hash === 'terms' ? 'terms' : hash === 'faq' ? 'faq' : hash === 'admin' ? 'admin' : null);
     const onHashChange = () => {
       const h = (window.location.hash || '').replace('#', '').toLowerCase();
-      setLegalPage(h === 'privacy' ? 'privacy' : h === 'terms' ? 'terms' : h === 'faq' ? 'faq' : null);
+      setLegalPage(h === 'privacy' ? 'privacy' : h === 'terms' ? 'terms' : h === 'faq' ? 'faq' : h === 'admin' ? 'admin' : null);
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
@@ -1192,6 +1353,7 @@ export default function App() {
   if (legalPage === 'privacy') return <PrivacyPolicyPage />;
   if (legalPage === 'terms') return <TermsOfServicePage />;
   if (legalPage === 'faq') return <FAQPage />;
+  if (legalPage === 'admin') return <AdminPage />;
   return (
     <>
       <Header />
