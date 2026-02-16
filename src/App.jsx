@@ -1206,7 +1206,19 @@ function AdminPage() {
         await OneSignal.User.PushSubscription.optIn();
         setPushEnabled(true);
       } catch (e) {
-        setPushError(e?.message || 'Error al activar notificaciones. Prueba en otro navegador o en modo no incógnito.');
+        const msg = e?.message || '';
+        if (msg.includes('already initialized')) {
+          try {
+            await OneSignal.User.PushSubscription.optIn();
+            setPushEnabled(true);
+          } catch (e2) {
+            setPushError(e2?.message || 'Error al solicitar permiso.');
+          }
+        } else if (msg.includes('not configured for web push')) {
+          setPushError('OneSignal aún no tiene la Web configurada. En el panel: Settings → Web → Custom Code, Site URL exacta, luego Save. Espera 2–3 min y recarga esta página.');
+        } else {
+          setPushError(msg || 'Error al activar notificaciones. Prueba en otro navegador o en modo no incógnito.');
+        }
       } finally {
         setPushLoading(false);
       }
