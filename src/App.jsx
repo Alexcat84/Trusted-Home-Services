@@ -538,6 +538,16 @@ function RealtorFormModal({ open, onClose }) {
     onClose();
   };
 
+  const goToDetailedQuote = () => {
+    handleClose();
+    const hash = getSectionHash(lang, 'quote');
+    window.location.hash = hash;
+    setTimeout(() => {
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  };
+
   if (!open) return null;
   return (
     <motion.div
@@ -555,7 +565,7 @@ function RealtorFormModal({ open, onClose }) {
         exit={{ opacity: 0, y: -16 }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button type="button" className="realtor-modal-close" onClick={handleClose} aria-label={t('realtors.form.close')}>×</button>
+        <button type="button" className="realtor-modal-close" onClick={handleClose} aria-label={t('realtors.form.close')} title={t('realtors.form.close')}>×</button>
         <h2 className="realtor-modal-title">{t('realtors.form.title')}</h2>
         {!submitted ? (
           <>
@@ -598,8 +608,11 @@ function RealtorFormModal({ open, onClose }) {
           </>
         ) : (
           <div className="realtor-modal-success">
-            <p>{t('realtors.form.success')}</p>
-            <button type="button" className="btn btn-primary" onClick={handleClose}>{t('realtors.form.close')}</button>
+            <p className="realtor-modal-success-main">{t('realtors.form.success')}</p>
+            <p className="realtor-modal-success-prompt">{t('realtors.form.successDetailPrompt')}</p>
+            <div className="realtor-modal-success-actions">
+              <button type="button" className="btn btn-primary" onClick={goToDetailedQuote}>{t('realtors.form.getDetailedQuote')}</button>
+            </div>
           </div>
         )}
       </motion.div>

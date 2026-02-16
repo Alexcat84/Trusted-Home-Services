@@ -1267,6 +1267,9 @@ a:hover {
   color: var(--color-text);
   line-height: 1.5;
 }
+.realtor-modal-success-main { font-weight: 600; }
+.realtor-modal-success-prompt { margin-bottom: 1.25rem !important; color: var(--color-text-muted) !important; font-size: 0.9375rem; }
+.realtor-modal-success-actions { margin-top: 1rem; }
 .realtor-modal-success .btn + .btn {
   margin-left: 0.5rem;
 }
