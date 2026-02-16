@@ -1344,15 +1344,16 @@ function AdminPage() {
           </div>
           {error && <p className="admin-error" role="alert">{error}</p>}
           <div className="admin-table-wrap">
-            <div className="admin-filters-grid">
-              <label className="admin-filter">
-                <span>Type</span>
-                <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-                  <option value="all">All</option>
-                  <option value="realtor">Realtor</option>
-                  <option value="quote">Quote</option>
-                </select>
-              </label>
+            <div className="admin-filters-card">
+              <div className="admin-filters-grid">
+                <label className="admin-filter">
+                  <span>Type</span>
+                  <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+                    <option value="all">All</option>
+                    <option value="realtor">Realtor</option>
+                    <option value="quote">Quote</option>
+                  </select>
+                </label>
               <label className="admin-filter">
                 <span>Status</span>
                 <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
@@ -1402,12 +1403,15 @@ function AdminPage() {
                 <span>Message</span>
                 <input type="text" placeholder="Contains…" value={filterMessage} onChange={(e) => setFilterMessage(e.target.value)} />
               </label>
+              </div>
+              <div className="admin-filters-actions">
+                <button type="button" className="admin-download-csv btn btn-primary" onClick={downloadCsv} disabled={filteredSubmissions.length === 0}>
+                  Download CSV
+                </button>
+              </div>
             </div>
             <div className="admin-toolbar">
               <p className="admin-updated">Updates every 5 seconds. Total: {filteredSubmissions.length} (of {submissions.length})</p>
-              <button type="button" className="admin-download-csv btn btn-primary" onClick={downloadCsv} disabled={filteredSubmissions.length === 0}>
-                Download CSV
-              </button>
             </div>
             <p className="admin-csv-hint">Apply filters above (type, status, date range, or any text field). The CSV exports only the rows currently shown.</p>
             <table className="admin-table">

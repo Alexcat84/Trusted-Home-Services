@@ -2039,10 +2039,13 @@ a:hover {
 .admin-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
 .admin-toolbar .admin-updated { margin: 0; }
 .admin-toolbar .admin-download-csv { margin: 0; }
-.admin-filters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem 1rem; margin-bottom: 1rem; padding: 1rem; background: var(--color-bg-alt); border-radius: var(--radius); border: 1px solid var(--color-border); }
+.admin-filters-card { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; padding: 1rem; background: var(--color-bg-alt); border-radius: var(--radius); border: 1px solid var(--color-border); }
+.admin-filters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem 1rem; flex: 1; min-width: 0; }
 .admin-filters-grid .admin-filter { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
 .admin-filters-grid .admin-filter input { width: 100%; min-width: 0; padding: 0.35rem 0.5rem; border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-bg); color: var(--color-text); font-size: 0.875rem; }
 .admin-filters-grid .admin-filter select { width: 100%; min-width: 0; }
+.admin-filters-actions { flex-shrink: 0; align-self: center; margin-left: auto; }
+.admin-filters-actions .admin-download-csv { margin: 0; }
 .admin-filter { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
 .admin-filter select { padding: 0.35rem 0.5rem; border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-bg); color: var(--color-text); }
 .admin-download-csv { margin-left: 0.5rem; }
