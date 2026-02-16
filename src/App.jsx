@@ -1290,7 +1290,8 @@ function AdminPage() {
                   <span className="admin-push-sync-hint">Espera 10–15 s y envía la notificación de prueba. También puedes usar la campana OneSignal (esquina inferior derecha) para suscribirte.</span>
                 </span>
               )}
-              <p className="admin-push-sync-hint" style={{ marginTop: '0.25rem' }}>Usamos el SDK oficial de OneSignal (react-onesignal). Si no se registra la suscripción, suscríbete con la campana y luego envía la prueba.</p>
+              <p className="admin-push-sync-hint" style={{ marginTop: '0.25rem' }}>Si la prueba dice «no hay suscriptores»: en OneSignal → Audience, localiza tu suscripción, clic en los 3 puntos → <strong>Add to Test Subscriptions</strong>. Luego envía de nuevo la prueba (se enviará al segmento Test Users).</p>
+              <p className="admin-push-sync-hint" style={{ marginTop: '0.5rem' }}><strong>Alternativa:</strong> para no depender de push, configura en Vercel <code>RESEND_API_KEY</code> y <code>ADMIN_EMAIL</code>; recibirás un email por cada envío de formulario.</p>
               {pushError && <p className="admin-error admin-error--block" role="alert">{pushError}</p>}
               <div className="admin-test-push">
                 <p className="admin-test-push-label">Probar que el servidor envía notificaciones:</p>

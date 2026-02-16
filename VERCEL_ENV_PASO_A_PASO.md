@@ -79,6 +79,19 @@ Para que los formularios se guarden y el panel `/#admin` muestre datos en tiempo
 
 ---
 
+## Alternativa: aviso por email (sin depender de push)
+
+Si las notificaciones push no se registran bien, puedes recibir un **email por cada envío de formulario**:
+
+1. Crea cuenta en [Resend](https://resend.com) y obtén una **API Key** (API Keys).
+2. En Vercel → tu proyecto → **Settings → Environment Variables** añade:
+   - `RESEND_API_KEY` = tu API key de Resend
+   - `ADMIN_EMAIL` = tu correo (donde quieres recibir los avisos)
+   - (Opcional) `NOTIFY_FROM_EMAIL` = `"Trusted Home Services <noreply@tudominio.com>"` si tienes dominio verificado en Resend; si no, se usa el remitente de prueba de Resend.
+3. **Redeploy**. A partir de ahí, cada vez que alguien envíe el formulario de realtor o cotización, recibirás un email con los datos.
+
+---
+
 ## Resumen rápido
 
 | Dónde | Qué hacer |
