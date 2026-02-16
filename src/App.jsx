@@ -1439,11 +1439,11 @@ function AdminPage() {
                     <td className="admin-cell-wrap">{s.work || '–'}</td>
                     <td className="admin-cell-wrap">{s.areas || '–'}</td>
                     <td>{s.size || '–'}</td>
-                    <td>
+                    <td className={`admin-status-cell admin-status-cell--${s.status || 'new'}`}>
                       {s.id ? (
                         <select
                           className="admin-status-select"
-                          value={s.status || 'nuevo'}
+                          value={s.status || 'new'}
                           onChange={(e) => handleStatusChange(s.id, e.target.value)}
                         >
                           {ADMIN_STATUS_OPTIONS.map((o) => (

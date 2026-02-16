@@ -2065,6 +2065,15 @@ a:hover {
 .admin-table td.admin-cell-wrap { white-space: normal; max-width: 200px; }
 .admin-table th { background: var(--color-bg-alt); font-weight: 600; color: var(--color-primary); }
 .admin-table td { color: var(--color-text); }
+.admin-status-cell { border-radius: 4px; }
+.admin-status-cell--new { background: #e8e9eb; color: #374151; }
+.admin-status-cell--contacted { background: #dbeafe; color: #1e40af; }
+.admin-status-cell--offer_sent { background: #fef3c7; color: #b45309; }
+.admin-status-cell--offer_accepted { background: #d1fae5; color: #047857; }
+.admin-status-cell--offer_rejected { background: #fee2e2; color: #b91c1c; }
+.admin-status-cell--work_in_progress { background: #e0e7ff; color: #3730a3; }
+.admin-status-cell--work_done { background: #a7f3d0; color: #065f46; }
+.admin-status-cell .admin-status-select { background: transparent; border-color: rgba(0,0,0,0.15); font-weight: 600; }
 .admin-empty { font-size: 0.9375rem; color: var(--color-text-muted); margin-top: 1rem; }
 @media (max-width: 768px) {
   .admin-table th, .admin-table td { padding: 0.4rem 0.5rem; font-size: 0.8125rem; }
