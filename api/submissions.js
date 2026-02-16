@@ -1,6 +1,6 @@
 /**
  * GET /api/submissions?token=ADMIN_SECRET
- * Returns latest submissions (newest first) for the admin panel.
+ * Returns latest submissions (newest first). Reads from Prisma if DATABASE_URL set, else KV.
  */
 
 const KV_KEY = 'submissions';
@@ -11,6 +11,21 @@ function cors(res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   return res;
+}
+
+function toAdminShape(row) {
+  return {
+    _at: row.createdAt?.toISOString?.() ?? row._at,
+    type: row.type,
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    message: row.message,
+    work: row.work,
+    areas: row.areas,
+    propertyType: row.propertyType,
+    size: row.size,
+  };
 }
 
 export default async function handler(req, res) {
@@ -24,6 +39,23 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
+  const limit = Math.min(parseInt(req.query.limit, 10) || DEFAULT_LIMIT, 500);
+
+  if (process.env.DATABASE_URL) {
+    try {
+      const { prisma } = await import('./lib/prisma.js');
+      const rows = await prisma.submission.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+      });
+      const submissions = rows.map(toAdminShape);
+      return res.status(200).json({ submissions });
+    } catch (e) {
+      console.error('Prisma submissions error:', e.message);
+      return res.status(500).json({ error: 'Storage error' });
+    }
+  }
+
   const kvUrl = process.env.KV_REST_API_URL;
   const kvToken = process.env.KV_REST_API_TOKEN;
   if (!kvUrl || !kvToken) {
@@ -32,7 +64,6 @@ export default async function handler(req, res) {
 
   try {
     const { kv } = await import('@vercel/kv');
-    const limit = Math.min(parseInt(req.query.limit, 10) || DEFAULT_LIMIT, 500);
     const raw = await kv.lrange(KV_KEY, 0, limit - 1);
     const submissions = raw
       .map((s) => {

@@ -15,12 +15,12 @@ Tienes dos formas de añadirlas: **una por una** en la pantalla de “New Projec
 
    | Key | Value (tú lo rellenas) |
    |-----|------------------------|
-   | `ADMIN_SECRET` | Una contraseña larga que solo tú sepas (ej. generada con un gestor de contraseñas). Es la “llave” del panel `/#admin`. |
-   | `ONE_SIGNAL_APP_ID` | En OneSignal → tu app → **Settings → Keys & IDs** → **OneSignal App ID** (tipo `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`). |
-   | `ONE_SIGNAL_API_KEY` | En la misma página → **REST API Key**. |
-   | `VITE_ONESIGNAL_APP_ID` | **El mismo** App ID de OneSignal (copia el mismo valor que `ONE_SIGNAL_APP_ID`). |
+   | `ADMIN_SECRET` | Una contraseña larga que solo tú sepas. Es la “llave” del panel `/#admin`. |
+   | `DATABASE_URL` | (Opcional) Si usas Prisma: URL de Postgres (Vercel Postgres o Supabase). Sin esto, puedes usar KV. |
+   | `RESEND_API_KEY` | (Opcional) Para recibir un email por cada envío. Crea la key en [resend.com](https://resend.com/api-keys). |
+   | `ADMIN_EMAIL` | (Opcional) Tu correo donde recibir los avisos de envíos. |
 
-3. **KV (base de datos)**  
+3. **KV (si no usas DATABASE_URL)**  
    `KV_REST_API_URL` y `KV_REST_API_TOKEN` **no** las pongas todavía en esta pantalla.  
    Las añadirá Vercel solo cuando crees la base KV y la conectes al proyecto (pasos más abajo).
 
@@ -39,13 +39,13 @@ En la carpeta del proyecto (junto a `package.json`) crea un archivo llamado **`.
 
 ```env
 ADMIN_SECRET=tu_contraseña_secreta_larga
-ONE_SIGNAL_APP_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-ONE_SIGNAL_API_KEY=tu_rest_api_key_de_onesignal
-VITE_ONESIGNAL_APP_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+DATABASE_URL=postgresql://...   # si usas Prisma (Vercel Postgres o Supabase)
+RESEND_API_KEY=re_...           # opcional: aviso por email
+ADMIN_EMAIL=tu@email.com        # opcional
 ```
 
 - **No pongas** comillas en los valores.
-- **No incluyas** `KV_REST_API_URL` ni `KV_REST_API_TOKEN` aquí; se añaden al crear KV (más abajo).
+- Si no usas base de datos con Prisma, puedes crear KV en Vercel Storage y conectar el proyecto (se añaden `KV_REST_API_URL` y `KV_REST_API_TOKEN`).
 - Si más adelante tienes Formspree:  
   `VITE_FORMSPREE_REALTOR=id1`  
   `VITE_FORMSPREE_QUOTE=id2`
@@ -79,16 +79,10 @@ Para que los formularios se guarden y el panel `/#admin` muestre datos en tiempo
 
 ---
 
-## Alternativa: aviso por email (sin depender de push)
+## Aviso por email y app instalable
 
-Si las notificaciones push no se registran bien, puedes recibir un **email por cada envío de formulario**:
-
-1. Crea cuenta en [Resend](https://resend.com) y obtén una **API Key** (API Keys).
-2. En Vercel → tu proyecto → **Settings → Environment Variables** añade:
-   - `RESEND_API_KEY` = tu API key de Resend
-   - `ADMIN_EMAIL` = tu correo (donde quieres recibir los avisos)
-   - (Opcional) `NOTIFY_FROM_EMAIL` = `"Trusted Home Services <noreply@tudominio.com>"` si tienes dominio verificado en Resend; si no, se usa el remitente de prueba de Resend.
-3. **Redeploy**. A partir de ahí, cada vez que alguien envíe el formulario de realtor o cotización, recibirás un email con los datos.
+- **Email:** Añade `RESEND_API_KEY` y `ADMIN_EMAIL` en Vercel para recibir un correo por cada envío de formulario.
+- **App web instalable (PWA):** En el móvil, abre tu sitio, entra en `/#admin` si quieres, y en el menú del navegador elige **«Añadir a la pantalla de inicio»** o **«Instalar»**. La web se abre como app.
 
 ---
 

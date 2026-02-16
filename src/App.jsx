@@ -599,8 +599,7 @@ function RealtorFormModal({ open, onClose }) {
         ) : (
           <div className="realtor-modal-success">
             <p>{t('realtors.form.success')}</p>
-            <a href={`#${getSectionHash(lang, 'quote')}`} className="btn btn-primary" onClick={handleClose}>{t('nav.quote')}</a>
-            <button type="button" className="btn btn-secondary" onClick={handleClose}>{t('realtors.form.close')}</button>
+            <button type="button" className="btn btn-primary" onClick={handleClose}>{t('realtors.form.close')}</button>
           </div>
         )}
       </motion.div>
@@ -1158,11 +1157,6 @@ function AdminPage() {
   const [token, setToken] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem(ADMIN_TOKEN_KEY) || '' : '');
   const [submissions, setSubmissions] = useState([]);
   const [error, setError] = useState(null);
-  const [pushEnabled, setPushEnabled] = useState(false);
-  const [pushLoading, setPushLoading] = useState(false);
-  const [pushError, setPushError] = useState(null);
-  const [testPushLoading, setTestPushLoading] = useState(false);
-  const [testPushResult, setTestPushResult] = useState(null);
 
   const saveToken = (t) => {
     setToken(t);
@@ -1191,61 +1185,6 @@ function AdminPage() {
     const interval = setInterval(fetchList, 5000);
     return () => clearInterval(interval);
   }, [token]);
-
-  const appId = (import.meta.env.VITE_ONESIGNAL_APP_ID || '').trim();
-  useEffect(() => {
-    if (!appId || typeof window === 'undefined') return;
-    let cancelled = false;
-    import('react-onesignal').then(({ default: OneSignal }) => {
-      if (cancelled) return;
-      OneSignal.init({
-        appId,
-        notifyButton: { enable: true, size: 'small', position: 'bottom-right', showCredit: false, prenotify: false },
-      }).catch(() => {});
-    });
-    return () => { cancelled = true; };
-  }, [appId]);
-
-  const enablePush = async () => {
-    setPushError(null);
-    setPushLoading(true);
-    if (!appId) {
-      setPushError('VITE_ONESIGNAL_APP_ID no está configurado. Añádelo en Vercel y haz Redeploy.');
-      setPushLoading(false);
-      return;
-    }
-    try {
-      const { default: OneSignal } = await import('react-onesignal');
-      await OneSignal.User.PushSubscription.optIn();
-      setPushEnabled(true);
-    } catch (e) {
-      const msg = e?.message || '';
-      if (msg.includes('not configured for web push')) {
-        setPushError('OneSignal: en el panel configura Web (Site URL: ' + window.location.origin + ') y guarda.');
-      } else if (msg.includes('Service Worker') || msg.includes('service worker')) {
-        setPushError('Service Worker falló. Abre ' + window.location.origin + '/OneSignalSDKWorker.js en otra pestaña.');
-      } else {
-        setPushError(msg || 'Error. Recarga (F5) e inténtalo de nuevo.');
-      }
-    } finally {
-      setPushLoading(false);
-    }
-  };
-
-  const sendTestPush = async () => {
-    if (!token.trim()) return;
-    setTestPushResult(null);
-    setTestPushLoading(true);
-    try {
-      const res = await fetch(`/api/test-push?token=${encodeURIComponent(token)}`);
-      const data = await res.json();
-      setTestPushResult(data.ok ? { ok: true, message: data.message } : { ok: false, error: data.error });
-    } catch (e) {
-      setTestPushResult({ ok: false, error: e.message || 'Network error' });
-    } finally {
-      setTestPushLoading(false);
-    }
-  };
 
   const goHome = (e) => {
     e.preventDefault();
@@ -1278,43 +1217,7 @@ function AdminPage() {
               />
             </label>
           </div>
-          {import.meta.env.VITE_ONESIGNAL_APP_ID ? (
-            <div className="admin-push-wrap">
-              <button type="button" className="btn btn-primary" onClick={enablePush} disabled={pushLoading}>
-                {pushLoading ? 'Cargando…' : 'Enable push notifications'}
-              </button>
-              {pushLoading && <span className="admin-push-loading"> → Espera la ventana del navegador para permitir notificaciones.</span>}
-              {pushEnabled && (
-                <span className="admin-push-ok-block">
-                  <span className="admin-push-ok">✓ Notifications enabled</span>
-                  <span className="admin-push-sync-hint">Espera 10–15 s y envía la notificación de prueba. También puedes usar la campana OneSignal (esquina inferior derecha) para suscribirte.</span>
-                </span>
-              )}
-              <p className="admin-push-sync-hint" style={{ marginTop: '0.25rem' }}>Si la prueba dice «no hay suscriptores»: en OneSignal → Audience, localiza tu suscripción, clic en los 3 puntos → <strong>Add to Test Subscriptions</strong>. Luego envía de nuevo la prueba (se enviará al segmento Test Users).</p>
-              <p className="admin-push-sync-hint" style={{ marginTop: '0.5rem' }}><strong>Alternativa:</strong> para no depender de push, configura en Vercel <code>RESEND_API_KEY</code> y <code>ADMIN_EMAIL</code>; recibirás un email por cada envío de formulario.</p>
-              {pushError && <p className="admin-error admin-error--block" role="alert">{pushError}</p>}
-              <div className="admin-test-push">
-                <p className="admin-test-push-label">Probar que el servidor envía notificaciones:</p>
-                <button type="button" className="btn btn-primary admin-test-push-btn" onClick={sendTestPush} disabled={testPushLoading || !token.trim()}>
-                  {testPushLoading ? 'Enviando…' : 'Enviar notificación de prueba'}
-                </button>
-                {testPushResult && (
-                  <div role="status">
-                    <p className={testPushResult.ok ? 'admin-push-ok' : 'admin-error'}>
-                      {testPushResult.ok ? testPushResult.message : testPushResult.error}
-                    </p>
-                    {!testPushResult.ok && (
-                      <p className="admin-test-push-hint">
-                        Si acabas de activar notificaciones, espera 10–15 segundos y vuelve a enviar. En Vercel, <strong>ONE_SIGNAL_APP_ID</strong> y <strong>VITE_ONESIGNAL_APP_ID</strong> deben ser exactamente el mismo valor (OneSignal → Settings → Keys &amp; IDs). En OneSignal → <strong>Audience</strong>: comprueba que aparezca al menos 1 suscriptor web en esta URL.
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <p className="admin-error">Push no configurado: añade VITE_ONESIGNAL_APP_ID en Vercel y haz Redeploy.</p>
-          )}
+          <p className="admin-push-sync-hint" style={{ marginBottom: '1rem' }}>Avisos por email: configura en Vercel <code>RESEND_API_KEY</code> y <code>ADMIN_EMAIL</code> para recibir un correo por cada envío de formulario. Esta página es instalable como app web (menú del navegador → «Instalar» o «Añadir a pantalla de inicio»).</p>
           {error && <p className="admin-error" role="alert">{error}</p>}
           <div className="admin-table-wrap">
             <p className="admin-updated">Updates every 5 seconds. Total: {submissions.length}</p>

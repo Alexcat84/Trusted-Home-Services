@@ -1,8 +1,8 @@
 /**
  * POST /api/submit
  * Body: { type: 'realtor'|'quote', ...fields }
- * - Stores in Vercel KV (if KV_* env set)
- * - Sends OneSignal push (if ONE_SIGNAL_* env set)
+ * - Stores in Prisma DB (if DATABASE_URL set) or Vercel KV (if KV_* set)
+ * - Sends email alert (if RESEND_API_KEY + ADMIN_EMAIL set)
  */
 
 const KV_KEY = 'submissions';
@@ -13,45 +13,6 @@ function cors(res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   return res;
-}
-
-async function sendOneSignalPush(type, payload) {
-  const appId = process.env.ONE_SIGNAL_APP_ID;
-  const apiKey = process.env.ONE_SIGNAL_API_KEY;
-  if (!appId || !apiKey) {
-    console.error('OneSignal: missing ONE_SIGNAL_APP_ID or ONE_SIGNAL_API_KEY');
-    return;
-  }
-
-  const isRealtor = type === 'realtor';
-  const title = isRealtor ? 'Nuevo contacto (agente)' : 'Nueva solicitud de cotización';
-  const name = payload.name || 'Sin nombre';
-  const body = isRealtor
-    ? `${name} – ${payload.email || payload.phone || ''}`
-    : `${name} – ${payload.work || 'cotización'}`;
-
-  try {
-    const notifRes = await fetch('https://api.onesignal.com/notifications', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Key ${apiKey}`,
-      },
-      body: JSON.stringify({
-        app_id: appId,
-        included_segments: ['Subscribed Users', 'Test Users'],
-        target_channel: 'push',
-        headings: { en: title },
-        contents: { en: body },
-      }),
-    });
-    if (!notifRes.ok) {
-      const errText = await notifRes.text();
-      console.error('OneSignal API error:', notifRes.status, errText);
-    }
-  } catch (e) {
-    console.error('OneSignal error:', e.message);
-  }
 }
 
 async function sendAdminEmail(type, payload) {
@@ -109,20 +70,41 @@ export default async function handler(req, res) {
     _at: new Date().toISOString(),
   };
 
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-  if (kvUrl && kvToken) {
+  if (process.env.DATABASE_URL) {
     try {
-      const { kv } = await import('@vercel/kv');
-      await kv.lpush(KV_KEY, JSON.stringify(record));
-      await kv.ltrim(KV_KEY, 0, MAX_SUBMISSIONS - 1);
+      const { prisma } = await import('./lib/prisma.js');
+      await prisma.submission.create({
+        data: {
+          type,
+          name: body.name ?? '',
+          email: body.email ?? null,
+          phone: body.phone ?? null,
+          message: body.message ?? null,
+          work: body.work ?? null,
+          areas: body.areas ?? null,
+          propertyType: body.propertyType ?? null,
+          size: body.size ?? null,
+        },
+      });
     } catch (e) {
-      console.error('KV error:', e.message);
+      console.error('Prisma error:', e.message);
       return res.status(500).json({ error: 'Storage error' });
+    }
+  } else {
+    const kvUrl = process.env.KV_REST_API_URL;
+    const kvToken = process.env.KV_REST_API_TOKEN;
+    if (kvUrl && kvToken) {
+      try {
+        const { kv } = await import('@vercel/kv');
+        await kv.lpush(KV_KEY, JSON.stringify(record));
+        await kv.ltrim(KV_KEY, 0, MAX_SUBMISSIONS - 1);
+      } catch (e) {
+        console.error('KV error:', e.message);
+        return res.status(500).json({ error: 'Storage error' });
+      }
     }
   }
 
-  await sendOneSignalPush(type, body);
   await sendAdminEmail(type, body);
 
   return res.status(200).json({ ok: true });
