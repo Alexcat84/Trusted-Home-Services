@@ -1865,6 +1865,14 @@ a:hover {
   border-color: var(--color-accent);
   color: #fff;
 }
+.privacy-header-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.admin-logout-btn { color: #fff; border-color: rgba(255,255,255,0.5); background: transparent; }
+.admin-logout-btn:hover { background: rgba(255,255,255,0.15); border-color: #fff; color: #fff; }
+.admin-login-wrap { max-width: 360px; margin-bottom: 2rem; }
+.admin-login-form { display: flex; flex-direction: column; gap: 1rem; }
+.admin-login-form label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.9375rem; }
+.admin-login-form .admin-token-input { max-width: 100%; min-height: 44px; }
+.admin-login-form .btn { align-self: flex-start; min-height: 44px; }
 .privacy-main {
   flex: 1;
   padding-bottom: 2rem;

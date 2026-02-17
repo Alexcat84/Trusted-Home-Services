@@ -15,10 +15,17 @@ function cors(res) {
   return res;
 }
 
-function auth(req) {
+async function auth(req) {
   const token = req.query.token || req.headers.authorization?.replace(/^Bearer\s+/i, '');
   const secret = process.env.ADMIN_SECRET;
-  return secret && token === secret;
+  if (!secret || !token) return false;
+  if (token === secret) return true;
+  if (token.includes('.') && token.split('.').length === 3) {
+    const { verifyJWT } = await import('./lib/auth.js');
+    const payload = verifyJWT(token, secret);
+    return payload && payload.admin === true;
+  }
+  return false;
 }
 
 const LEGACY_STATUS_MAP = { nuevo: 'new', tomado: 'contacted', en_proceso: 'work_in_progress', finalizado: 'work_done' };
@@ -45,7 +52,7 @@ function toAdminShape(row) {
 export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (!auth(req)) return res.status(401).json({ error: 'Unauthorized' });
+  if (!(await auth(req))) return res.status(401).json({ error: 'Unauthorized' });
 
   if (req.method === 'GET') {
     const limit = Math.min(parseInt(req.query.limit, 10) || DEFAULT_LIMIT, 500);

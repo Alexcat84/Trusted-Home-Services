@@ -1193,10 +1193,13 @@ const ADMIN_STATUS_OPTIONS = [
 function AdminPage() {
   const { lang } = useLang();
   const homeHash = getSectionHash(lang, 'home');
-  const [token, setToken] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem(ADMIN_TOKEN_KEY) || '' : '');
-  const [showTokenInput, setShowTokenInput] = useState(() => !(typeof window !== 'undefined' && sessionStorage.getItem(ADMIN_TOKEN_KEY)));
+  const [token, setToken] = useState(() => typeof window !== 'undefined' ? localStorage.getItem(ADMIN_TOKEN_KEY) || '' : '');
   const [submissions, setSubmissions] = useState([]);
   const [error, setError] = useState(null);
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState(null);
+  const [loginLoading, setLoginLoading] = useState(false);
   const [filterType, setFilterType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterDateFrom, setFilterDateFrom] = useState('');
@@ -1212,7 +1215,47 @@ function AdminPage() {
 
   const saveToken = (t) => {
     setToken(t);
-    if (typeof window !== 'undefined') sessionStorage.setItem(ADMIN_TOKEN_KEY, t);
+    if (typeof window !== 'undefined') {
+      if (t) localStorage.setItem(ADMIN_TOKEN_KEY, t);
+      else localStorage.removeItem(ADMIN_TOKEN_KEY);
+    }
+  };
+
+  const handleLogout = () => {
+    saveToken('');
+    setError(null);
+    setSubmissions([]);
+    setLoginError(null);
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginError(null);
+    if (!loginUsername.trim() || !loginPassword) {
+      setLoginError('Username and password required');
+      return;
+    }
+    setLoginLoading(true);
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: loginUsername.trim(), password: loginPassword }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.token) {
+        saveToken(data.token);
+        setLoginUsername('');
+        setLoginPassword('');
+        setError(null);
+      } else {
+        setLoginError(data.error || 'Invalid username or password');
+      }
+    } catch (e) {
+      setLoginError('Network error');
+    } finally {
+      setLoginLoading(false);
+    }
   };
 
   const fetchList = useCallback(async () => {
@@ -1220,14 +1263,13 @@ function AdminPage() {
     try {
       const res = await fetch(`/api/submissions?token=${encodeURIComponent(token)}`);
       if (res.status === 401) {
-        setError('Invalid token');
+        setError('Session expired. Please log in again.');
         setSubmissions([]);
         return;
       }
       setError(null);
       const data = await res.json();
       setSubmissions(data.submissions || []);
-      setShowTokenInput(false);
     } catch (e) {
       setError('Network error');
       setSubmissions([]);
@@ -1235,10 +1277,11 @@ function AdminPage() {
   }, [token]);
 
   useEffect(() => {
+    if (!token.trim()) return;
     fetchList();
     const interval = setInterval(fetchList, 5000);
     return () => clearInterval(interval);
-  }, [fetchList]);
+  }, [token, fetchList]);
 
   const filteredSubmissions = submissions.filter((s) => {
     if (filterType !== 'all' && s.type !== filterType) return false;
@@ -1329,33 +1372,54 @@ function AdminPage() {
           <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Home">
             <img src="/images/logo v1.0.jpg" alt="" className="privacy-logo" />
           </a>
-          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">Back to Home</a>
+          <div className="privacy-header-actions">
+            {token ? (
+              <button type="button" className="btn btn-secondary admin-logout-btn" onClick={handleLogout}>Log out</button>
+            ) : null}
+            <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">Back to Home</a>
+          </div>
         </div>
       </header>
       <main className="privacy-main">
         <div className="container privacy-content" style={{ paddingTop: '2rem' }}>
           <h1 className="privacy-hero-title" style={{ marginBottom: '1rem' }}>Admin – Leads &amp; Quotes</h1>
+
+          {!token ? (
+            <div className="admin-login-wrap">
+              <p className="admin-install-hint">To add to home screen: open Chrome menu (⋮) and choose <strong>Add to Home screen</strong> (you may need to scroll down in the menu).</p>
+              <form className="admin-login-form" onSubmit={handleLogin}>
+                <label>
+                  <span>Username</span>
+                  <input
+                    type="text"
+                    value={loginUsername}
+                    onChange={(e) => setLoginUsername(e.target.value)}
+                    placeholder="Admin username"
+                    className="admin-token-input"
+                    autoComplete="username"
+                    autoFocus
+                  />
+                </label>
+                <label>
+                  <span>Password</span>
+                  <input
+                    type="password"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    placeholder="Password"
+                    className="admin-token-input"
+                    autoComplete="current-password"
+                  />
+                </label>
+                {loginError && <p className="admin-error" role="alert">{loginError}</p>}
+                <button type="submit" className="btn btn-primary" disabled={loginLoading}>
+                  {loginLoading ? 'Logging in…' : 'Log in'}
+                </button>
+              </form>
+            </div>
+          ) : (
+            <>
           <p className="admin-install-hint">To add to home screen: open Chrome menu (⋮) and choose <strong>Add to Home screen</strong> (you may need to scroll down in the menu).</p>
-          <div className="admin-token-wrap">
-            {showTokenInput ? (
-              <label>
-                <span>Access token (ADMIN_SECRET):</span>
-                <input
-                  type="password"
-                  value={token}
-                  onChange={(e) => saveToken(e.target.value)}
-                  placeholder="Enter token"
-                  className="admin-token-input"
-                  autoComplete="off"
-                />
-              </label>
-            ) : (
-              <p className="admin-token-saved">
-                Token saved.
-                <button type="button" className="admin-token-change" onClick={() => setShowTokenInput(true)}>Change token</button>
-              </p>
-            )}
-          </div>
           {error && <p className="admin-error" role="alert">{error}</p>}
           <div className="admin-table-wrap">
             <div className="admin-filters-card">
@@ -1493,6 +1557,8 @@ function AdminPage() {
             </table>
             {filteredSubmissions.length === 0 && !error && token && <p className="admin-empty">No records match the current filters.</p>}
           </div>
+            </>
+          )}
         </div>
       </main>
     </div>
