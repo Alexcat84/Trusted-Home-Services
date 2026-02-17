@@ -1335,6 +1335,7 @@ function AdminPage() {
       <main className="privacy-main">
         <div className="container privacy-content" style={{ paddingTop: '2rem' }}>
           <h1 className="privacy-hero-title" style={{ marginBottom: '1rem' }}>Admin – Leads &amp; Quotes</h1>
+          <p className="admin-install-hint">To add to home screen: open Chrome menu (⋮) and choose <strong>Add to Home screen</strong> (you may need to scroll down in the menu).</p>
           <div className="admin-token-wrap">
             {showTokenInput ? (
               <label>
