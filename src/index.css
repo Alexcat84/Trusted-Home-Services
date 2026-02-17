@@ -1742,13 +1742,14 @@ a:hover {
 .footer-logo {
   height: 76px;
   width: auto;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .footer-social {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
 }
 .footer-social-link {
   display: flex;
