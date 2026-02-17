@@ -448,9 +448,10 @@ a:hover {
   z-index: 2;
   padding: 4.5rem 0;
 }
-/* About Us: menos espacio arriba para que el título quede cerca del header al hacer scroll */
+/* About Us: más espacio arriba y abajo para centrado vertical y título completo visible */
 .section-mvv {
-  padding-top: 0.5rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 .section:nth-child(even) {
   background: var(--color-bg-alt);
