@@ -1735,6 +1735,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: max-content;
 }
 
 @media (max-width: 768px) {
@@ -1759,7 +1760,7 @@ a:hover {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  align-self: stretch;
+  width: 100%;
   margin-top: 1.25rem;
 }
 .footer-social-link {
