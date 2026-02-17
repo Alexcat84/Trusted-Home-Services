@@ -1372,12 +1372,11 @@ function AdminPage() {
           <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Home">
             <img src="/images/logo v1.0.jpg" alt="" className="privacy-logo" />
           </a>
-          <div className="privacy-header-actions">
-            {token ? (
+          {token ? (
+            <div className="privacy-header-actions">
               <button type="button" className="btn btn-secondary admin-logout-btn" onClick={handleLogout}>Log out</button>
-            ) : null}
-            <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">Back to Home</a>
-          </div>
+            </div>
+          ) : null}
         </div>
       </header>
       <main className="privacy-main">
