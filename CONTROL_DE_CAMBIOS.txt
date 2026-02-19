@@ -28,8 +28,8 @@ Objetivo: Saber exactamente en qué commit/push quedó cada versión para poder
 --------------------------------------------------------------------------------
 
 --- VERSIÓN 2 (For Realtors + Our Projects + Partners) ---
-  Fecha: (rellenar al hacer push)
-  Commit: (rellenar después del push)
+  Fecha: 2026-02-19
+  Commit: 07d205648d041c2a08f39c353b5d4392b30472b6
 
   Resumen de lo que incluye esta versión:
   - Página "For Realtors": hero con CTA "Become a Realtor Partner"; bloques alternos
@@ -44,8 +44,8 @@ Objetivo: Saber exactamente en qué commit/push quedó cada versión para poder
     "See the value we've added to listings and closings"); Our Projects (subtitle valor venta/permanecer).
   - Páginas Partners/Franquicias y formularios según propuesta (ver PROPUESTA_V2.txt / PROPUESTA_V3.txt si aplica).
 
-  Cómo volver a esta versión si hace falta (después de rellenar commit):
-  git checkout <commit_de_versión_2>
+  Cómo volver a esta versión si hace falta:
+  git checkout 07d205648d041c2a08f39c353b5d4392b30472b6
 
 --------------------------------------------------------------------------------
 
