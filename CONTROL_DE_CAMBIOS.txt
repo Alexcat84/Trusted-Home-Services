@@ -1,54 +1,53 @@
 ================================================================================
-TRUSTED HOME SERVICES — CONTROL DE CAMBIOS (VERSIONES)
+TRUSTED HOME SERVICES — CHANGE CONTROL (VERSIONS)
 ================================================================================
-Objetivo: Saber exactamente en qué commit/push quedó cada versión para poder
-          volver atrás si el cliente no aprueba. Alimentar este archivo en cada
-          versión nueva que se presente.
+Purpose: Track exactly which commit corresponds to each version so we can
+         roll back if needed. Update this file with every new version release.
 ================================================================================
 
---- VERSIÓN 1 (ESTADO ACTUAL — LÍNEA BASE) ---
-  Fecha: 2026-02-17
+--- VERSION 1 (BASELINE) ---
+  Date: 2026-02-17
   Commit: 589ad4885712c0ee3285c35beff2137eea47c333
-  Mensaje: Add padding to About Us section for vertical centering
+  Message: Add padding to About Us section for vertical centering
 
-  Resumen de lo que incluye esta versión:
-  - Sitio principal: Home, About Us, Our Services, How We Work, Free Quote
-  - Header/footer con logo 76px, menú más pequeño, selector de idiomas compacto
-  - Logo igual en Privacy Policy, Terms, FAQ y panel Admin
-  - Footer: iconos de redes en banda verde, distribuidos al ancho del logo
-  - About Us: tarjeta Our Values más compacta; padding 3rem arriba/abajo
-  - Admin: login usuario/contraseña (ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_SECRET)
-  - GA4: G-C4H7QVDMLH; Search Console verificado
-  - Formularios Realtor y Free Quote; envíos a Postgres/Prisma (o KV)
-  - PWA; sin OneSignal
+  Summary of what this version includes:
+  - Main site: Home, About Us, Our Services, How We Work, Free Quote
+  - Header/footer with 76px logo, smaller menu, compact language selector
+  - Same logo on Privacy Policy, Terms, FAQ and Admin panel
+  - Footer: social icons on green band, spread to logo width
+  - About Us: more compact Our Values card; 3rem padding top/bottom
+  - Admin: user/password login (ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_SECRET)
+  - GA4: G-C4H7QVDMLH; Search Console verified
+  - Realtor and Free Quote forms; submissions to Postgres/Prisma (or KV)
+  - PWA; no OneSignal
 
-  Cómo volver a esta versión si hace falta:
+  To roll back to this version if needed:
   git checkout 589ad4885712c0ee3285c35beff2137eea47c333
 
 --------------------------------------------------------------------------------
 
---- VERSIÓN 2 (For Realtors + Our Projects + Partners) ---
-  Fecha: 2026-02-19
+--- VERSION 2 (For Realtors + Our Projects + Partners) ---
+  Date: 2026-02-19
   Commit: 07d205648d041c2a08f39c353b5d4392b30472b6
 
-  Resumen de lo que incluye esta versión:
-  - Página "For Realtors": hero con CTA "Become a Realtor Partner"; bloques alternos
-    (What we offer / How it works / Why work with us) con imágenes; sección "Our work"
-    con mismo estilo de header (barra naranja, alineado) y enlace "View our projects";
-    FAQ; CTA final. Header fijo con logo y Back to Home.
-  - Página "Our Projects": ruta #our-projects (EN), #nos-projets (FR), #nuestros-proyectos (ES).
-    Título y subtítulo sobre valor añadido a propiedades (para venta o para quedarse).
-    Rejilla de proyectos (placeholders). En menú principal y footer.
-  - Menú y footer: Our Projects (después de How We Work), For Realtors, Become a Partner, Free Quote.
-  - Traducciones EN/FR/ES: textos Realtors (projectsLinkTitle "Our work", projectsLinkIntro
-    "See the value we've added to listings and closings"); Our Projects (subtitle valor venta/permanecer).
-  - Páginas Partners/Franquicias y formularios según propuesta (ver PROPUESTA_V2.txt / PROPUESTA_V3.txt si aplica).
+  Summary of what this version includes:
+  - "For Realtors" page: hero with "Become a Realtor Partner" CTA; alternating
+    blocks (What we offer / How it works / Why work with us) with images;
+    "Our work" section with same header style (orange bar, left-aligned) and
+    "View our projects" link; FAQ; final CTA. Fixed header with logo and Back to Home.
+  - "Our Projects" page: routes #our-projects (EN), #nos-projets (FR), #nuestros-proyectos (ES).
+    Title and subtitle about value added to properties (for sale or to stay).
+    Project grid (placeholders). In main menu and footer.
+  - Menu and footer: Our Projects (after How We Work), For Realtors, Become a Partner, Free Quote.
+  - EN/FR/ES translations: Realtors copy (projectsLinkTitle "Our work", projectsLinkIntro
+    "See the value we've added to listings and closings"); Our Projects (subtitle sale/stay value).
+  - Partners/Franchise pages and forms per proposal (see PROPUESTA_V2.txt / PROPUESTA_V3.txt if applicable).
 
-  Cómo volver a esta versión si hace falta:
+  To roll back to this version if needed:
   git checkout 07d205648d041c2a08f39c353b5d4392b30472b6
 
 --------------------------------------------------------------------------------
 
-(Añadir más versiones debajo siguiendo el mismo formato)
+(Add further versions below using the same format)
 
 ================================================================================
