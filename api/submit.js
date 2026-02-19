@@ -21,15 +21,15 @@ async function sendAdminEmail(type, payload) {
   const from = process.env.NOTIFY_FROM_EMAIL || 'Trusted Home Services <onboarding@resend.dev>';
   if (!apiKey || !to) return;
 
-  const isRealtor = type === 'realtor';
-  const subject = isRealtor ? 'Nuevo contacto (agente) – Trusted Home Services' : 'Nueva cotización – Trusted Home Services';
+  const typeLabel = type === 'realtor' ? 'Realtor / Agente' : type === 'franchise' ? 'Franquicia' : type === 'partner' ? 'Partner' : 'Cotización';
+  const subject = type === 'realtor' ? 'Nuevo contacto (agente) – Trusted Home Services' : type === 'franchise' ? 'Nueva solicitud franquicia – Trusted Home Services' : type === 'partner' ? 'Nueva solicitud partner – Trusted Home Services' : 'Nueva cotización – Trusted Home Services';
   const name = payload.name || 'Sin nombre';
   const lines = [
-    `Tipo: ${isRealtor ? 'Realtor / Agente' : 'Cotización'}`,
+    `Tipo: ${typeLabel}`,
     `Nombre: ${name}`,
     `Email: ${payload.email || '–'}`,
     `Teléfono: ${payload.phone || '–'}`,
-    isRealtor ? `Mensaje: ${payload.message || '–'}` : `Trabajo: ${payload.work || '–'}\nÁreas: ${payload.areas || '–'}\nTipo propiedad: ${payload.propertyType || '–'}\nTamaño: ${payload.size || '–'}`,
+    (type === 'realtor' || type === 'franchise' || type === 'partner') ? `Mensaje: ${payload.message || '–'}` : `Trabajo: ${payload.work || '–'}\nÁreas: ${payload.areas || '–'}\nTipo propiedad: ${payload.propertyType || '–'}\nTamaño: ${payload.size || '–'}`,
   ];
   const text = lines.join('\n');
   const html = '<p>' + lines.map((l) => l.replace(/&/g, '&amp;').replace(/</g, '&lt;')).join('</p><p>') + '</p>';
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid JSON' });
   }
 
-  const type = body.type === 'realtor' || body.type === 'quote' ? body.type : null;
+  const type = (body.type === 'realtor' || body.type === 'quote' || body.type === 'franchise' || body.type === 'partner') ? body.type : null;
   if (!type) return res.status(400).json({ error: 'Missing or invalid type' });
 
   const record = {

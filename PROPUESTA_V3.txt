@@ -1,0 +1,124 @@
+================================================================================
+TRUSTED HOME SERVICES — PROPUESTA V3
+================================================================================
+Objetivo: Primera impresión impactante, vender valor (no “mucha letra”), orientación
+          a realtors y dueños. Inspiración: prepnsell.com, curbio.com y rubro.
+================================================================================
+
+--- 1. INVESTIGACIÓN (PÁGINAS SIMILARES) ---
+
+PREP'N SELL (prepnsell.com)
+  · Hero: “We Help You Sell Homes FASTER and for MORE MONEY” + una línea.
+  · Servicios en la home (iconos + una línea cada uno):
+    Decluttering & Junk Removal, Cleaning & Deodorizing, Handyman Repairs,
+    Carpet & Flooring, Interior/Exterior Painting, Curb Appeal,
+    Staging & Organizing, Licensed Trades (electrical, plumbing, HVAC).
+  · Proceso: 4 pasos numerados (Schedule → Estimate 24h → Start in 3 days → We handle it all).
+  · Bloque corto “Why Trust Prep'n Sell” (confianza, 5-star review).
+  · Poco texto largo; mucho CTA y cuadros visuales.
+
+CURBIO (curbio.com) — orientado 100% a agentes
+  · Hero: “Get Every Listing Ready for Market” + una frase (concierge for agents).
+  · Servicios en 4 bloques cortos: Repairs, Refreshes, Renovations, Exterior Updates.
+  · “Why Do Thousands of Agents Count on Curbio?”: 3 puntos con iconos (We manage everything / Service when you need it / Partner that elevates your reputation).
+  · Testimonios de agentes.
+  · Proceso en 4 pasos invertidos (List with confidence → Curbio does the work → Finalize plan → Tell us what’s needed).
+  · Casi nada de párrafos largos; CTAs claros: “Get Started”, “Free Quote”.
+
+CONCLUSIÓN
+  · Venden con headlines cortos, números/proceso, confianza y CTA.
+  · El realtor no “lee” — ve prueba (portfolio, cifras, testimonios) y actúa (formulario).
+
+--- 2. HOME (PRIMERA IMPRESIÓN) ---
+
+2.1 HERO — CAMBIO DE TEXTO
+  · Actual: “One team, your home ready” + subtítulo largo (500 propiedades, garantía, no depósito).
+  · Problema: Poco impactante; no comunica “somos quien resuelve el problema”.
+  · Propuesta (elegir una línea o mezclar):
+    - Título: “Get Every Listing Ready for Market” (estilo Curbio) o
+              “We Help You Sell Faster. One Call. Every Trade.” o
+              “Your Listing, Market-Ready. We Handle the Rest.”
+    - Subtítulo: UNA línea. Ejemplos:
+      “One team for painting, repairs, cleaning and curb appeal. Ottawa. No deposit—you pay when it’s done.”
+      “Smart fixes, clean execution, smoother sale. For homeowners and real estate professionals.”
+  · Mantener: 2 botones (Free Quote + Call).
+
+2.2 ESTADÍSTICAS + SELLO EN HOME (NO EN REALTORS)
+  · Mover las 4 cards (500+ properties, Fast response, Ottawa & region, 15+ years) a la HOME.
+  · Ubicación: justo debajo del hero (primera pantalla o al hacer scroll mínimo).
+  · Integrar el “Quality Guarantee” (sello actual de About) junto a esas 4 cards o justo después.
+  · Objetivo: Primera vista = “empresa sólida, cifras, garantía”. Sin leer párrafos.
+
+2.3 ESTRUCTURA HOME PROPUESTA
+  1. Hero (título + subtítulo corto + 2 CTAs).
+  2. Bloque de 4 stats + sello Quality (misma fila o debajo).
+  3. Our Services (continuo; ver punto 3).
+  4. ¿How We Work? — OPCIONAL: eliminar como sección propia o comprimir en 1 línea + enlace “See how it works” que expanda o lleve a Quote. Si se deja, que sea muy breve (3 íconos + una frase cada uno).
+  5. Free Quote: mantener como sección, pero el CTA “Free Quote” puede repetirse también como card/icono junto a las stats (ej. “Free quote” como 5.º ítem o botón destacado) para que sea obvio.
+
+2.4 ABOUT US
+  · Reducir o mantener solo título + 1 párrafo corto (o integrar “quiénes somos” en el bloque de stats/seño).
+  · Si se mantiene Mission/Vision/Values, acortar textos; el sello “Quality guaranteed” ya está junto a las stats.
+
+--- 3. OUR SERVICES — ORDEN Y LISTADO ---
+
+3.1 SERVICIOS PREP'N SELL (referencia)
+  Decluttering & Junk Removal | Cleaning & Deodorizing | Handyman Repairs |
+  Carpet & Flooring | Interior/Exterior Painting | Curb Appeal |
+  Staging & Organizing | Licensed Trades (electrical, plumbing, HVAC).
+
+3.2 NUESTROS ACTUALES
+  Painting & coatings | Cleaning | Repairs & preparation | Curb appeal & maintenance.
+
+3.3 PROPUESTA DE ORDEN (prioridad venta / impacto para listados)
+  1. Painting & coatings (interior, exterior, cabinets, epoxy).
+  2. Repairs & preparation (drywall, caulking, carpentry, fixtures).
+  3. Curb appeal & maintenance (lawn, power washing, touch-ups).
+  4. Cleaning (pre-listing, deep clean, post-sale) — EN ÚLTIMO LUGAR como pediste.
+
+3.4 SERVICIOS OPCIONALES A AÑADIR (según capacidad)
+  · Decluttering / Junk removal (si lo ofrecen).
+  · Staging & organizing (aunque sea “coordinamos con estilista”).
+  · Flooring (solo si aplica).
+  No es obligatorio igualar a Prep'n Sell; mantener solo lo que realmente ofrecen.
+
+--- 4. FOR REALTORS — REHACER CON IMPACTO ---
+
+4.1 PROBLEMA ACTUAL
+  Demasiado texto (dolores, pre-listing, inspección, cierre, diferenciador, programa, valor).
+  Un realtor no va a leer todo; necesita ver prueba y tener 1 CTA claro.
+
+4.2 ESTRUCTURA PROPUESTA (estilo Curbio + Prep'n Sell)
+  · Hero: 1 headline + 1 línea. Ej: “List Faster, Sell Higher, Close Without Headaches.” / “One call. Every trade. Deal saved.”
+  · Bloque de 4 stats (500+, Fast response, Ottawa, 15+ years): QUITAR de aquí; ya están en Home.
+  · “What we do” / “We get your listings ready”: 3–4 íconos o cards con UNA línea cada uno:
+    - Pre-listing (paint, drywall, curb appeal).
+    - Inspection conditions (electrical, plumbing, repairs).
+    - Closing (quick fixes, cleaning, walkthrough).
+  · “Why work with us”: 3 bullets cortos (timelines, one contact, your reputation).
+  · “Our projects”: grid de fotos (proof) — ya lo tienen; mantener y destacar.
+  · 1 CTA principal: “Become a Realtor Partner” o “Get in touch” → abre formulario.
+  · Sin listas largas de dolores ni párrafos de programa/valor; eso puede ir a una página “Details” o FAQ si acaso.
+
+4.3 MENSAJE
+  Vender valor en una vista: “Somos el socio que resuelve; aquí está la prueba (fotos + cifras en Home); aquí el formulario.”
+
+--- 5. BECOME A PARTNER ---
+  Mantener como está (dos columnas, Partner / Franchise, modales con consentimiento).
+  En el menú: después de For Realtors; no dentro del contenido de Realtors.
+
+--- 6. QUOTE EN HOME ---
+  Mantener la sección “Free Quote” en la home.
+  Opción adicional: en el bloque de stats/cards, añadir un 5.º elemento o botón “Free quote” para que sea parte de la primera impresión (igual que “15+ years”), sin quitar la sección completa del formulario más abajo.
+
+--- 7. RESUMEN EJECUTIVO ---
+
+  · Home: Hero nuevo (impactante, “solucionamos / listado listo”), 4 stats + Quality en Home, Services en orden (Cleaning último), How We Work opcional/reducido, Quote mantenido (+ opción card “Free quote”).
+  · Services: Orden 1.Painting 2.Repairs 3.Curb 4.Cleaning; opcional añadir 1–2 servicios tipo Prep'n Sell si aplica.
+  · For Realtors: Poco texto; headline + “what we do” (3–4 líneas) + “why us” (3 bullets) + Our projects (fotos) + 1 CTA al formulario. Stats movidos a Home.
+  · For Realtors y Become a Partner: dos páginas/secciones separadas; sin mezclar contenido.
+
+================================================================================
+Fin de la propuesta V3. Próximo paso: validar con el cliente y luego implementar
+por fases (primero Home + stats + hero; luego Services orden; luego For Realtors).
+================================================================================

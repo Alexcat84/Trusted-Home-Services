@@ -1,0 +1,65 @@
+================================================================================
+TRUSTED HOME SERVICES — PROPUESTA V2 (PLAN PARA EL CLIENTE)
+================================================================================
+Basado en: documento Untitled document.pdf, web de referencia prepnsell.com,
+           y diálogo ChatGPT orientado a realtors. Objetivo: impacto y enfoque
+           Real Estate, sin copiar; contenido relevante + espacios para fotos.
+================================================================================
+
+1. ENFOQUE ESTRATÉGICO
+   - Realtors como clientes principales (dueños de casa siguen, pero el fuerte es Real Estate).
+   - Posicionar Trusted Home Services como “socio de la transacción”, no solo “pintor”.
+   - Mensajes que toquen: velocidad, protección del beneficio, menos estrés.
+   - CTAs que suenen a “unirse a algo” (ej. “Realtor Partner”, “Priority Access”), no solo “contratar”.
+
+2. ESTRUCTURA PROPUESTA DE PÁGINA / SECCIONES
+
+   A) PÁGINA PRINCIPAL (actual, con ajustes)
+      - Mantener: Hero, About Us, Our Services, How We Work, Free Quote.
+      - Añadir en el menú (o bloque destacado): enlace claro a “For Realtors” / “Real Estate”.
+      - Opción: un bloque “For Real Estate Professionals” o “Listing-Ready” que lleve a la sección B.
+
+   B) SECCIÓN O PÁGINA DEDICADA A REAL ESTATE (NUEVA)
+      Inspiración prepnsell + ChatGPT; contenido original y en español/inglés según idioma del sitio.
+
+      - Headline orientado a ellos (ej. “List Faster, Sell Higher, Close Without Headaches” o “One Call. Every Trade. Deal Saved.”).
+      - Dolor: bullets cortos (reparaciones de último momento, condiciones de inspección que amenazan el cierre, varios contratistas, estrés cuando un problema de $5k arriesga un deal de $900k).
+      - Posicionamiento “todo en uno” por fases:
+        · Pre-Listing: retoques de pintura, drywall, masilla, curb appeal, mejoras pequeñas.
+        · Condiciones de inspección: eléctrico, plomería, pudrición, barandales/código, seguridad.
+        · Cierre: reparaciones rápidas, coordinación de limpieza, ajustes del walkthrough final.
+      - Diferenciador: “Entendemos plazos inmobiliarios; priorizamos listados y fechas firmes; representamos tu reputación con cuidado.”
+      - Programa “Trusted Realtor” (aunque sea en formato “próximamente” o básico): prioridad, respuesta 24–48 h, cotizaciones claras para el cliente, fotos antes/después, mentalidad de proteger la comisión.
+      - Bloque “Cómo aumentamos el valor del listado”: mejoras estratégicas que pueden subir valor percibido $10k–$30k, menos días en mercado, más poder de negociación.
+      - Espacio para 1–2 testimonios de realtors (texto + foto placeholder si no hay aún).
+      - CTA fuerte: “Become a Realtor Partner”, “Book a Strategy Call”, “Add Us to Your Trade Team” o “Secure Priority Access” (uno principal + otro secundario).
+      - Dejar espacios marcados para fotos (antes/después, equipo, obras) que el cliente pueda enviar después.
+
+   C) FRANQUICIAS (NUEVA SECCIÓN / PÁGINA)
+      - Mensaje corto: “¿Quieres operar una franquicia? Contáctanos.”
+      - Formulario de contacto específico: nombre, email, teléfono, mensaje breve (y opcional: ciudad/región de interés). Los envíos van al cliente (igual que otros formularios); él contacta directamente.
+      - Sin contenido largo por ahora; se puede ampliar luego si el cliente da más detalle.
+
+   D) PARTNERS / PROVEEDORES DE OFICIO (NUEVA SECCIÓN / PÁGINA)
+      - Idea: “¿Eres especialista (pisos, ventanas, etc.) y quieres ser Partner?” — “Conviértete en proveedor de Trusted Home Services.”
+      - Formulario: nombre, oficio/especialidad, contacto, breve descripción. Mismo flujo: envíos al cliente para que él gestione.
+      - Texto corto que explique que buscan partners confiables para trabajar en proyectos (sin venderlo como “empleo” sino como colaboración/proveedor).
+
+3. CONTENIDO Y FOTOS
+   - Usar solo contenido relevante del sitio de referencia; reescribir en tono de Trusted Home Services.
+   - Donde haga falta, dejar bloques “[FOTO: descripción]” para que el cliente las pida o las suba después (ej. “Equipo en obra”, “Antes/después listado”, “Realtor partner”).
+
+4. ORDEN SUGERIDO DE TRABAJO (PARA NO PERDER LA REFERENCIA V1)
+   - Mantener el CONTROL_DE_CAMBIOS.txt actualizado: cuando el primer cambio de esta propuesta se suba a Git, anotar ese commit como inicio de Versión 2.
+   - Hacer cambios por fases: primero estructura y textos (y placeholders de fotos), luego formularios Franquicias y Partners, luego afinación de CTAs y diseño.
+   - Si el cliente pide volver atrás, usar el commit de CONTROL_DE_CAMBIOS para esa versión.
+
+5. RESUMEN PARA EL MEETING CON EL CLIENTE
+   - “Sitio más impactante y orientado a realtors, con sección dedicada a Real Estate (listados, cierres, programa Realtor).”
+   - “Sección Franquicias: formulario de contacto para quien quiera una franquicia.”
+   - “Sección Partners: formulario para especialistas que quieran ser proveedores.”
+   - “Todo original, sin copiar; espacios listos para fotos que tú nos pases.”
+
+================================================================================
+Fin de la propuesta. Ajustar según feedback del cliente y del meeting.
+================================================================================

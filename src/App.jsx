@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { animate, stagger } from 'animejs';
 import { useLang } from './context/LangContext';
@@ -125,7 +125,12 @@ function AnimatedSection({ id, className, children }) {
   );
 }
 
-const NAV_KEYS = ['home', 'about', 'services', 'how', 'quote'];
+const NAV_KEYS = ['home', 'services', 'how', 'projects', 'realtors', 'partners', 'quote'];
+
+/** Hashes that show dedicated subpages (any language) */
+const REALTORS_PAGE_HASHES = ['for-realtors', 'pour-realtors', 'para-realtors'];
+const PARTNERS_PAGE_HASHES = ['partners', 'partenaires', 'socios'];
+const PROJECTS_PAGE_HASHES = ['our-projects', 'nos-projets', 'nuestros-proyectos'];
 
 function Header() {
   const { lang, setLang, t } = useLang();
@@ -220,60 +225,128 @@ function Header() {
   );
 }
 
-const HERO_BG_INTERVAL_MS = 7000;
+const HERO_BG_INTERVAL_MS = 4000;
 
-function Hero() {
+function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
-  const [bgActive, setBgActive] = useState('image');
-  const videoRef = useRef(null);
+  const [bgActive, setBgActive] = useState('first');
   const heroRef = useRef(null);
   const heroInView = useInView(heroRef, { margin: '-1px' });
+  const outOfView = !heroInView;
 
   useEffect(() => {
     const id = setInterval(() => {
-      setBgActive((prev) => (prev === 'image' ? 'video' : 'image'));
+      setBgActive((prev) => (prev === 'first' ? 'casa' : prev === 'casa' ? 'luxury' : prev === 'luxury' ? 'tools' : 'first'));
     }, HERO_BG_INTERVAL_MS);
     return () => clearInterval(id);
   }, []);
 
-  useEffect(() => {
-    if (bgActive === 'video' && videoRef.current) {
-      const video = videoRef.current;
-      video.currentTime = 0;
-      video.playbackRate = 0.75;
-      video.play().catch(() => {});
-    }
-  }, [bgActive]);
-
-  /* Ocultar fondo solo cuando el hero sale del viewport (scroll). Si vuelves a subir, se ve de nuevo */
-  const outOfView = !heroInView;
-
+  const quoteHash = getSectionHash(lang, 'quote');
   return (
-    <section ref={heroRef} id={getSectionHash(lang, 'home')} className="hero">
-      <div className={`hero-bg ${bgActive === 'video' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
-      <div className={`hero-bg-video ${bgActive === 'image' ? 'hero-bg-video--hidden' : ''} ${outOfView ? 'hero-bg-video--out-of-view' : ''}`} aria-hidden="true">
-        <video
-          ref={videoRef}
-          src="/images/0215%20(1).mp4"
-          muted
-          playsInline
-          className="hero-bg-video-el"
-        />
-      </div>
+    <section ref={heroRef} id={getSectionHash(lang, 'home')} className={`hero ${outOfView ? 'hero--no-bg' : ''}`}>
+      <div className={`hero-bg hero-bg-first ${bgActive !== 'first' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
+      <div className={`hero-bg hero-bg-casa ${bgActive !== 'casa' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
+      <div className={`hero-bg hero-bg-luxury ${bgActive !== 'luxury' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
+      <div className={`hero-bg hero-bg-tools ${bgActive !== 'tools' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
       <div className={`hero-bg-overlay ${outOfView ? 'hero-bg-overlay--out-of-view' : ''}`} aria-hidden="true" />
       <motion.div
-        className="container hero-content"
+        className={`container hero-content ${skipAnimation ? 'hero-content--no-animate' : ''}`}
         variants={container}
-        initial="hidden"
+        initial={skipAnimation ? 'visible' : 'hidden'}
         animate="visible"
       >
         <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
         <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
         <motion.div className="hero-actions" variants={item}>
-          <a href={`#${getSectionHash(lang, 'quote')}`} className="btn btn-primary">{t('hero.cta1')}</a>
+          <a href={`#${quoteHash}`} className="btn btn-primary">{t('hero.cta1')}</a>
           <span className="btn btn-secondary" aria-hidden="true">{t('hero.cta2')}</span>
         </motion.div>
+        <div className="hero-stats-wrap" aria-label="Key facts">
+          <div className="home-stats-grid hero-stats-grid">
+            <div className="realtor-proof-stat-box">
+              <span className="realtor-proof-stat-emoji" aria-hidden="true">🏠</span>
+              <span className="realtor-proof-stat-value">{t('realtorPage.proofStats1Value')}</span>
+              <span className="realtor-proof-stat-label">{t('realtorPage.proofStats1Label')}</span>
+            </div>
+            <div className="realtor-proof-stat-box">
+              <span className="realtor-proof-stat-emoji" aria-hidden="true">🏆</span>
+              <span className="realtor-proof-stat-value">{t('realtorPage.proofStats4Value')}</span>
+              <span className="realtor-proof-stat-label">{t('realtorPage.proofStats4Label')}</span>
+            </div>
+            <div className="realtor-proof-stat-box">
+              <span className="realtor-proof-stat-emoji" aria-hidden="true">📍</span>
+              <span className="realtor-proof-stat-value">{t('realtorPage.proofStats3Value')}</span>
+              <span className="realtor-proof-stat-label">{t('realtorPage.proofStats3Label')}</span>
+            </div>
+            <div className="realtor-proof-stat-box">
+              <span className="realtor-proof-stat-emoji" aria-hidden="true">⚡</span>
+              <span className="realtor-proof-stat-value">{t('realtorPage.proofStats2Value')}</span>
+              <span className="realtor-proof-stat-label">{t('realtorPage.proofStats2Label')}</span>
+            </div>
+            <a href={`#${quoteHash}`} className="realtor-proof-stat-box home-stats-quote-card">
+              <span className="realtor-proof-stat-emoji" aria-hidden="true">📋</span>
+              <span className="realtor-proof-stat-value">{t('homeStats.freeQuoteCard')}</span>
+              <span className="realtor-proof-stat-label" aria-hidden="true">&nbsp;</span>
+            </a>
+          </div>
+          <div className="home-stats-seal hero-stats-seal">
+            <div className="home-stats-seal-img" aria-hidden="true">
+              <img src="/images/quality%20guarantee%20luxury.png" alt="" />
+            </div>
+            <div className="home-stats-seal-text">
+              <p className="home-stats-seal-title">{t('homeStats.qualityTitle')}</p>
+              <p className="home-stats-seal-desc">{t('homeStats.qualityDesc')}</p>
+            </div>
+          </div>
+        </div>
       </motion.div>
+    </section>
+  );
+}
+
+function HomeStatsBlock() {
+  const { t, lang } = useLang();
+  const quoteHash = getSectionHash(lang, 'quote');
+  return (
+    <section className="home-stats" aria-label="Key facts">
+      <div className="container">
+        <div className="home-stats-grid">
+          <div className="realtor-proof-stat-box">
+            <span className="realtor-proof-stat-emoji" aria-hidden="true">🏠</span>
+            <span className="realtor-proof-stat-value">{t('realtorPage.proofStats1Value')}</span>
+            <span className="realtor-proof-stat-label">{t('realtorPage.proofStats1Label')}</span>
+          </div>
+          <div className="realtor-proof-stat-box">
+            <span className="realtor-proof-stat-emoji" aria-hidden="true">🏆</span>
+            <span className="realtor-proof-stat-value">{t('realtorPage.proofStats4Value')}</span>
+            <span className="realtor-proof-stat-label">{t('realtorPage.proofStats4Label')}</span>
+          </div>
+          <div className="realtor-proof-stat-box">
+            <span className="realtor-proof-stat-emoji" aria-hidden="true">📍</span>
+            <span className="realtor-proof-stat-value">{t('realtorPage.proofStats3Value')}</span>
+            <span className="realtor-proof-stat-label">{t('realtorPage.proofStats3Label')}</span>
+          </div>
+          <div className="realtor-proof-stat-box">
+            <span className="realtor-proof-stat-emoji" aria-hidden="true">⚡</span>
+            <span className="realtor-proof-stat-value">{t('realtorPage.proofStats2Value')}</span>
+            <span className="realtor-proof-stat-label">{t('realtorPage.proofStats2Label')}</span>
+          </div>
+          <a href={`#${quoteHash}`} className="realtor-proof-stat-box home-stats-quote-card">
+            <span className="realtor-proof-stat-emoji" aria-hidden="true">📋</span>
+            <span className="realtor-proof-stat-value">{t('homeStats.freeQuoteCard')}</span>
+            <span className="realtor-proof-stat-label" aria-hidden="true">&nbsp;</span>
+          </a>
+        </div>
+        <div className="home-stats-seal">
+          <div className="home-stats-seal-img" aria-hidden="true">
+            <img src="/images/quality%20guarantee%20luxury.png" alt="" />
+          </div>
+          <div className="home-stats-seal-text">
+            <p className="home-stats-seal-title">{t('homeStats.qualityTitle')}</p>
+            <p className="home-stats-seal-desc">{t('homeStats.qualityDesc')}</p>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
@@ -362,10 +435,14 @@ function Services() {
   const [flippedKey, setFlippedKey] = useState(null);
 
   const services = [
-    { key: 'paint', img: '/images/roller painting.jpeg' },
-    { key: 'clean', img: '/images/cleaning services 1.png' },
     { key: 'repair', img: '/images/Plaster.png' },
-    { key: 'curb', img: '/images/home makeover.png' },
+    { key: 'handyman', img: '/images/handyman.jpg' },
+    { key: 'paint', img: '/images/roller painting.jpeg' },
+    { key: 'flooring', img: '/images/flooring.jpg' },
+    { key: 'curb', img: '/images/curb-appeal.avif' },
+    { key: 'declutter', img: '/images/decluttering-removal.jpg' },
+    { key: 'staging', img: '/images/staging-organizing.jpg' },
+    { key: 'clean', img: '/images/cleaning services 1.png' },
   ];
 
   return (
@@ -375,7 +452,7 @@ function Services() {
         <p className="section-intro">{t('services.intro')}</p>
         <motion.div
           ref={ref}
-          className="services-grid services-grid--four"
+          className="services-grid services-grid--multi"
           initial="hidden"
           animate={inView ? 'visible' : 'hidden'}
           variants={container}
@@ -456,7 +533,7 @@ function HowWeWork() {
     <AnimatedSection id={getSectionHash(lang, 'how')} className="section section-steps">
       <div className="container">
         <h2 className="section-title"><AnimatedSectionTitle text={t('steps.title')} /></h2>
-        <p className="section-intro">{t('steps.intro')}</p>
+        <p className="section-intro section-steps-intro">{t('steps.intro')}</p>
         <motion.div
           className="steps-grid"
           initial={{ opacity: 0 }}
@@ -481,6 +558,56 @@ function HowWeWork() {
         </motion.div>
       </div>
     </AnimatedSection>
+  );
+}
+
+function Testimonials() {
+  const { t, lang } = useLang();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const items = [
+    { nameKey: 'testimonials.name1', roleKey: 'testimonials.role1', quoteKey: 'testimonials.quote1', img: '/images/woman1.jpg' },
+    { nameKey: 'testimonials.name2', roleKey: 'testimonials.role2', quoteKey: 'testimonials.quote2', img: '/images/man1.jpg' },
+    { nameKey: 'testimonials.name4', roleKey: 'testimonials.role4', quoteKey: 'testimonials.quote4', img: '/images/man2.jpg' },
+    { nameKey: 'testimonials.name3', roleKey: 'testimonials.role3', quoteKey: 'testimonials.quote3', img: '/images/woman2.jpg' },
+  ];
+
+  useEffect(() => {
+    const id = setInterval(() => setActiveIndex((i) => (i + 1) % items.length), 5000);
+    return () => clearInterval(id);
+  }, [items.length]);
+
+  return (
+    <section className="section section-testimonials" aria-label={t('testimonials.title')}>
+      <div className="container">
+        <h2 className="section-title">{t('testimonials.title')}</h2>
+        <div className="testimonials-strip">
+          {items.map((item, i) => (
+            <div
+              key={i}
+              className={`testimonial-card ${i === activeIndex ? 'active' : ''}`}
+              aria-hidden={i !== activeIndex}
+            >
+              <img src={item.img} alt="" className="testimonial-avatar" />
+              <div className="testimonial-stars" aria-hidden="true">★★★★★</div>
+              <p className="testimonial-quote">"{t(item.quoteKey)}"</p>
+              <p className="testimonial-name">{t(item.nameKey)}</p>
+              <p className="testimonial-role">{t(item.roleKey)}</p>
+            </div>
+          ))}
+        </div>
+        <div className="testimonials-dots" aria-hidden="true">
+          {items.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              className={`testimonials-dot ${i === activeIndex ? 'active' : ''}`}
+              onClick={() => setActiveIndex(i)}
+              aria-label={`${t('testimonials.title')} ${i + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -612,6 +739,233 @@ function RealtorFormModal({ open, onClose }) {
             <p className="realtor-modal-success-prompt">{t('realtors.form.successDetailPrompt')}</p>
             <div className="realtor-modal-success-actions">
               <button type="button" className="btn btn-primary" onClick={goToDetailedQuote}>{t('realtors.form.getDetailedQuote')}</button>
+            </div>
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function PartnerFormModal({ open, onClose }) {
+  const { t } = useLang();
+  const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState('');
+  const [specialty, setSpecialty] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
+  const base = 'partnersPage.partnerSection';
+  const hasContact = (email.trim() !== '' || phone.trim() !== '');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errors = [];
+    if (name.trim() === '') errors.push('name');
+    if (!hasContact) errors.push('contact');
+    if (!consent) errors.push('consent');
+    setValidationErrors(errors);
+    if (errors.length > 0) return;
+    const msg = specialty.trim() ? (message.trim() ? `Specialty: ${specialty.trim()}\n\n${message.trim()}` : `Specialty: ${specialty.trim()}`) : message.trim() || undefined;
+    const ok = await submitToOwnApi({ type: 'partner', name: name.trim(), email: email.trim() || undefined, phone: phone.trim() || undefined, message: msg });
+    if (ok) {
+      setSubmitted(true);
+      return;
+    }
+    setValidationErrors(['submit']);
+  };
+
+  const handleClose = () => {
+    setSubmitted(false);
+    setValidationErrors([]);
+    setName('');
+    setSpecialty('');
+    setEmail('');
+    setPhone('');
+    setMessage('');
+    setConsent(false);
+    onClose();
+  };
+
+  if (!open) return null;
+  return (
+    <motion.div
+      className="realtor-modal"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={(e) => { if (e.target === e.currentTarget || e.target.getAttribute('aria-hidden') === 'true') handleClose(); }}
+    >
+      <div className="realtor-modal-backdrop" aria-hidden="true" onClick={handleClose} />
+      <motion.div
+        className="realtor-modal-content"
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -16 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button type="button" className="realtor-modal-close" onClick={handleClose} aria-label={t(`${base}.close`)} title={t(`${base}.close`)}>×</button>
+        <h2 className="realtor-modal-title">{t(`${base}.title`)}</h2>
+        {!submitted ? (
+          <>
+            <p className="realtor-modal-intro">{t(`${base}.modalIntro`)}</p>
+            <form className="realtor-form" onSubmit={handleSubmit}>
+              <label>
+                <span>{t(`${base}.name`)}</span>
+                <input type="text" name="name" required value={name} onChange={(e) => setName(e.target.value)} />
+              </label>
+              <label>
+                <span>{t(`${base}.specialty`)}</span>
+                <input type="text" name="specialty" value={specialty} onChange={(e) => setSpecialty(e.target.value)} placeholder={t(`${base}.specialtyPlaceholder`)} />
+              </label>
+              <label>
+                <span>{t(`${base}.email`)}</span>
+                <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              </label>
+              <label>
+                <span>{t(`${base}.phone`)}</span>
+                <input type="tel" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+              </label>
+              <label>
+                <span>{t(`${base}.message`)}</span>
+                <textarea name="message" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} />
+              </label>
+              <label className="realtor-form-consent">
+                <input type="checkbox" name="consent" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="realtor-form-consent-input" />
+                <span className="realtor-form-consent-box" aria-hidden="true" />
+                <span className="realtor-form-consent-text">{t(`${base}.consent`)}</span>
+              </label>
+              {validationErrors.length > 0 && (
+                <div className="realtor-form-errors" role="alert">
+                  <ul>
+                    {validationErrors.map((key) => (
+                      <li key={key}>{t(`${base}.errors.${key}`)}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div className="realtor-form-actions">
+                <button type="submit" className="btn btn-primary">{t(`${base}.submit`)}</button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <div className="realtor-modal-success">
+            <p className="realtor-modal-success-main">{t(`${base}.success`)}</p>
+            <div className="realtor-modal-success-actions">
+              <button type="button" className="btn btn-primary" onClick={handleClose}>{t(`${base}.close`)}</button>
+            </div>
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function FranchiseFormModal({ open, onClose }) {
+  const { t } = useLang();
+  const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
+  const base = 'partnersPage.franchiseSection';
+  const hasContact = (email.trim() !== '' || phone.trim() !== '');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errors = [];
+    if (name.trim() === '') errors.push('name');
+    if (!hasContact) errors.push('contact');
+    if (!consent) errors.push('consent');
+    setValidationErrors(errors);
+    if (errors.length > 0) return;
+    const ok = await submitToOwnApi({ type: 'franchise', name: name.trim(), email: email.trim() || undefined, phone: phone.trim() || undefined, message: message.trim() || undefined });
+    if (ok) {
+      setSubmitted(true);
+      return;
+    }
+    setValidationErrors(['submit']);
+  };
+
+  const handleClose = () => {
+    setSubmitted(false);
+    setValidationErrors([]);
+    setName('');
+    setEmail('');
+    setPhone('');
+    setMessage('');
+    setConsent(false);
+    onClose();
+  };
+
+  if (!open) return null;
+  return (
+    <motion.div
+      className="realtor-modal"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={(e) => { if (e.target === e.currentTarget || e.target.getAttribute('aria-hidden') === 'true') handleClose(); }}
+    >
+      <div className="realtor-modal-backdrop" aria-hidden="true" onClick={handleClose} />
+      <motion.div
+        className="realtor-modal-content"
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -16 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button type="button" className="realtor-modal-close" onClick={handleClose} aria-label={t(`${base}.close`)} title={t(`${base}.close`)}>×</button>
+        <h2 className="realtor-modal-title">{t(`${base}.title`)}</h2>
+        {!submitted ? (
+          <>
+            <p className="realtor-modal-intro">{t(`${base}.modalIntro`)}</p>
+            <form className="realtor-form" onSubmit={handleSubmit}>
+              <label>
+                <span>{t(`${base}.name`)}</span>
+                <input type="text" name="name" required value={name} onChange={(e) => setName(e.target.value)} />
+              </label>
+              <label>
+                <span>{t(`${base}.email`)}</span>
+                <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              </label>
+              <label>
+                <span>{t(`${base}.phone`)}</span>
+                <input type="tel" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+              </label>
+              <label>
+                <span>{t(`${base}.message`)}</span>
+                <textarea name="message" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} placeholder={t(`${base}.messagePlaceholder`)} />
+              </label>
+              <label className="realtor-form-consent">
+                <input type="checkbox" name="consent" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="realtor-form-consent-input" />
+                <span className="realtor-form-consent-box" aria-hidden="true" />
+                <span className="realtor-form-consent-text">{t(`${base}.consent`)}</span>
+              </label>
+              {validationErrors.length > 0 && (
+                <div className="realtor-form-errors" role="alert">
+                  <ul>
+                    {validationErrors.map((key) => (
+                      <li key={key}>{t(`${base}.errors.${key}`)}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div className="realtor-form-actions">
+                <button type="submit" className="btn btn-primary">{t(`${base}.submit`)}</button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <div className="realtor-modal-success">
+            <p className="realtor-modal-success-main">{t(`${base}.success`)}</p>
+            <div className="realtor-modal-success-actions">
+              <button type="button" className="btn btn-primary" onClick={handleClose}>{t(`${base}.close`)}</button>
             </div>
           </div>
         )}
@@ -923,16 +1277,6 @@ function QuoteForm() {
             </motion.div>
           )}
         </div>
-
-        <p className="quote-alt">
-          <span>{t('quote.alt')}</span>{' '}
-          <a href="https://wa.me/16132048000?text=Hi%2C%20I%20want%20a%20free%20quote." target="_blank" rel="noopener" className="quote-alt-wa">
-            <svg className="quote-alt-wa-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            {t('quote.altlink')}
-          </a>
-        </p>
       </div>
     </AnimatedSection>
   );
@@ -1173,6 +1517,269 @@ function FAQPage() {
           </div>
         </div>
       </main>
+      <Footer />
+    </div>
+  );
+}
+
+const REALTOR_THIRD_IMG_INTERVAL_MS = 4000;
+
+function ProjectsPage() {
+  const { t, lang } = useLang();
+  const homeHash = getSectionHash(lang, 'home');
+  const goHome = (e) => {
+    e.preventDefault();
+    window.location.hash = homeHash;
+    setTimeout(() => window.scrollTo(0, 0), 50);
+  };
+  const proofItems = [1, 2, 3, 4];
+  return (
+    <div className="privacy-page projects-page">
+      <header className="privacy-header">
+        <div className="container privacy-header-inner">
+          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Trusted Home Services - Home">
+            <img src="/images/logo v1.0.jpg" alt="" className="privacy-logo" />
+          </a>
+          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('projectsPage.backToHome')}</a>
+        </div>
+      </header>
+      <main className="privacy-main">
+        <div className="privacy-hero">
+          <div className="container">
+            <h1 className="privacy-hero-title">{t('projectsPage.title')}</h1>
+            <p className="privacy-hero-intro">{t('projectsPage.subtitle')}</p>
+          </div>
+        </div>
+        <div className="container privacy-content">
+          <section className="privacy-section realtor-proof-section">
+            <motion.div
+              className="realtor-proof-grid"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-60px' }}
+              variants={{
+                visible: { transition: { staggerChildren: 0.1 } },
+                hidden: {}
+              }}
+            >
+              {proofItems.map((num, i) => (
+                <motion.article
+                  key={i}
+                  className="realtor-proof-card"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                >
+                  <div className="realtor-proof-card-placeholder">
+                    <span className="realtor-proof-card-placeholder-label">{t('realtorPage.proofProject')} {num}</span>
+                  </div>
+                  <p className="realtor-proof-card-location">{t('realtorPage.proofLocationLabel')}: {t('realtorPage.proofLocationPlaceholder')}</p>
+                  <p className="realtor-proof-card-desc">{t('realtorPage.proofDescLabel')}: {t('realtorPage.proofDescPlaceholder')}</p>
+                </motion.article>
+              ))}
+            </motion.div>
+          </section>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function RealtorsPage() {
+  const { t, lang } = useLang();
+  const [realtorModalOpen, setRealtorModalOpen] = useState(false);
+  const [thirdImgActive, setThirdImgActive] = useState('money');
+  const homeHash = getSectionHash(lang, 'home');
+  useEffect(() => {
+    const id = setInterval(() => {
+      setThirdImgActive((prev) => (prev === 'money' ? 'sold' : 'money'));
+    }, REALTOR_THIRD_IMG_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, []);
+  const goHome = (e) => {
+    e.preventDefault();
+    window.location.hash = homeHash;
+    setTimeout(() => window.scrollTo(0, 0), 50);
+  };
+  const offerItems = [t('realtorPage.offer1'), t('realtorPage.offer2'), t('realtorPage.offer3'), t('realtorPage.offer4'), t('realtorPage.offer5')];
+  const whyUs = [t('realtorPage.whyUs1'), t('realtorPage.whyUs2'), t('realtorPage.whyUs3'), t('realtorPage.whyUs4')];
+  const howSteps = [
+    { titleKey: 'how1Title', textKey: 'how1Text' },
+    { titleKey: 'how2Title', textKey: 'how2Text' },
+    { titleKey: 'how3Title', textKey: 'how3Text' },
+    { titleKey: 'how4Title', textKey: 'how4Text' },
+  ];
+  const realtorFaqItems = [
+    { qKey: 'realtorPage.realtorFaq1Q', aKey: 'realtorPage.realtorFaq1A' },
+    { qKey: 'realtorPage.realtorFaq2Q', aKey: 'realtorPage.realtorFaq2A' },
+    { qKey: 'realtorPage.realtorFaq3Q', aKey: 'realtorPage.realtorFaq3A' },
+    { qKey: 'realtorPage.realtorFaq4Q', aKey: 'realtorPage.realtorFaq4A' },
+    { qKey: 'realtorPage.realtorFaq5Q', aKey: 'realtorPage.realtorFaq5A' },
+  ];
+  return (
+    <div className="privacy-page realtor-page">
+      <header className="privacy-header">
+        <div className="container privacy-header-inner">
+          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Trusted Home Services - Home">
+            <img src="/images/logo v1.0.jpg" alt="" className="privacy-logo" />
+          </a>
+          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('realtorPage.backToHome')}</a>
+        </div>
+      </header>
+      <main className="privacy-main">
+        <div className="realtor-hero">
+          <div className="container">
+            <h1 className="realtor-hero-title">{t('realtorPage.headline')}</h1>
+            <p className="realtor-hero-sub">{t('realtorPage.subhead')}</p>
+            <p className="realtor-hero-tagline">{t('realtorPage.heroTagline')}</p>
+            <div className="realtor-hero-actions">
+              <button type="button" className="btn btn-primary btn-lg" onClick={() => setRealtorModalOpen(true)}>{t('realtorPage.ctaPrimary')}</button>
+            </div>
+          </div>
+        </div>
+        <div className="container privacy-content realtor-content">
+          <div className="realtor-alternate-blocks">
+            {/* 1. Texto izquierda, imagen derecha */}
+            <section className="realtor-alternate-block realtor-alternate-block--text-left">
+              <div className="realtor-alternate-content">
+                <h2 className="privacy-section-title">{t('realtorPage.offerTitle')}</h2>
+                <ul className="realtor-list realtor-list--offer">
+                  {offerItems.map((p, i) => <li key={i}>{p}</li>)}
+                </ul>
+              </div>
+              <div className="realtor-alternate-img-wrap">
+                <img src="/images/Reno.jpg" alt="" className="realtor-alternate-img" />
+              </div>
+            </section>
+            {/* 2. Imagen izquierda, How it works derecha */}
+            <section className="realtor-alternate-block realtor-alternate-block--text-right">
+              <div className="realtor-alternate-img-wrap">
+                <img src="/images/For%20sale%20realtors.png" alt="" className="realtor-alternate-img" />
+              </div>
+              <div className="realtor-alternate-content">
+                <h2 className="privacy-section-title">{t('realtorPage.howTitle')}</h2>
+                <ol className="realtor-how-steps">
+                  {howSteps.map((step, i) => (
+                    <li key={i} className="realtor-how-step">
+                      <span className="realtor-how-step-num">{i + 1}</span>
+                      <div>
+                        <h3 className="realtor-how-step-title">{t(`realtorPage.${step.titleKey}`)}</h3>
+                        <p className="realtor-how-step-text">{t(`realtorPage.${step.textKey}`)}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </section>
+            {/* 3. Texto izquierda, imagen derecha */}
+            <section className="realtor-alternate-block realtor-alternate-block--text-left">
+              <div className="realtor-alternate-content">
+                <h2 className="privacy-section-title">{t('realtorPage.whyUsTitle')}</h2>
+                <ul className="realtor-list">
+                  {whyUs.map((p, i) => <li key={i}>{p}</li>)}
+                </ul>
+              </div>
+              <div className="realtor-alternate-img-wrap realtor-alternate-img-wrap--crossfade">
+                <img src="/images/money%20house.jpg" alt="" className={`realtor-alternate-img realtor-alternate-img-layer ${thirdImgActive !== 'money' ? 'realtor-alternate-img-layer--hidden' : ''}`} aria-hidden={thirdImgActive !== 'money'} />
+                <img src="/images/sold.jpg" alt="" className={`realtor-alternate-img realtor-alternate-img-layer realtor-alternate-img-sold ${thirdImgActive !== 'sold' ? 'realtor-alternate-img-layer--hidden' : ''}`} aria-hidden={thirdImgActive !== 'sold'} />
+              </div>
+            </section>
+          </div>
+          <section className="privacy-section realtor-projects-link-section">
+            <h2 className="privacy-section-title realtor-projects-link-title">{t('realtorPage.projectsLinkTitle')}</h2>
+            <p className="realtor-projects-link-intro">{t('realtorPage.projectsLinkIntro')}</p>
+            <a href={`#${getSectionHash(lang, 'projects')}`} className="btn btn-primary">{t('realtorPage.projectsLinkText')}</a>
+          </section>
+          <section className="privacy-section realtor-faq-section" id="realtor-faq">
+            <h2 className="privacy-section-title realtor-faq-title">{t('realtorPage.realtorFaqTitle')}</h2>
+            {realtorFaqItems.map(({ qKey, aKey }, i) => (
+              <div key={i} className="realtor-faq-item">
+                <h3 className="realtor-faq-question">{t(qKey)}</h3>
+                <p className="realtor-faq-answer">{t(aKey)}</p>
+              </div>
+            ))}
+          </section>
+          <section className="privacy-section realtor-cta-section">
+            <button type="button" className="btn btn-primary btn-lg" onClick={() => setRealtorModalOpen(true)}>{t('realtorPage.ctaPrimary')}</button>
+            <button type="button" className="btn btn-secondary" onClick={() => setRealtorModalOpen(true)}>{t('realtorPage.ctaSecondary')}</button>
+          </section>
+        </div>
+      </main>
+      <RealtorFormModal open={realtorModalOpen} onClose={() => setRealtorModalOpen(false)} />
+      <Footer />
+    </div>
+  );
+}
+
+function BecomePartnerPage() {
+  const { t, lang } = useLang();
+  const homeHash = getSectionHash(lang, 'home');
+  const [partnerModalOpen, setPartnerModalOpen] = useState(false);
+  const [franchiseModalOpen, setFranchiseModalOpen] = useState(false);
+  const goHome = (e) => {
+    e.preventDefault();
+    window.location.hash = homeHash;
+    setTimeout(() => window.scrollTo(0, 0), 50);
+  };
+  return (
+    <div className="privacy-page">
+      <header className="privacy-header">
+        <div className="container privacy-header-inner">
+          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Home">
+            <img src="/images/logo v1.0.jpg" alt="" className="privacy-logo" />
+          </a>
+          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('partnersPage.backToHome')}</a>
+        </div>
+      </header>
+      <main className="privacy-main">
+        <div className="privacy-hero">
+          <div className="container">
+            <h1 className="privacy-hero-title">{t('partnersPage.title')}</h1>
+            <p className="privacy-hero-intro">{t('partnersPage.intro')}</p>
+          </div>
+        </div>
+        <div className="container privacy-content">
+          <motion.div
+            className="become-partner-cols"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: { transition: { staggerChildren: 0.12 } },
+              hidden: {}
+            }}
+          >
+            <motion.section
+              className="become-partner-card"
+              variants={{
+                hidden: { opacity: 0, y: 24 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <h2 className="privacy-section-title">{t('partnersPage.partnerSection.title')}</h2>
+              <p className="become-partner-card-intro">{t('partnersPage.partnerSection.intro')}</p>
+              <button type="button" className="btn btn-primary" onClick={() => setPartnerModalOpen(true)}>{t('partnersPage.partnerSection.cta')}</button>
+            </motion.section>
+            <motion.section
+              className="become-partner-card"
+              variants={{
+                hidden: { opacity: 0, y: 24 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <h2 className="privacy-section-title">{t('partnersPage.franchiseSection.title')}</h2>
+              <p className="become-partner-card-intro">{t('partnersPage.franchiseSection.intro')}</p>
+              <button type="button" className="btn btn-primary" onClick={() => setFranchiseModalOpen(true)}>{t('partnersPage.franchiseSection.cta')}</button>
+            </motion.section>
+          </motion.div>
+        </div>
+      </main>
+      <PartnerFormModal open={partnerModalOpen} onClose={() => setPartnerModalOpen(false)} />
+      <FranchiseFormModal open={franchiseModalOpen} onClose={() => setFranchiseModalOpen(false)} />
       <Footer />
     </div>
   );
@@ -1512,7 +2119,7 @@ function AdminPage() {
                 {filteredSubmissions.map((s, i) => (
                   <tr key={s.id || i}>
                     <td>{s._at ? new Date(s._at).toLocaleString() : '–'}</td>
-                    <td>{s.type === 'realtor' ? 'Realtor' : 'Quote'}</td>
+                    <td>{s.type === 'realtor' ? 'Realtor' : s.type === 'franchise' ? 'Franchise' : s.type === 'partner' ? 'Partner' : s.type || 'Quote'}</td>
                     <td>{s.name || '–'}</td>
                     <td>{s.email || '–'}</td>
                     <td>{s.phone || '–'}</td>
@@ -1583,10 +2190,12 @@ function Footer() {
           <h3 className="footer-heading">{t('footer.quickLinks')}</h3>
           <nav className="footer-nav" aria-label="Quick links">
             <a href={`#${hash('home')}`}>{t('footer.home')}</a>
-            <a href={`#${hash('about')}`}>{t('footer.about')}</a>
             <a href={`#${hash('services')}`}>{t('footer.services')}</a>
             <a href={`#${hash('how')}`}>{t('footer.how')}</a>
+            <a href={`#${hash('projects')}`}>{t('footer.projects')}</a>
+            <a href={`#${hash('realtors')}`}>{t('footer.realtors')}</a>
             <a href={`#${hash('quote')}`}>{t('footer.quote')}</a>
+            <a href={`#${hash('partners')}`}>{t('footer.partners')}</a>
           </nav>
         </div>
         <div className="footer-col footer-support">
@@ -1611,34 +2220,58 @@ function Footer() {
   );
 }
 
+function getSubPageFromHash(h) {
+  if (REALTORS_PAGE_HASHES.includes(h)) return 'realtors';
+  if (PARTNERS_PAGE_HASHES.includes(h)) return 'partners';
+  if (PROJECTS_PAGE_HASHES.includes(h)) return 'projects';
+  return null;
+}
+
 export default function App() {
-  const [legalPage, setLegalPage] = useState(null); // 'privacy' | 'terms' | 'faq' | 'admin' | null
+  const [legalPage, setLegalPage] = useState(null);
+  const [subPage, setSubPage] = useState(null);
+  const prevSubPageRef = useRef(null);
+  const prevLegalPageRef = useRef(null);
   useEffect(() => {
-    const hash = (window.location.hash || '').replace('#', '').toLowerCase();
-    setLegalPage(hash === 'privacy' ? 'privacy' : hash === 'terms' ? 'terms' : hash === 'faq' ? 'faq' : hash === 'admin' ? 'admin' : null);
+    const h = (window.location.hash || '').replace('#', '').toLowerCase();
+    setLegalPage(h === 'privacy' ? 'privacy' : h === 'terms' ? 'terms' : h === 'faq' ? 'faq' : h === 'admin' ? 'admin' : null);
+    setSubPage(getSubPageFromHash(h));
     const onHashChange = () => {
-      const h = (window.location.hash || '').replace('#', '').toLowerCase();
-      setLegalPage(h === 'privacy' ? 'privacy' : h === 'terms' ? 'terms' : h === 'faq' ? 'faq' : h === 'admin' ? 'admin' : null);
+      const hash = (window.location.hash || '').replace('#', '').toLowerCase();
+      const isLegal = ['privacy', 'terms', 'faq', 'admin'].includes(hash);
+      const isSub = getSubPageFromHash(hash) != null;
+      if (isLegal || isSub) window.scrollTo(0, 0);
+      setLegalPage(hash === 'privacy' ? 'privacy' : hash === 'terms' ? 'terms' : hash === 'faq' ? 'faq' : hash === 'admin' ? 'admin' : null);
+      setSubPage(getSubPageFromHash(hash));
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
+  useLayoutEffect(() => {
+    if (legalPage || subPage) window.scrollTo(0, 0);
+  }, [legalPage, subPage]);
+  const wasOnSubOrLegal = prevSubPageRef.current != null || prevLegalPageRef.current != null;
+  const nowOnMain = !subPage && !legalPage;
+  const skipHeroAnimation = wasOnSubOrLegal && nowOnMain;
   useEffect(() => {
-    if (legalPage) window.scrollTo(0, 0);
-  }, [legalPage]);
+    prevSubPageRef.current = subPage;
+    prevLegalPageRef.current = legalPage;
+  });
   if (legalPage === 'privacy') return <PrivacyPolicyPage />;
   if (legalPage === 'terms') return <TermsOfServicePage />;
   if (legalPage === 'faq') return <FAQPage />;
   if (legalPage === 'admin') return <AdminPage />;
+  if (subPage === 'realtors') return <RealtorsPage />;
+  if (subPage === 'partners') return <BecomePartnerPage />;
+  if (subPage === 'projects') return <ProjectsPage />;
   return (
     <>
       <Header />
       <main>
-        <Hero />
-        <About />
+        <Hero skipAnimation={skipHeroAnimation} />
         <Services />
         <HowWeWork />
-        <Realtors />
+        <Testimonials />
         <QuoteForm />
       </main>
       <Footer />
