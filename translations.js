@@ -17,7 +17,7 @@ window.TRUSTED_I18N = {
       values: {
         title: 'Values',
         trust: 'Trust: no deposit, even on large projects. You pay when the work is done.',
-        family: 'Family and team: over 15 years working together, same standards every time.',
+        family: 'Family and team: over 30 years working together, same standards every time.',
         quality: 'Quality: we grow by referrals and repeat clients, not just ads.',
         respect: 'Respect for your home: we treat your space like our own.'
       },
@@ -86,7 +86,7 @@ window.TRUSTED_I18N = {
       values: {
         title: 'Valeurs',
         trust: 'Confiance : pas d\'acompte, même sur les grands projets. Vous payez quand le travail est terminé.',
-        family: 'Famille et équipe : plus de 15 ans ensemble, les mêmes standards à chaque fois.',
+        family: 'Famille et équipe : plus de 30 ans ensemble, les mêmes standards à chaque fois.',
         quality: 'Qualité : nous grandissons par les références et les clients fidèles, pas seulement la pub.',
         respect: 'Respect de votre maison : nous traitons votre espace comme le nôtre.'
       },
@@ -155,7 +155,7 @@ window.TRUSTED_I18N = {
       values: {
         title: 'Valores',
         trust: 'Confianza: sin depósito, incluso en proyectos grandes. Pagas cuando el trabajo está hecho.',
-        family: 'Familia y equipo: más de 15 años trabajando juntos, los mismos estándares siempre.',
+        family: 'Familia y equipo: más de 30 años trabajando juntos, los mismos estándares siempre.',
         quality: 'Calidad: crecemos por referidos y clientes repetidos, no solo por publicidad.',
         respect: 'Respeto por tu hogar: tratamos tu espacio como el nuestro.'
       },
