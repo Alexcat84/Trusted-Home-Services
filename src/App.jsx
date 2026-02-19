@@ -435,12 +435,12 @@ function Services() {
   const [flippedKey, setFlippedKey] = useState(null);
 
   const services = [
+    { key: 'declutter', img: '/images/decluttering-removal.jpg' },
     { key: 'repair', img: '/images/Plaster.png' },
     { key: 'handyman', img: '/images/handyman.jpg' },
     { key: 'paint', img: '/images/roller painting.jpeg' },
     { key: 'flooring', img: '/images/flooring.jpg' },
     { key: 'curb', img: '/images/curb-appeal.avif' },
-    { key: 'declutter', img: '/images/decluttering-removal.jpg' },
     { key: 'staging', img: '/images/staging-organizing.jpg' },
     { key: 'clean', img: '/images/cleaning services 1.png' },
   ];
