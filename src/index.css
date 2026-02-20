@@ -544,6 +544,32 @@ a:hover {
   opacity: 0;
   animation: fadeUp 0.8s ease 0.3s forwards;
 }
+.hero-actions .btn-primary {
+  background: linear-gradient(180deg, rgba(255, 140, 90, 0.85) 0%, rgba(249, 119, 43, 0.75) 50%, rgba(220, 95, 30, 0.8) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: var(--color-text-on-dark);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.hero-actions .btn-primary:hover {
+  background: linear-gradient(180deg, rgba(255, 150, 100, 0.9) 0%, rgba(224, 106, 32, 0.85) 50%, rgba(200, 85, 25, 0.9) 100%);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 3px 8px rgba(0, 0, 0, 0.25),
+    0 6px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+.hero-actions .btn-primary:active {
+  transform: translateY(0);
+  box-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.15) inset,
+    0 1px 3px rgba(0, 0, 0, 0.2);
+}
 /* Al volver a Home desde otra página: sin parpadeo, contenido visible de inmediato */
 .hero-content--no-animate .hero-title,
 .hero-content--no-animate .hero-subtitle,

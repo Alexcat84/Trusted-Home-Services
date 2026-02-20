@@ -9,7 +9,7 @@ datasource db {
 
 model Submission {
   id           String   @id @default(cuid())
-  type         String   // "realtor" | "quote"
+  type         String   // "quote" | "realtor" | "partner" | "franchise"
   name         String
   email        String?
   phone        String?

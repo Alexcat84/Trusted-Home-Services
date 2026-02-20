@@ -230,6 +230,7 @@ const HERO_BG_INTERVAL_MS = 4000;
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
   const [bgActive, setBgActive] = useState('first');
+  const [heroRealtorModalOpen, setHeroRealtorModalOpen] = useState(false);
   const heroRef = useRef(null);
   const heroInView = useInView(heroRef, { margin: '-1px' });
   const outOfView = !heroInView;
@@ -243,6 +244,7 @@ function Hero({ skipAnimation = false }) {
 
   const quoteHash = getSectionHash(lang, 'quote');
   return (
+    <>
     <section ref={heroRef} id={getSectionHash(lang, 'home')} className={`hero ${outOfView ? 'hero--no-bg' : ''}`}>
       <div className={`hero-bg hero-bg-first ${bgActive !== 'first' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
       <div className={`hero-bg hero-bg-casa ${bgActive !== 'casa' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
@@ -259,7 +261,8 @@ function Hero({ skipAnimation = false }) {
         <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
         <motion.div className="hero-actions" variants={item}>
           <a href={`#${quoteHash}`} className="btn btn-primary">{t('hero.cta1')}</a>
-          <span className="btn btn-secondary" aria-hidden="true">{t('hero.cta2')}</span>
+          <button type="button" className="btn btn-primary" onClick={() => setHeroRealtorModalOpen(true)}>{t('realtorPage.ctaPrimary')}</button>
+          <span className="btn btn-primary" aria-hidden="true">{t('hero.cta2')}</span>
         </motion.div>
         <div className="hero-stats-wrap" aria-label="Key facts">
           <div className="home-stats-grid hero-stats-grid">
@@ -301,6 +304,8 @@ function Hero({ skipAnimation = false }) {
         </div>
       </motion.div>
     </section>
+    <RealtorFormModal open={heroRealtorModalOpen} onClose={() => setHeroRealtorModalOpen(false)} />
+    </>
   );
 }
 
@@ -976,26 +981,23 @@ function FranchiseFormModal({ open, onClose }) {
 
 function Realtors() {
   const { t, lang } = useLang();
-  const [modalOpen, setModalOpen] = useState(false);
+  const realtorsHash = getSectionHash(lang, 'realtors');
   return (
-    <>
-      <AnimatedSection className="section section-realtors">
-        <div className="container">
-          <motion.div
-            className="realtors-inner"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="section-title">{t('realtors.title')}</h2>
-            <p>{t('realtors.text')}</p>
-            <button type="button" className="btn btn-primary" onClick={() => setModalOpen(true)}>{t('realtors.cta')}</button>
-            <p className="realtors-hint">{t('realtors.form.hint')}</p>
-          </motion.div>
-        </div>
-      </AnimatedSection>
-      <RealtorFormModal open={modalOpen} onClose={() => setModalOpen(false)} />
-    </>
+    <AnimatedSection className="section section-realtors">
+      <div className="container">
+        <motion.div
+          className="realtors-inner"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="section-title">{t('realtors.title')}</h2>
+          <p>{t('realtors.text')}</p>
+          <a href={`#${realtorsHash}`} className="btn btn-primary">{t('realtorPage.ctaPrimary')}</a>
+          <p className="realtors-hint">{t('realtors.form.hint')}</p>
+        </motion.div>
+      </div>
+    </AnimatedSection>
   );
 }
 
@@ -2119,7 +2121,7 @@ function AdminPage() {
                 {filteredSubmissions.map((s, i) => (
                   <tr key={s.id || i}>
                     <td>{s._at ? new Date(s._at).toLocaleString() : '–'}</td>
-                    <td>{s.type === 'realtor' ? 'Realtor' : s.type === 'franchise' ? 'Franchise' : s.type === 'partner' ? 'Partner' : s.type || 'Quote'}</td>
+                    <td>{s.type === 'realtor' ? 'Realtor partner' : s.type === 'franchise' ? 'Franchise' : s.type === 'partner' ? 'Partner' : s.type === 'quote' ? 'Quote' : s.type || '–'}</td>
                     <td>{s.name || '–'}</td>
                     <td>{s.email || '–'}</td>
                     <td>{s.phone || '–'}</td>
