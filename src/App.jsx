@@ -1220,7 +1220,7 @@ function QuoteForm() {
                 <motion.fieldset className="quote-step active" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}>
                   <legend>{t('quote.step3.legend')}</legend>
                   <div className="quote-checkboxes">
-                    {['paint', 'clean', 'repairs', 'prep', 'curb'].map((w) => (
+                    {['paint', 'clean', 'repairs', 'prep', 'curb', 'declutter', 'handyman', 'staging', 'flooring', 'fullReno'].map((w) => (
                       <label key={w}><input type="checkbox" name="trabajo" value={w} /> <span>{t(`quote.work.${w}`)}</span></label>
                     ))}
                   </div>
@@ -1789,7 +1789,7 @@ function BecomePartnerPage() {
 
 const ADMIN_TOKEN_KEY = 'th_admin_token';
 
-const ADMIN_STATUS_OPTIONS = [
+const ADMIN_QUOTE_STATUS_OPTIONS = [
   { value: 'new', label: 'New' },
   { value: 'contacted', label: 'Contacted' },
   { value: 'offer_sent', label: 'Offer sent' },
@@ -1798,6 +1798,30 @@ const ADMIN_STATUS_OPTIONS = [
   { value: 'work_in_progress', label: 'Work in progress' },
   { value: 'work_done', label: 'Work done' },
 ];
+const ADMIN_PARTNER_STATUS_OPTIONS = [
+  { value: 'new', label: 'New' },
+  { value: 'contacted', label: 'Contacted' },
+  { value: 'intro_scheduled', label: 'Intro scheduled' },
+  { value: 'proposal_sent', label: 'Proposal sent' },
+  { value: 'accepted', label: 'Accepted' },
+  { value: 'rejected', label: 'Rejected' },
+  { value: 'onboarding', label: 'Onboarding' },
+  { value: 'active', label: 'Active' },
+];
+function getAdminStatusOptions(type, currentStatus) {
+  const opts = type === 'quote' ? ADMIN_QUOTE_STATUS_OPTIONS : ADMIN_PARTNER_STATUS_OPTIONS;
+  if (!currentStatus) return opts;
+  if (opts.some((o) => o.value === currentStatus)) return opts;
+  return [...opts, { value: currentStatus, label: currentStatus }];
+}
+const ADMIN_ALL_STATUS_OPTIONS = [
+  ...ADMIN_QUOTE_STATUS_OPTIONS,
+  ...ADMIN_PARTNER_STATUS_OPTIONS.filter((o) => !ADMIN_QUOTE_STATUS_OPTIONS.some((q) => q.value === o.value)),
+];
+function getAdminStatusLabel(status, type) {
+  const opts = getAdminStatusOptions(type);
+  return opts.find((o) => o.value === status)?.label || status || 'New';
+}
 
 function AdminPage() {
   const { lang } = useLang();
@@ -1961,7 +1985,7 @@ function AdminPage() {
       s.work || '',
       s.areas || '',
       s.size || '',
-      ADMIN_STATUS_OPTIONS.find((o) => o.value === (s.status || 'new'))?.label || (s.status || 'New'),
+      getAdminStatusLabel(s.status || 'new', s.type),
       s.message || '',
     ]);
     const csvContent = [headers.map(escapeCsvCell).join(','), ...rows.map((r) => r.map(escapeCsvCell).join(','))].join('\n');
@@ -2044,7 +2068,7 @@ function AdminPage() {
                 <span>Status</span>
                 <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                   <option value="all">All</option>
-                  {ADMIN_STATUS_OPTIONS.map((o) => (
+                  {ADMIN_ALL_STATUS_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>{o.label}</option>
                   ))}
                 </select>
@@ -2136,12 +2160,12 @@ function AdminPage() {
                           value={s.status || 'new'}
                           onChange={(e) => handleStatusChange(s.id, e.target.value)}
                         >
-                          {ADMIN_STATUS_OPTIONS.map((o) => (
+                          {getAdminStatusOptions(s.type, s.status || 'new').map((o) => (
                             <option key={o.value} value={o.value}>{o.label}</option>
                           ))}
                         </select>
                       ) : (
-                        <span>{s.status ? ADMIN_STATUS_OPTIONS.find((o) => o.value === s.status)?.label || s.status : 'New'}</span>
+                        <span>{s.status ? getAdminStatusLabel(s.status, s.type) : 'New'}</span>
                       )}
                     </td>
                     <td className="admin-cell-wrap">{s.message || '–'}</td>

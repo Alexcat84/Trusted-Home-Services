@@ -6,7 +6,9 @@
 
 const KV_KEY = 'submissions';
 const DEFAULT_LIMIT = 100;
-const VALID_STATUSES = ['new', 'contacted', 'offer_sent', 'offer_accepted', 'offer_rejected', 'work_in_progress', 'work_done'];
+const QUOTE_STATUSES = ['new', 'contacted', 'offer_sent', 'offer_accepted', 'offer_rejected', 'work_in_progress', 'work_done'];
+const PARTNER_STATUSES = ['new', 'contacted', 'intro_scheduled', 'proposal_sent', 'accepted', 'rejected', 'onboarding', 'active'];
+const VALID_STATUSES = [...new Set([...QUOTE_STATUSES, ...PARTNER_STATUSES])];
 
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

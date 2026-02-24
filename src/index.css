@@ -2947,6 +2947,7 @@ a:hover {
 .admin-table th { background: var(--color-bg-alt); font-weight: 600; color: var(--color-primary); }
 .admin-table td { color: var(--color-text); }
 .admin-status-cell { border-radius: 4px; }
+/* Quote-style statuses */
 .admin-status-cell--new { background: #e8e9eb; color: #374151; }
 .admin-status-cell--contacted { background: #dbeafe; color: #1e40af; }
 .admin-status-cell--offer_sent { background: #fef3c7; color: #b45309; }
@@ -2954,6 +2955,13 @@ a:hover {
 .admin-status-cell--offer_rejected { background: #fee2e2; color: #b91c1c; }
 .admin-status-cell--work_in_progress { background: #e0e7ff; color: #3730a3; }
 .admin-status-cell--work_done { background: #a7f3d0; color: #065f46; }
+/* Partner / Realtor / Franchise statuses (distinct palette) */
+.admin-status-cell--intro_scheduled { background: #e0f2fe; color: #0369a1; }
+.admin-status-cell--proposal_sent { background: #f3e8ff; color: #6b21a8; }
+.admin-status-cell--accepted { background: #ccfbf1; color: #0f766e; }
+.admin-status-cell--rejected { background: #ffe4e6; color: #be123c; }
+.admin-status-cell--onboarding { background: #fef9c3; color: #854d0e; }
+.admin-status-cell--active { background: #d1fae5; color: #065f46; }
 .admin-status-cell .admin-status-select { background: transparent; border-color: rgba(0,0,0,0.15); font-weight: 600; }
 .admin-empty { font-size: 0.9375rem; color: var(--color-text-muted); margin-top: 1rem; }
 
