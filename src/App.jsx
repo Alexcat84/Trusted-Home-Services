@@ -1798,26 +1798,65 @@ const ADMIN_QUOTE_STATUS_OPTIONS = [
   { value: 'work_in_progress', label: 'Work in progress' },
   { value: 'work_done', label: 'Work done' },
 ];
+const ADMIN_REALTOR_STATUS_OPTIONS = [
+  { value: 'new', label: 'New' },
+  { value: 'contacted', label: 'Contacted' },
+  { value: 'property_details_received', label: 'Property details received' },
+  { value: 'quote_sent', label: 'Quote sent' },
+  { value: 'quote_accepted', label: 'Quote accepted' },
+  { value: 'quote_rejected', label: 'Quote rejected' },
+  { value: 'work_scheduled', label: 'Work scheduled' },
+  { value: 'work_in_progress', label: 'Work in progress' },
+  { value: 'work_completed', label: 'Work completed' },
+  { value: 'invoice_sent', label: 'Invoice sent' },
+  { value: 'payment_received', label: 'Payment received' },
+  { value: 'closed', label: 'Closed' },
+];
 const ADMIN_PARTNER_STATUS_OPTIONS = [
   { value: 'new', label: 'New' },
   { value: 'contacted', label: 'Contacted' },
-  { value: 'intro_scheduled', label: 'Intro scheduled' },
-  { value: 'proposal_sent', label: 'Proposal sent' },
-  { value: 'accepted', label: 'Accepted' },
+  { value: 'interview_scheduled', label: 'Interview scheduled' },
+  { value: 'under_review', label: 'Under review' },
+  { value: 'active_partner', label: 'Active partner' },
+  { value: 'inactive', label: 'Inactive' },
   { value: 'rejected', label: 'Rejected' },
-  { value: 'onboarding', label: 'Onboarding' },
-  { value: 'active', label: 'Active' },
+];
+const ADMIN_FRANCHISE_STATUS_OPTIONS = [
+  { value: 'new', label: 'New' },
+  { value: 'contacted', label: 'Contacted' },
+  { value: 'info_sent', label: 'Info sent' },
+  { value: 'application_received', label: 'Application received' },
+  { value: 'under_review', label: 'Under review' },
+  { value: 'agreement_sent', label: 'Agreement sent' },
+  { value: 'agreement_signed', label: 'Agreement signed' },
+  { value: 'active_member', label: 'Active member' },
+  { value: 'inactive', label: 'Inactive' },
+  { value: 'terminated', label: 'Terminated' },
 ];
 function getAdminStatusOptions(type, currentStatus) {
-  const opts = type === 'quote' ? ADMIN_QUOTE_STATUS_OPTIONS : ADMIN_PARTNER_STATUS_OPTIONS;
+  const opts =
+    type === 'quote' ? ADMIN_QUOTE_STATUS_OPTIONS
+    : type === 'realtor' ? ADMIN_REALTOR_STATUS_OPTIONS
+    : type === 'partner' ? ADMIN_PARTNER_STATUS_OPTIONS
+    : type === 'franchise' ? ADMIN_FRANCHISE_STATUS_OPTIONS
+    : ADMIN_QUOTE_STATUS_OPTIONS;
   if (!currentStatus) return opts;
   if (opts.some((o) => o.value === currentStatus)) return opts;
   return [...opts, { value: currentStatus, label: currentStatus }];
 }
-const ADMIN_ALL_STATUS_OPTIONS = [
-  ...ADMIN_QUOTE_STATUS_OPTIONS,
-  ...ADMIN_PARTNER_STATUS_OPTIONS.filter((o) => !ADMIN_QUOTE_STATUS_OPTIONS.some((q) => q.value === o.value)),
-];
+const ADMIN_ALL_STATUS_OPTIONS = (() => {
+  const seen = new Set();
+  return [
+    ...ADMIN_QUOTE_STATUS_OPTIONS,
+    ...ADMIN_REALTOR_STATUS_OPTIONS,
+    ...ADMIN_PARTNER_STATUS_OPTIONS,
+    ...ADMIN_FRANCHISE_STATUS_OPTIONS,
+  ].filter((o) => {
+    if (seen.has(o.value)) return false;
+    seen.add(o.value);
+    return true;
+  });
+})();
 function getAdminStatusLabel(status, type) {
   const opts = getAdminStatusOptions(type);
   return opts.find((o) => o.value === status)?.label || status || 'New';

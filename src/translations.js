@@ -378,7 +378,7 @@ export const TRANSLATIONS = {
         errors: { name: 'Please enter your name.', contact: 'Please enter at least one of email or phone.', consent: 'Please accept the consent.', submit: 'Could not send. Please try again or call (613) 204-8000.' }
       }
     },
-    footer: { desc: 'Property preparation for sale and move-in. Ottawa, Ontario.', home: 'Home', about: 'About', services: 'Services', how: 'How We Work', projects: 'Our Projects', realtors: 'For Realtors', quote: 'Quote', partners: 'Become a Partner', rights: '© Trusted Home Services. All rights reserved.', quickLinks: 'Quick Links', support: 'Support', faq: 'FAQ', privacyPolicy: 'Privacy Policy', termsOfService: 'Terms of Service' }
+    footer: { desc: 'Property preparation for sale and move-in. Ottawa, Ontario.', home: 'Home', about: 'About', services: 'Services', how: 'How We Work', projects: 'Our Projects', realtors: 'For Realtors', quote: 'Quote', partners: 'Become a Partner', rights: '© 2026 Trusted Home Services. All rights reserved.', quickLinks: 'Quick Links', support: 'Support', faq: 'FAQ', privacyPolicy: 'Privacy Policy', termsOfService: 'Terms of Service' }
   },
   fr: {
     nav: { home: 'Accueil', services: 'Nos services', how: 'Notre processus', projects: 'Nos projets', realtors: 'Pour les courtiers', partners: 'Devenir partenaire', quote: 'Devis gratuit' },
@@ -759,7 +759,7 @@ export const TRANSLATIONS = {
         errors: { name: 'Veuillez entrer votre nom.', contact: 'Veuillez entrer au moins le courriel ou le téléphone.', consent: 'Veuillez accepter le consentement.', submit: 'Envoi impossible. Réessayez ou appelez le (613) 204-8000.' }
       }
     },
-    footer: { desc: 'Préparation de propriétés. Ottawa, Ontario.', home: 'Accueil', about: 'À propos', services: 'Services', how: 'Notre processus', projects: 'Nos projets', realtors: 'Pour courtiers', quote: 'Devis', partners: 'Devenir partenaire', rights: '© Trusted Home Services. Tous droits réservés.', quickLinks: 'Liens rapides', support: 'Support', faq: 'FAQ', privacyPolicy: 'Politique de confidentialité', termsOfService: 'Conditions d\'utilisation' }
+    footer: { desc: 'Préparation de propriétés. Ottawa, Ontario.', home: 'Accueil', about: 'À propos', services: 'Services', how: 'Notre processus', projects: 'Nos projets', realtors: 'Pour courtiers', quote: 'Devis', partners: 'Devenir partenaire', rights: '© 2026 Trusted Home Services. Tous droits réservés.', quickLinks: 'Liens rapides', support: 'Support', faq: 'FAQ', privacyPolicy: 'Politique de confidentialité', termsOfService: 'Conditions d\'utilisation' }
   },
   es: {
     nav: { home: 'Inicio', services: 'Nuestros servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', realtors: 'Para agentes', partners: 'Ser socio', quote: 'Cotización gratuita' },
@@ -1139,7 +1139,7 @@ export const TRANSLATIONS = {
         errors: { name: 'Por favor indique su nombre.', contact: 'Por favor indique al menos email o teléfono.', consent: 'Por favor acepte el consentimiento.', submit: 'No se pudo enviar. Intente de nuevo o llame al (613) 204-8000.' }
       }
     },
-    footer: { desc: 'Preparación de propiedades. Ottawa, Ontario.', home: 'Inicio', about: 'Nosotros', services: 'Servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', realtors: 'Para agentes', quote: 'Cotización', partners: 'Ser socio', rights: '© Trusted Home Services. Todos los derechos reservados.', quickLinks: 'Enlaces rápidos', support: 'Soporte', faq: 'FAQ', privacyPolicy: 'Política de privacidad', termsOfService: 'Términos de servicio' }
+    footer: { desc: 'Preparación de propiedades. Ottawa, Ontario.', home: 'Inicio', about: 'Nosotros', services: 'Servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', realtors: 'Para agentes', quote: 'Cotización', partners: 'Ser socio', rights: '© 2026 Trusted Home Services. Todos los derechos reservados.', quickLinks: 'Enlaces rápidos', support: 'Soporte', faq: 'FAQ', privacyPolicy: 'Política de privacidad', termsOfService: 'Términos de servicio' }
   }
 };
 
