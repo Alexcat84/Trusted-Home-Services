@@ -115,11 +115,9 @@ export default async function handler(req, res) {
   const { sendAdminSms } = await import('./lib/sms.js');
   const { sendPushToAll } = await import('./lib/push.js');
   const { sendAdminNotifyEvents } = await import('./lib/notify-events.js');
-  const { sendOneSignalPush } = await import('./lib/onesignal.js');
   await sendAdminSms(type, body).catch((e) => console.error('SMS:', e.message));
   await sendPushToAll(type, body).catch((e) => console.error('Push:', e.message));
   await sendAdminNotifyEvents(type, body).catch((e) => console.error('Notify.Events:', e.message));
-  await sendOneSignalPush(type, body).catch((e) => console.error('OneSignal:', e.message));
 
   return res.status(200).json({ ok: true });
 }
