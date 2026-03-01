@@ -1884,6 +1884,12 @@ function AdminPage() {
   const [filterAreas, setFilterAreas] = useState('');
   const [filterSize, setFilterSize] = useState('');
   const [filterMessage, setFilterMessage] = useState('');
+  const [pushStatus, setPushStatus] = useState('idle'); // idle | loading | enabled | error | unsupported
+  const [pushError, setPushError] = useState(null);
+  const oneSignalAppId = import.meta.env.VITE_ONE_SIGNAL_APP_ID || '';
+  const [oneSignalPushStatus, setOneSignalPushStatus] = useState('idle'); // idle | loading | enabled | error | unsupported
+  const [oneSignalPushError, setOneSignalPushError] = useState(null);
+  const oneSignalRef = useRef(null);
 
   const saveToken = (t) => {
     setToken(t);
@@ -1898,6 +1904,116 @@ function AdminPage() {
     setError(null);
     setSubmissions([]);
     setLoginError(null);
+  };
+
+  const urlBase64ToUint8Array = (base64String) => {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    const output = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; i++) output[i] = rawData.charCodeAt(i);
+    return output;
+  };
+
+  const enablePushNotifications = async () => {
+    setPushError(null);
+    if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+      setPushStatus('unsupported');
+      return;
+    }
+    setPushStatus('loading');
+    try {
+      const vapidRes = await fetch('/api/push-vapid');
+      if (!vapidRes.ok) {
+        const err = await vapidRes.json().catch(() => ({}));
+        throw new Error(err.error || 'VAPID not configured');
+      }
+      const { publicKey } = await vapidRes.json();
+      if (!publicKey) throw new Error('No public key');
+      const registration = await navigator.serviceWorker.ready;
+      let subscription = await registration.pushManager.getSubscription();
+      if (!subscription) {
+        const perm = await Notification.requestPermission();
+        if (perm !== 'granted') throw new Error('Permission denied');
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(publicKey),
+        });
+      }
+      const res = await fetch('/api/push-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ subscription: subscription.toJSON() }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Subscribe failed');
+      }
+      setPushStatus('enabled');
+    } catch (e) {
+      setPushStatus('error');
+      setPushError(e.message || 'Failed to enable notifications');
+    }
+  };
+
+  // Load OneSignal SDK when admin is logged in and app id is set
+  useEffect(() => {
+    if (!oneSignalAppId || !token) return;
+    if (window.OneSignalDeferred) {
+      window.OneSignalDeferred.push(async (OneSignal) => {
+        oneSignalRef.current = OneSignal;
+        try {
+          await OneSignal.init({
+            appId: oneSignalAppId,
+            allowLocalhostAsSecureOrigin: true,
+          });
+          const optedIn = await OneSignal.User.PushSubscription.optedIn;
+          setOneSignalPushStatus(optedIn ? 'enabled' : 'idle');
+        } catch (e) {
+          setOneSignalPushStatus('error');
+          setOneSignalPushError(e.message || 'OneSignal init failed');
+        }
+      });
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      window.OneSignalDeferred.push(async (OneSignal) => {
+        oneSignalRef.current = OneSignal;
+        try {
+          await OneSignal.init({
+            appId: oneSignalAppId,
+            allowLocalhostAsSecureOrigin: true,
+          });
+          const optedIn = await OneSignal.User.PushSubscription.optedIn;
+          setOneSignalPushStatus(optedIn ? 'enabled' : 'idle');
+        } catch (e) {
+          setOneSignalPushStatus('error');
+          setOneSignalPushError(e.message || 'OneSignal init failed');
+        }
+      });
+    };
+    document.head.appendChild(script);
+    return () => { /* script stays */ };
+  }, [oneSignalAppId, token]);
+
+  const enableOneSignalPush = async () => {
+    if (!oneSignalRef.current) return;
+    setOneSignalPushError(null);
+    setOneSignalPushStatus('loading');
+    try {
+      const granted = await oneSignalRef.current.Notifications.requestPermission();
+      if (!granted) throw new Error('Permission denied');
+      await oneSignalRef.current.User.PushSubscription.optIn();
+      setOneSignalPushStatus('enabled');
+    } catch (e) {
+      setOneSignalPushStatus('error');
+      setOneSignalPushError(e.message || 'Failed to enable OneSignal push');
+    }
   };
 
   const handleLogin = async (e) => {
@@ -2091,6 +2207,35 @@ function AdminPage() {
           ) : (
             <>
           <p className="admin-install-hint">To add to home screen: open Chrome menu (⋮) and choose <strong>Add to Home screen</strong> (you may need to scroll down in the menu).</p>
+          <div className="admin-push-wrap">
+            <p className="admin-test-push-label"><strong>Push notifications</strong></p>
+            <p className="admin-test-push-hint">When a form is submitted (Quote, Realtor, Partner, Franchise), you can receive an email, an SMS, and a push notification on this device. Enable push below so you get alerts even when the app is in the background.</p>
+            {oneSignalAppId ? (
+              <>
+                <p className="admin-test-push-hint">Using <strong>OneSignal</strong> (free plan). Configure ONE_SIGNAL_APP_ID and ONE_SIGNAL_REST_API_KEY in the backend.</p>
+                {oneSignalPushStatus === 'idle' && (
+                  <button type="button" className="btn btn-primary admin-test-push" onClick={enableOneSignalPush}>
+                    Enable push (OneSignal)
+                  </button>
+                )}
+                {oneSignalPushStatus === 'loading' && <span className="admin-push-loading">Enabling…</span>}
+                {oneSignalPushStatus === 'enabled' && <span className="admin-push-ok admin-push-ok-block">OneSignal push enabled. You will receive alerts for new submissions.</span>}
+                {oneSignalPushStatus === 'error' && oneSignalPushError && <p className="admin-error">{oneSignalPushError}</p>}
+              </>
+            ) : (
+              <>
+                {pushStatus === 'idle' && (
+                  <button type="button" className="btn btn-primary admin-test-push" onClick={enablePushNotifications}>
+                    Enable push notifications (VAPID)
+                  </button>
+                )}
+                {pushStatus === 'loading' && <span className="admin-push-loading">Enabling…</span>}
+                {pushStatus === 'enabled' && <span className="admin-push-ok admin-push-ok-block">Push notifications enabled. You will receive alerts for new submissions.</span>}
+                {pushStatus === 'unsupported' && <p className="admin-test-push-hint">Your browser does not support push notifications. Use Chrome or Edge and add this app to the home screen for best results.</p>}
+                {pushStatus === 'error' && pushError && <p className="admin-error">{pushError}</p>}
+              </>
+            )}
+          </div>
           {error && <p className="admin-error" role="alert">{error}</p>}
           <div className="admin-table-wrap">
             <div className="admin-filters-card">

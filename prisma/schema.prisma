@@ -18,6 +18,15 @@ model Submission {
   areas        String?
   propertyType String?
   size         String?
-  status       String?  @default("new") // new | contacted | offer_sent | offer_accepted | offer_rejected | work_in_progress | work_done
+  status       String?  @default("new") // new | contacted | offer_sent | ...
+  createdAt    DateTime @default(now())
+}
+
+model PushSubscription {
+  id           String   @id @default(cuid())
+  endpoint     String   @unique
+  keysP256dh   String
+  keysAuth     String
+  userAgent    String?
   createdAt    DateTime @default(now())
 }
