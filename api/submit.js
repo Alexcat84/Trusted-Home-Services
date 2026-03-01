@@ -21,15 +21,15 @@ async function sendAdminEmail(type, payload) {
   const from = process.env.NOTIFY_FROM_EMAIL || 'Trusted Home Services <onboarding@resend.dev>';
   if (!apiKey || !to) return;
 
-  const typeLabel = type === 'realtor' ? 'Realtor / Agente' : type === 'franchise' ? 'Franquicia' : type === 'partner' ? 'Partner' : 'Cotización';
-  const subject = type === 'realtor' ? 'Nuevo contacto (agente) – Trusted Home Services' : type === 'franchise' ? 'Nueva solicitud franquicia – Trusted Home Services' : type === 'partner' ? 'Nueva solicitud partner – Trusted Home Services' : 'Nueva cotización – Trusted Home Services';
-  const name = payload.name || 'Sin nombre';
+  const typeLabel = type === 'realtor' ? 'Realtor' : type === 'franchise' ? 'Franchise' : type === 'partner' ? 'Partner' : 'Quote';
+  const subject = type === 'realtor' ? 'New realtor contact – Trusted Home Services' : type === 'franchise' ? 'New franchise request – Trusted Home Services' : type === 'partner' ? 'New partner request – Trusted Home Services' : 'New quote – Trusted Home Services';
+  const name = payload.name || 'No name';
   const lines = [
-    `Tipo: ${typeLabel}`,
-    `Nombre: ${name}`,
+    `Type: ${typeLabel}`,
+    `Name: ${name}`,
     `Email: ${payload.email || '–'}`,
-    `Teléfono: ${payload.phone || '–'}`,
-    (type === 'realtor' || type === 'franchise' || type === 'partner') ? `Mensaje: ${payload.message || '–'}` : `Trabajo: ${payload.work || '–'}\nÁreas: ${payload.areas || '–'}\nTipo propiedad: ${payload.propertyType || '–'}\nTamaño: ${payload.size || '–'}`,
+    `Phone: ${payload.phone || '–'}`,
+    (type === 'realtor' || type === 'franchise' || type === 'partner') ? `Message: ${payload.message || '–'}` : `Work: ${payload.work || '–'}\nAreas: ${payload.areas || '–'}\nProperty type: ${payload.propertyType || '–'}\nSize: ${payload.size || '–'}`,
   ];
   const text = lines.join('\n');
   const html = '<p>' + lines.map((l) => l.replace(/&/g, '&amp;').replace(/</g, '&lt;')).join('</p><p>') + '</p>';

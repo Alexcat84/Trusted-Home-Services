@@ -1884,8 +1884,6 @@ function AdminPage() {
   const [filterAreas, setFilterAreas] = useState('');
   const [filterSize, setFilterSize] = useState('');
   const [filterMessage, setFilterMessage] = useState('');
-  const [pushStatus, setPushStatus] = useState('idle'); // idle | loading | enabled | error | unsupported
-  const [pushError, setPushError] = useState(null);
 
   const saveToken = (t) => {
     setToken(t);
@@ -1900,56 +1898,6 @@ function AdminPage() {
     setError(null);
     setSubmissions([]);
     setLoginError(null);
-  };
-
-  const urlBase64ToUint8Array = (base64String) => {
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const rawData = atob(base64);
-    const output = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; i++) output[i] = rawData.charCodeAt(i);
-    return output;
-  };
-
-  const enablePushNotifications = async () => {
-    setPushError(null);
-    if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
-      setPushStatus('unsupported');
-      return;
-    }
-    setPushStatus('loading');
-    try {
-      const vapidRes = await fetch('/api/push-vapid');
-      if (!vapidRes.ok) {
-        const err = await vapidRes.json().catch(() => ({}));
-        throw new Error(err.error || 'VAPID not configured');
-      }
-      const { publicKey } = await vapidRes.json();
-      if (!publicKey) throw new Error('No public key');
-      const registration = await navigator.serviceWorker.ready;
-      let subscription = await registration.pushManager.getSubscription();
-      if (!subscription) {
-        const perm = await Notification.requestPermission();
-        if (perm !== 'granted') throw new Error('Permission denied');
-        subscription = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(publicKey),
-        });
-      }
-      const res = await fetch('/api/push-subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ subscription: subscription.toJSON() }),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || 'Subscribe failed');
-      }
-      setPushStatus('enabled');
-    } catch (e) {
-      setPushStatus('error');
-      setPushError(e.message || 'Failed to enable notifications');
-    }
   };
 
   const handleLogin = async (e) => {
@@ -2143,19 +2091,6 @@ function AdminPage() {
           ) : (
             <>
           <p className="admin-install-hint">To add to home screen: open Chrome menu (⋮) and choose <strong>Add to Home screen</strong> (you may need to scroll down in the menu).</p>
-          <div className="admin-push-wrap">
-            <p className="admin-test-push-label"><strong>Push notifications</strong></p>
-            <p className="admin-test-push-hint">When a form is submitted you receive an email and an SMS. Push (optional) uses VAPID below—enable only if you have VAPID keys configured.</p>
-            {pushStatus === 'idle' && (
-              <button type="button" className="btn btn-primary admin-test-push" onClick={enablePushNotifications}>
-                Enable push notifications
-              </button>
-            )}
-            {pushStatus === 'loading' && <span className="admin-push-loading">Enabling…</span>}
-            {pushStatus === 'enabled' && <span className="admin-push-ok admin-push-ok-block">Push notifications enabled.</span>}
-            {pushStatus === 'unsupported' && <p className="admin-test-push-hint">Your browser does not support push. Use Chrome or Edge.</p>}
-            {pushStatus === 'error' && pushError && <p className="admin-error">{pushError}</p>}
-          </div>
           {error && <p className="admin-error" role="alert">{error}</p>}
           <div className="admin-table-wrap">
             <div className="admin-filters-card">

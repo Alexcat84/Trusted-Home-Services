@@ -33,17 +33,17 @@ export async function sendNotifyEvents(title, content, options = {}) {
 }
 
 export async function sendAdminNotifyEvents(type, payload) {
-  const typeLabel = type === 'realtor' ? 'Realtor / Agente' : type === 'franchise' ? 'Franquicia' : type === 'partner' ? 'Partner' : 'Cotización';
-  const title = `Nuevo: ${typeLabel} – Trusted Home Services`;
-  const name = payload.name || 'Sin nombre';
+  const typeLabel = type === 'realtor' ? 'Realtor' : type === 'franchise' ? 'Franchise' : type === 'partner' ? 'Partner' : 'Quote';
+  const title = `New: ${typeLabel} – Trusted Home Services`;
+  const name = payload.name || 'No name';
   const lines = [
-    `Tipo: ${typeLabel}`,
-    `Nombre: ${name}`,
+    `Type: ${typeLabel}`,
+    `Name: ${name}`,
     `Email: ${payload.email || '–'}`,
-    `Teléfono: ${payload.phone || '–'}`,
+    `Phone: ${payload.phone || '–'}`,
     type === 'quote'
-      ? `Trabajo: ${payload.work || '–'} | Áreas: ${payload.areas || '–'} | Propiedad: ${payload.propertyType || '–'} | Tamaño: ${payload.size || '–'}`
-      : `Mensaje: ${payload.message || '–'}`,
+      ? `Work: ${payload.work || '–'} | Areas: ${payload.areas || '–'} | Property type: ${payload.propertyType || '–'} | Size: ${payload.size || '–'}`
+      : `Message: ${payload.message || '–'}`,
   ];
   const content = lines.join('\n');
   await sendNotifyEvents(title, content, { priority: 'high', level: 'notice' });
