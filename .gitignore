@@ -8,10 +8,12 @@ node_modules/
 dist/
 *.local
 
-# Env
+# Env (nunca subir secretos)
 .env
 .env.local
 .env.*.local
+.env.development
+.env.production
 
 # Logs
 npm-debug.log*

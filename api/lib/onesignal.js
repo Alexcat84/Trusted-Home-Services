@@ -17,7 +17,8 @@ export async function sendOneSignalPush(type, payload) {
   const name = payload.name || 'Sin nombre';
   const body = `${name} – ${payload.email || payload.phone || 'sin contacto'}`.slice(0, 120);
 
-  const baseUrl = process.env.SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '');
+  const rawBase = process.env.SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '');
+  const baseUrl = rawBase ? rawBase.replace(/#.*$/, '').replace(/\/+$/, '') : '';
   const openUrl = baseUrl ? `${baseUrl}/#admin` : '/#admin';
 
   try {
