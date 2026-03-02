@@ -2381,6 +2381,7 @@ export default function App() {
   const [subPage, setSubPage] = useState(null);
   const prevSubPageRef = useRef(null);
   const prevLegalPageRef = useRef(null);
+  const isFirstRenderRef = useRef(true);
   useEffect(() => {
     const h = (window.location.hash || '').replace('#', '').toLowerCase();
     setLegalPage(h === 'privacy' ? 'privacy' : h === 'terms' ? 'terms' : h === 'faq' ? 'faq' : h === 'admin' ? 'admin' : null);
@@ -2396,12 +2397,15 @@ export default function App() {
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
+  useEffect(() => {
+    isFirstRenderRef.current = false;
+  }, []);
   useLayoutEffect(() => {
     if (legalPage || subPage) window.scrollTo(0, 0);
   }, [legalPage, subPage]);
   const wasOnSubOrLegal = prevSubPageRef.current != null || prevLegalPageRef.current != null;
   const nowOnMain = !subPage && !legalPage;
-  const skipHeroAnimation = wasOnSubOrLegal && nowOnMain;
+  const skipHeroAnimation = isFirstRenderRef.current || (wasOnSubOrLegal && nowOnMain);
   useEffect(() => {
     prevSubPageRef.current = subPage;
     prevLegalPageRef.current = legalPage;

@@ -576,6 +576,7 @@ a:hover {
 .hero-content--no-animate .hero-actions {
   animation: none;
   opacity: 1;
+  transform: translateY(0);
 }
 
 .hero-scroll {
