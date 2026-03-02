@@ -227,7 +227,7 @@ function Header() {
 
 const HERO_BG_INTERVAL_MS = 4000;
 
-function Hero({ skipAnimation = false }) {
+function Hero({ skipAnimation = false, skipInitialMotion = false }) {
   const { t, lang } = useLang();
   const [bgActive, setBgActive] = useState('first');
   const [heroRealtorModalOpen, setHeroRealtorModalOpen] = useState(false);
@@ -254,7 +254,7 @@ function Hero({ skipAnimation = false }) {
       <motion.div
         className={`container hero-content ${skipAnimation ? 'hero-content--no-animate' : ''}`}
         variants={container}
-        initial={skipAnimation ? 'visible' : 'hidden'}
+        initial={skipAnimation || skipInitialMotion ? 'visible' : 'hidden'}
         animate="visible"
       >
         <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
@@ -2013,6 +2013,11 @@ function AdminPage() {
     updateNotificationSettings(next);
   };
 
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   const filteredSubmissions = submissions.filter((s) => {
     if (filterType !== 'all' && s.type !== filterType) return false;
     if (filterStatus !== 'all' && (s.status || 'new') !== filterStatus) return false;
@@ -2417,7 +2422,7 @@ export default function App() {
     <>
       <Header />
       <main>
-        <Hero skipAnimation={skipHeroAnimation} />
+        <Hero skipAnimation={skipHeroAnimation} skipInitialMotion={!hasMounted} />
         <Services />
         <HowWeWork />
         <Testimonials />
