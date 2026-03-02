@@ -15,6 +15,47 @@ function cors(res) {
   return res;
 }
 
+async function getNotificationFlags() {
+  // Defaults if settings have never been saved.
+  const defaults = { email: true, sms: true };
+
+  const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+  if (dbUrl) {
+    try {
+      const { prisma } = await import('./lib/prisma.js');
+      const row = await prisma.notificationSettings.findUnique({ where: { id: 'default' } });
+      if (row) {
+        return {
+          email: typeof row.email === 'boolean' ? row.email : defaults.email,
+          sms: typeof row.sms === 'boolean' ? row.sms : defaults.sms,
+        };
+      }
+    } catch (e) {
+      console.error('NotificationFlags DB read error:', e.message);
+    }
+  }
+
+  const kvUrl = process.env.KV_REST_API_URL;
+  const kvToken = process.env.KV_REST_API_TOKEN;
+  if (kvUrl && kvToken) {
+    try {
+      const { kv } = await import('@vercel/kv');
+      const raw = await kv.get('notification_settings');
+      if (raw) {
+        const obj = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        return {
+          email: typeof obj.email === 'boolean' ? obj.email : defaults.email,
+          sms: typeof obj.sms === 'boolean' ? obj.sms : defaults.sms,
+        };
+      }
+    } catch (e) {
+      console.error('NotificationFlags KV read error:', e.message);
+    }
+  }
+
+  return defaults;
+}
+
 async function sendAdminEmail(type, payload) {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.ADMIN_EMAIL;
@@ -111,11 +152,17 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Storage error. Configure POSTGRES_URL (and run: npx prisma db push) or KV in Vercel.' });
   }
 
-  await sendAdminEmail(type, body);
+  const flags = await getNotificationFlags().catch(() => ({ email: true, sms: true }));
+
+  if (flags.email) {
+    await sendAdminEmail(type, body);
+  }
   const { sendAdminSms } = await import('./lib/sms.js');
   const { sendPushToAll } = await import('./lib/push.js');
   const { sendAdminNotifyEvents } = await import('./lib/notify-events.js');
-  await sendAdminSms(type, body).catch((e) => console.error('SMS:', e.message));
+  if (flags.sms) {
+    await sendAdminSms(type, body).catch((e) => console.error('SMS:', e.message));
+  }
   await sendPushToAll(type, body).catch((e) => console.error('Push:', e.message));
   await sendAdminNotifyEvents(type, body).catch((e) => console.error('Notify.Events:', e.message));
 

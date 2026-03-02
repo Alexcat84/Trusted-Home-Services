@@ -1884,6 +1884,10 @@ function AdminPage() {
   const [filterAreas, setFilterAreas] = useState('');
   const [filterSize, setFilterSize] = useState('');
   const [filterMessage, setFilterMessage] = useState('');
+  const [notifyEmail, setNotifyEmail] = useState(true);
+  const [notifySms, setNotifySms] = useState(true);
+  const [notifyLoading, setNotifyLoading] = useState(false);
+  const [notifyError, setNotifyError] = useState(null);
 
   const saveToken = (t) => {
     setToken(t);
@@ -1899,6 +1903,19 @@ function AdminPage() {
     setSubmissions([]);
     setLoginError(null);
   };
+
+  const fetchNotificationSettings = useCallback(async () => {
+    if (!token.trim()) return;
+    try {
+      const res = await fetch(`/api/notification-settings?token=${encodeURIComponent(token)}`);
+      if (!res.ok) return;
+      const data = await res.json().catch(() => ({}));
+      if (typeof data.email === 'boolean') setNotifyEmail(data.email);
+      if (typeof data.sms === 'boolean') setNotifySms(data.sms);
+    } catch {
+      // ignore; fall back to defaults
+    }
+  }, [token]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -1920,6 +1937,12 @@ function AdminPage() {
         setLoginUsername('');
         setLoginPassword('');
         setError(null);
+        // Fetch notification settings after successful login
+        try {
+          await fetchNotificationSettings();
+        } catch {
+          // ignore
+        }
       } else {
         setLoginError(data.error || 'Invalid username or password');
       }
@@ -1950,10 +1973,45 @@ function AdminPage() {
 
   useEffect(() => {
     if (!token.trim()) return;
+    fetchNotificationSettings();
     fetchList();
     const interval = setInterval(fetchList, 5000);
     return () => clearInterval(interval);
-  }, [token, fetchList]);
+  }, [token, fetchList, fetchNotificationSettings]);
+
+  const updateNotificationSettings = async (next) => {
+    if (!token.trim()) return;
+    setNotifyLoading(true);
+    setNotifyError(null);
+    try {
+      const res = await fetch('/api/notification-settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(next),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        if (typeof data.email === 'boolean') setNotifyEmail(data.email);
+        if (typeof data.sms === 'boolean') setNotifySms(data.sms);
+      } else {
+        setNotifyError(data.error || 'Failed to update notification settings');
+      }
+    } catch {
+      setNotifyError('Network error while saving notification settings');
+    } finally {
+      setNotifyLoading(false);
+    }
+  };
+
+  const handleToggleEmail = () => {
+    const next = { email: !notifyEmail, sms: notifySms };
+    updateNotificationSettings(next);
+  };
+
+  const handleToggleSms = () => {
+    const next = { email: notifyEmail, sms: !notifySms };
+    updateNotificationSettings(next);
+  };
 
   const filteredSubmissions = submissions.filter((s) => {
     if (filterType !== 'all' && s.type !== filterType) return false;
@@ -2091,6 +2149,32 @@ function AdminPage() {
           ) : (
             <>
           <p className="admin-install-hint">To add to home screen: open Chrome menu (⋮) and choose <strong>Add to Home screen</strong> (you may need to scroll down in the menu).</p>
+          <div className="admin-notify-wrap">
+            <p className="admin-test-push-label"><strong>Notification channels</strong></p>
+            <p className="admin-test-push-hint">Control whether new submissions trigger email and SMS alerts. Changes apply immediately.</p>
+            <div className="admin-notify-toggles">
+              <label className="admin-notify-toggle">
+                <input
+                  type="checkbox"
+                  checked={notifyEmail}
+                  disabled={notifyLoading}
+                  onChange={handleToggleEmail}
+                />
+                <span>Email notifications</span>
+              </label>
+              <label className="admin-notify-toggle">
+                <input
+                  type="checkbox"
+                  checked={notifySms}
+                  disabled={notifyLoading}
+                  onChange={handleToggleSms}
+                />
+                <span>SMS notifications</span>
+              </label>
+              {notifyLoading && <span className="admin-push-loading">Saving…</span>}
+            </div>
+            {notifyError && <p className="admin-error">{notifyError}</p>}
+          </div>
           {error && <p className="admin-error" role="alert">{error}</p>}
           <div className="admin-table-wrap">
             <div className="admin-filters-card">

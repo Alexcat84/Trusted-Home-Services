@@ -30,3 +30,10 @@ model PushSubscription {
   userAgent    String?
   createdAt    DateTime @default(now())
 }
+
+model NotificationSettings {
+  id        String   @id @default("default")
+  email     Boolean  @default(true)
+  sms       Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+}
