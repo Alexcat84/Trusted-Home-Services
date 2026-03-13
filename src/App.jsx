@@ -6,21 +6,29 @@ import { getSectionHash } from './translations';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
+/** Base URL for API (same origin if not set). No trailing slash. */
+function getApiBase() {
+  const base = import.meta.env.VITE_API_ORIGIN;
+  return typeof base === 'string' ? base.replace(/\/$/, '') : '';
+}
+
 /** Envía el payload a nuestra API (Vercel). Devuelve true si ok. */
 async function submitToOwnApi(payload) {
+  const apiBase = getApiBase();
+  const url = `${apiBase}/api/submit`;
   try {
-    const res = await fetch('/api/submit', {
+    const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
     if (!res.ok) {
       const text = await res.text();
-      console.warn('[Trusted Home] API submit failed:', res.status, text || res.statusText);
+      console.warn('[Trusted Home] API submit failed:', res.status, url, text || res.statusText);
     }
     return res.ok;
   } catch (err) {
-    console.warn('[Trusted Home] API submit error:', err?.message || err);
+    console.warn('[Trusted Home] API submit error:', url, err?.message || err);
     return false;
   }
 }

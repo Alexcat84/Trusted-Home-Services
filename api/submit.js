@@ -112,6 +112,8 @@ export default async function handler(req, res) {
   const type = (body.type === 'realtor' || body.type === 'quote' || body.type === 'franchise' || body.type === 'partner') ? body.type : null;
   if (!type) return res.status(400).json({ error: 'Missing or invalid type' });
 
+  console.log('[submit] request type=', type, 'name=', body.name);
+
   const LIMITS = { name: 200, email: 254, phone: 50, message: 5000, work: 5000, areas: 1000, propertyType: 200, size: 100 };
   const trim = (v, max) => (v == null ? v : String(v).trim().slice(0, max) || null);
   const name = trim(body.name ?? '', LIMITS.name);
@@ -156,8 +158,9 @@ export default async function handler(req, res) {
         },
       });
       stored = true;
+      console.log('[submit] stored in DB (Prisma)');
     } catch (e) {
-      console.error('Prisma error:', e.message);
+      console.error('[submit] Prisma error:', e.message);
     }
   }
   if (!stored) {
@@ -169,12 +172,14 @@ export default async function handler(req, res) {
         await kv.lpush(KV_KEY, JSON.stringify(record));
         await kv.ltrim(KV_KEY, 0, MAX_SUBMISSIONS - 1);
         stored = true;
+        console.log('[submit] stored in KV');
       } catch (e) {
-        console.error('KV error:', e.message);
+        console.error('[submit] KV error:', e.message);
       }
     }
   }
   if (!stored) {
+    console.error('[submit] no storage configured (no POSTGRES_URL/DATABASE_URL and no KV)');
     return res.status(500).json({ error: 'Storage error. Configure POSTGRES_URL (and run: npx prisma db push) or KV in Vercel.' });
   }
 
@@ -183,16 +188,24 @@ export default async function handler(req, res) {
   const payload = { name, email, phone, message, work, areas, propertyType, size };
   if (flags.email) {
     await sendAdminEmail(type, payload);
+    console.log('[submit] email sent (Resend)');
+  } else {
+    console.log('[submit] email skipped (flags.email=false or no RESEND_API_KEY/ADMIN_EMAIL)');
   }
   // Notifications are sent for all types: quote, realtor, partner, franchise.
   const { sendAdminSms } = await import('../server-lib/sms.js');
   const { sendPushToAll } = await import('../server-lib/push.js');
   const { sendAdminNotifyEvents } = await import('../server-lib/notify-events.js');
   if (flags.sms) {
-    await sendAdminSms(type, payload).catch((e) => console.error('SMS:', e.message));
+    await sendAdminSms(type, payload).catch((e) => console.error('[submit] SMS error:', e.message));
+    console.log('[submit] SMS sent (Twilio)');
+  } else {
+    console.log('[submit] SMS skipped (flags.sms=false or no Twilio env)');
   }
-  await sendPushToAll(type, payload).catch((e) => console.error('Push:', e.message));
-  await sendAdminNotifyEvents(type, payload).catch((e) => console.error('Notify.Events:', e.message));
+  await sendPushToAll(type, payload).catch((e) => console.error('[submit] Push error:', e.message));
+  console.log('[submit] push/Notify.Events invoked');
+  await sendAdminNotifyEvents(type, payload).catch((e) => console.error('[submit] Notify.Events error:', e.message));
 
+  console.log('[submit] success 200 type=', type);
   return res.status(200).json({ ok: true });
 }
