@@ -18,7 +18,7 @@ async function auth(req) {
   if (!secret || !token) return false;
   if (token === secret) return true;
   if (token.includes('.') && token.split('.').length === 3) {
-    const { verifyJWT } = await import('./lib/auth.js');
+    const { verifyJWT } = await import('../server-lib/auth.js');
     const payload = verifyJWT(token, secret);
     return payload && payload.admin === true;
   }
@@ -48,7 +48,7 @@ export default async function handler(req, res) {
 
   if (dbUrl) {
     try {
-      const { prisma } = await import('./lib/prisma.js');
+      const { prisma } = await import('../server-lib/prisma.js');
       await prisma.pushSubscription.upsert({
         where: { endpoint: sub.endpoint },
         create: {

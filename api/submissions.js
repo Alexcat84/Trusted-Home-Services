@@ -13,7 +13,7 @@ const FRANCHISE_STATUSES = ['new', 'contacted', 'info_sent', 'application_receiv
 const VALID_STATUSES = [...new Set([...QUOTE_STATUSES, ...REALTOR_STATUSES, ...PARTNER_STATUSES, ...FRANCHISE_STATUSES])];
 
 async function cors(req, res) {
-  const { adminCors } = await import('./lib/cors.js');
+  const { adminCors } = await import('../server-lib/cors.js');
   return adminCors(req, res, 'GET, PATCH, DELETE, OPTIONS', 'Content-Type, Authorization');
 }
 
@@ -23,7 +23,7 @@ async function auth(req) {
   if (!secret || !token) return false;
   if (token === secret) return true;
   if (token.includes('.') && token.split('.').length === 3) {
-    const { verifyJWT } = await import('./lib/auth.js');
+    const { verifyJWT } = await import('../server-lib/auth.js');
     const payload = verifyJWT(token, secret);
     return payload && payload.admin === true;
   }
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
     const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
     if (dbUrl) {
       try {
-        const { prisma } = await import('./lib/prisma.js');
+        const { prisma } = await import('../server-lib/prisma.js');
         const rows = await prisma.submission.findMany({
           orderBy: { createdAt: 'desc' },
           take: limit,
@@ -110,7 +110,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing id or invalid status' });
     }
     try {
-      const { prisma } = await import('./lib/prisma.js');
+      const { prisma } = await import('../server-lib/prisma.js');
       await prisma.submission.update({
         where: { id },
         data: { status },
@@ -129,7 +129,7 @@ export default async function handler(req, res) {
     const id = req.query.id;
     if (!id) return res.status(400).json({ error: 'Missing id' });
     try {
-      const { prisma } = await import('./lib/prisma.js');
+      const { prisma } = await import('../server-lib/prisma.js');
       await prisma.submission.delete({ where: { id } });
       return res.status(200).json({ ok: true });
     } catch (e) {

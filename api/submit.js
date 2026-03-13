@@ -22,7 +22,7 @@ async function getNotificationFlags() {
   const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
   if (dbUrl) {
     try {
-      const { prisma } = await import('./lib/prisma.js');
+      const { prisma } = await import('../server-lib/prisma.js');
       const row = await prisma.notificationSettings.findUnique({ where: { id: 'default' } });
       if (row) {
         return {
@@ -95,7 +95,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { checkRateLimit } = await import('./lib/rate-limit.js');
+  const { checkRateLimit } = await import('../server-lib/rate-limit.js');
   const rl = await checkRateLimit(req, 'submit', 10, 60);
   if (!rl.allowed) {
     res.setHeader('Retry-After', String(rl.retryAfter ?? 60));
@@ -141,7 +141,7 @@ export default async function handler(req, res) {
   const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
   if (dbUrl) {
     try {
-      const { prisma } = await import('./lib/prisma.js');
+      const { prisma } = await import('../server-lib/prisma.js');
       await prisma.submission.create({
         data: {
           type,
@@ -184,9 +184,9 @@ export default async function handler(req, res) {
   if (flags.email) {
     await sendAdminEmail(type, payload);
   }
-  const { sendAdminSms } = await import('./lib/sms.js');
-  const { sendPushToAll } = await import('./lib/push.js');
-  const { sendAdminNotifyEvents } = await import('./lib/notify-events.js');
+  const { sendAdminSms } = await import('../server-lib/sms.js');
+  const { sendPushToAll } = await import('../server-lib/push.js');
+  const { sendAdminNotifyEvents } = await import('../server-lib/notify-events.js');
   if (flags.sms) {
     await sendAdminSms(type, payload).catch((e) => console.error('SMS:', e.message));
   }

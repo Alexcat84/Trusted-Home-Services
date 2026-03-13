@@ -1,10 +1,6 @@
 /**
- * Send a notification via Notify.Events (one source → email, SMS, push, Telegram, etc.).
- * Set NOTIFY_EVENTS_SOURCE_TOKEN to the source token from your channel
- * (e.g. from "Incoming Webhook v2" or "Node.js" source).
- * API: POST https://notify.events/api/v1/channel/source/{token}/execute (multipart: title, content, priority, level)
+ * Send a notification via Notify.Events.
  */
-
 const EXECUTE_URL = 'https://notify.events/api/v1/channel/source';
 
 export async function sendNotifyEvents(title, content, options = {}) {
@@ -22,10 +18,7 @@ export async function sendNotifyEvents(title, content, options = {}) {
 
   try {
     const url = token.startsWith('http') ? token : `${EXECUTE_URL}/${token.replace(/\/$/, '')}/execute`;
-    const r = await fetch(url, {
-      method: 'POST',
-      body: form,
-    });
+    const r = await fetch(url, { method: 'POST', body: form });
     if (!r.ok) console.error('Notify.Events error:', r.status, await r.text());
   } catch (e) {
     console.error('Notify.Events request error:', e.message);

@@ -1,8 +1,6 @@
 /**
  * Send push notifications to all stored admin subscriptions.
- * Call after a form is submitted. Uses VAPID keys from env.
  */
-
 export async function sendPushToAll(type, payload) {
   const vapidPublic = process.env.VAPID_PUBLIC_KEY;
   const vapidPrivate = process.env.VAPID_PRIVATE_KEY;

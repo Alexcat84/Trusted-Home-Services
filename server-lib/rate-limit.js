@@ -1,10 +1,5 @@
 /**
  * Simple rate limit using Vercel KV. If KV is not configured, allows all requests.
- * @param {object} req - Vercel request object
- * @param {string} prefix - Key prefix (e.g. 'submit', 'login')
- * @param {number} limit - Max requests per window
- * @param {number} windowSeconds - Window in seconds
- * @returns {{ allowed: boolean, retryAfter?: number }}
  */
 export async function checkRateLimit(req, prefix, limit = 10, windowSeconds = 60) {
   const kvUrl = process.env.KV_REST_API_URL;

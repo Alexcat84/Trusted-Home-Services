@@ -1,8 +1,6 @@
 /**
  * Send SMS to admin phone via Twilio when a form is submitted.
- * Requires: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, ADMIN_PHONE
  */
-
 export async function sendAdminSms(type, payload) {
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;

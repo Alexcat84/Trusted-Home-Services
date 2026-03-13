@@ -12,7 +12,7 @@
 const KV_KEY = 'notification_settings';
 
 async function cors(req, res) {
-  const { adminCors } = await import('./lib/cors.js');
+  const { adminCors } = await import('../server-lib/cors.js');
   return adminCors(req, res, 'GET, PATCH, OPTIONS', 'Content-Type, Authorization');
 }
 
@@ -23,7 +23,7 @@ async function auth(req) {
   if (token === secret) return true;
   if (token.includes('.') && token.split('.').length === 3) {
     try {
-      const { verifyJWT } = await import('./lib/auth.js');
+      const { verifyJWT } = await import('../server-lib/auth.js');
       const payload = verifyJWT(token, secret);
       return payload && payload.admin === true;
     } catch {
@@ -39,7 +39,7 @@ async function getFlagsFromDb() {
   const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
   if (!dbUrl) return null;
   try {
-    const { prisma } = await import('./lib/prisma.js');
+    const { prisma } = await import('../server-lib/prisma.js');
     const row = await prisma.notificationSettings.findUnique({ where: { id: 'default' } });
     if (!row) return null;
     return { email: !!row.email, sms: !!row.sms };
@@ -53,7 +53,7 @@ async function saveFlagsToDb(flags) {
   const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
   if (!dbUrl) return false;
   try {
-    const { prisma } = await import('./lib/prisma.js');
+    const { prisma } = await import('../server-lib/prisma.js');
     await prisma.notificationSettings.upsert({
       where: { id: 'default' },
       update: { email: flags.email, sms: flags.sms },

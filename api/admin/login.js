@@ -6,12 +6,12 @@
  */
 
 export default async function handler(req, res) {
-  const { adminCors } = await import('../lib/cors.js');
+  const { adminCors } = await import('../../server-lib/cors.js');
   adminCors(req, res, 'POST, OPTIONS', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { checkRateLimit } = await import('../lib/rate-limit.js');
+  const { checkRateLimit } = await import('../../server-lib/rate-limit.js');
   const rl = await checkRateLimit(req, 'login', 5, 900);
   if (!rl.allowed) {
     res.setHeader('Retry-After', String(rl.retryAfter ?? 900));
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Invalid username or password' });
   }
 
-  const { signJWT } = await import('../lib/auth.js');
+  const { signJWT } = await import('../../server-lib/auth.js');
   const token = signJWT({ admin: true }, secret);
 
   return res.status(200).json({ token });
