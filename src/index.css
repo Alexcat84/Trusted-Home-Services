@@ -1483,6 +1483,17 @@ a:hover {
 .realtor-modal-success .btn + .btn {
   margin-left: 0;
 }
+/* Close button: modal has light bg, so secondary must use dark text (global .btn-secondary is white for dark backgrounds) */
+.realtor-modal-success-actions .btn-secondary {
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+  border: 2px solid var(--color-text-muted);
+}
+.realtor-modal-success-actions .btn-secondary:hover {
+  background: #e2e8f0;
+  border-color: var(--color-text);
+  color: var(--color-text);
+}
 .realtors-hint {
   margin: 1rem 0 0 !important;
   font-size: 0.875rem !important;
