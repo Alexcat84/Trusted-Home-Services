@@ -5,17 +5,18 @@
  * Env: ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_SECRET (for signing JWT)
  */
 
-function cors(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  return res;
-}
-
 export default async function handler(req, res) {
-  cors(res);
+  const { adminCors } = await import('../lib/cors.js');
+  adminCors(req, res, 'POST, OPTIONS', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const { checkRateLimit } = await import('../lib/rate-limit.js');
+  const rl = await checkRateLimit(req, 'login', 5, 900);
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter ?? 900));
+    return res.status(429).json({ error: 'Too many login attempts. Try again later.' });
+  }
 
   const username = process.env.ADMIN_USERNAME;
   const password = process.env.ADMIN_PASSWORD;

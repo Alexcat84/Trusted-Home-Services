@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { LangProvider } from './context/LangContext';
 import App from './App';
+import CookieConsent from './components/CookieConsent';
 import './index.css';
 
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
@@ -13,6 +14,7 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <LangProvider>
+      <CookieConsent />
       <App />
     </LangProvider>
   </React.StrictMode>

@@ -95,6 +95,13 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
+  const { checkRateLimit } = await import('./lib/rate-limit.js');
+  const rl = await checkRateLimit(req, 'submit', 10, 60);
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter ?? 60));
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+  }
+
   let body;
   try {
     body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
@@ -105,9 +112,28 @@ export default async function handler(req, res) {
   const type = (body.type === 'realtor' || body.type === 'quote' || body.type === 'franchise' || body.type === 'partner') ? body.type : null;
   if (!type) return res.status(400).json({ error: 'Missing or invalid type' });
 
+  const LIMITS = { name: 200, email: 254, phone: 50, message: 5000, work: 5000, areas: 1000, propertyType: 200, size: 100 };
+  const trim = (v, max) => (v == null ? v : String(v).trim().slice(0, max) || null);
+  const name = trim(body.name ?? '', LIMITS.name);
+  if (!name) return res.status(400).json({ error: 'Name is required' });
+  const email = trim(body.email, LIMITS.email);
+  const phone = trim(body.phone, LIMITS.phone);
+  const message = trim(body.message, LIMITS.message);
+  const work = trim(body.work, LIMITS.work);
+  const areas = trim(body.areas, LIMITS.areas);
+  const propertyType = trim(body.propertyType, LIMITS.propertyType);
+  const size = trim(body.size, LIMITS.size);
+
   const record = {
     type,
-    ...body,
+    name,
+    email: email || null,
+    phone: phone || null,
+    message: message || null,
+    work: work || null,
+    areas: areas || null,
+    propertyType: propertyType || null,
+    size: size || null,
     _at: new Date().toISOString(),
   };
 
@@ -119,14 +145,14 @@ export default async function handler(req, res) {
       await prisma.submission.create({
         data: {
           type,
-          name: body.name ?? '',
-          email: body.email ?? null,
-          phone: body.phone ?? null,
-          message: body.message ?? null,
-          work: body.work ?? null,
-          areas: body.areas ?? null,
-          propertyType: body.propertyType ?? null,
-          size: body.size ?? null,
+          name,
+          email: email || null,
+          phone: phone || null,
+          message: message || null,
+          work: work || null,
+          areas: areas || null,
+          propertyType: propertyType || null,
+          size: size || null,
         },
       });
       stored = true;
@@ -154,17 +180,18 @@ export default async function handler(req, res) {
 
   const flags = await getNotificationFlags().catch(() => ({ email: true, sms: true }));
 
+  const payload = { name, email, phone, message, work, areas, propertyType, size };
   if (flags.email) {
-    await sendAdminEmail(type, body);
+    await sendAdminEmail(type, payload);
   }
   const { sendAdminSms } = await import('./lib/sms.js');
   const { sendPushToAll } = await import('./lib/push.js');
   const { sendAdminNotifyEvents } = await import('./lib/notify-events.js');
   if (flags.sms) {
-    await sendAdminSms(type, body).catch((e) => console.error('SMS:', e.message));
+    await sendAdminSms(type, payload).catch((e) => console.error('SMS:', e.message));
   }
-  await sendPushToAll(type, body).catch((e) => console.error('Push:', e.message));
-  await sendAdminNotifyEvents(type, body).catch((e) => console.error('Notify.Events:', e.message));
+  await sendPushToAll(type, payload).catch((e) => console.error('Push:', e.message));
+  await sendAdminNotifyEvents(type, payload).catch((e) => console.error('Notify.Events:', e.message));
 
   return res.status(200).json({ ok: true });
 }

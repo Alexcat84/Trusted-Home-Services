@@ -1,5 +1,5 @@
 /**
- * GET /api/notification-settings?token=ADMIN_SECRET
+ * GET /api/notification-settings  (Authorization: Bearer <JWT or ADMIN_SECRET>)
  *  -> { email: boolean, sms: boolean }
  * PATCH /api/notification-settings
  *  Body: { email?: boolean, sms?: boolean }
@@ -11,17 +11,13 @@
 
 const KV_KEY = 'notification_settings';
 
-function cors(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, PATCH, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  return res;
+async function cors(req, res) {
+  const { adminCors } = await import('./lib/cors.js');
+  return adminCors(req, res, 'GET, PATCH, OPTIONS', 'Content-Type, Authorization');
 }
 
 async function auth(req) {
-  const header = req.headers.authorization || '';
-  const bearer = header.replace(/^Bearer\s+/i, '');
-  const token = req.query.token || bearer;
+  const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '').trim();
   const secret = process.env.ADMIN_SECRET;
   if (!secret || !token) return false;
   if (token === secret) return true;
@@ -120,7 +116,7 @@ async function saveFlags(flags) {
 }
 
 export default async function handler(req, res) {
-  cors(res);
+  await cors(req, res);
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (!(await auth(req))) return res.status(401).json({ error: 'Unauthorized' });
 

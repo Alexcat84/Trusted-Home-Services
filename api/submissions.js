@@ -1,7 +1,7 @@
 /**
- * GET /api/submissions?token=ADMIN_SECRET — list
- * PATCH /api/submissions — body { id, status }
- * DELETE /api/submissions?id=xxx&token=xxx
+ * GET /api/submissions  (Authorization: Bearer <JWT>)
+ * PATCH /api/submissions — body { id, status }  (Authorization: Bearer <JWT>)
+ * DELETE /api/submissions?id=xxx  (Authorization: Bearer <JWT>)
  */
 
 const KV_KEY = 'submissions';
@@ -12,15 +12,13 @@ const PARTNER_STATUSES = ['new', 'contacted', 'interview_scheduled', 'under_revi
 const FRANCHISE_STATUSES = ['new', 'contacted', 'info_sent', 'application_received', 'under_review', 'agreement_sent', 'agreement_signed', 'active_member', 'inactive', 'terminated'];
 const VALID_STATUSES = [...new Set([...QUOTE_STATUSES, ...REALTOR_STATUSES, ...PARTNER_STATUSES, ...FRANCHISE_STATUSES])];
 
-function cors(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, PATCH, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  return res;
+async function cors(req, res) {
+  const { adminCors } = await import('./lib/cors.js');
+  return adminCors(req, res, 'GET, PATCH, DELETE, OPTIONS', 'Content-Type, Authorization');
 }
 
 async function auth(req) {
-  const token = req.query.token || req.headers.authorization?.replace(/^Bearer\s+/i, '');
+  const token = req.headers.authorization?.replace(/^Bearer\s+/i, '') || '';
   const secret = process.env.ADMIN_SECRET;
   if (!secret || !token) return false;
   if (token === secret) return true;
@@ -54,7 +52,7 @@ function toAdminShape(row) {
 }
 
 export default async function handler(req, res) {
-  cors(res);
+  await cors(req, res);
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (!(await auth(req))) return res.status(401).json({ error: 'Unauthorized' });
 
