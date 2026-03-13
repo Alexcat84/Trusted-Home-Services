@@ -184,6 +184,7 @@ export default async function handler(req, res) {
   if (flags.email) {
     await sendAdminEmail(type, payload);
   }
+  // Notifications are sent for all types: quote, realtor, partner, franchise.
   const { sendAdminSms } = await import('../server-lib/sms.js');
   const { sendPushToAll } = await import('../server-lib/push.js');
   const { sendAdminNotifyEvents } = await import('../server-lib/notify-events.js');

@@ -1479,9 +1479,9 @@ a:hover {
 }
 .realtor-modal-success-main { font-weight: 600; }
 .realtor-modal-success-prompt { margin-bottom: 1.25rem !important; color: var(--color-text-muted) !important; font-size: 0.9375rem; }
-.realtor-modal-success-actions { margin-top: 1rem; }
+.realtor-modal-success-actions { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .realtor-modal-success .btn + .btn {
-  margin-left: 0.5rem;
+  margin-left: 0;
 }
 .realtors-hint {
   margin: 1rem 0 0 !important;

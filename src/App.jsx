@@ -14,8 +14,13 @@ async function submitToOwnApi(payload) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
+    if (!res.ok) {
+      const text = await res.text();
+      console.warn('[Trusted Home] API submit failed:', res.status, text || res.statusText);
+    }
     return res.ok;
-  } catch {
+  } catch (err) {
+    console.warn('[Trusted Home] API submit error:', err?.message || err);
     return false;
   }
 }
@@ -651,6 +656,7 @@ function RealtorFormModal({ open, onClose }) {
             <p className="realtor-modal-success-prompt">{t('realtors.form.successDetailPrompt')}</p>
             <div className="realtor-modal-success-actions">
               <button type="button" className="btn btn-primary" onClick={goToDetailedQuote}>{t('realtors.form.getDetailedQuote')}</button>
+              <button type="button" className="btn btn-secondary" onClick={handleClose}>{t('realtors.form.close')}</button>
             </div>
           </div>
         )}
