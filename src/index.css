@@ -1,12 +1,11 @@
 /* ============================================
-   Trusted Home Services — Paleta del logo
-   Header/cinta = fondo logo: #223151 (igual que el logo, sin diferencia)
-   Acento: #F9772B
-   Texto sobre oscuro: #FFFFFF
+   Trusted Home Services — Paleta (cintas = fondo del logo)
+   Primary/primary-dark extraídos del fondo de Logo v3 Inverted.jpg.
+   Acento: #F9772B | Texto sobre oscuro: #FFFFFF
    ============================================ */
 :root {
-  --color-primary: #223151;
-  --color-primary-dark: #1a2740;
+  --color-primary: #1e1e55;
+  --color-primary-dark: #16164a;
   --color-accent: #F9772B;
   --color-accent-hover: #e06a20;
   --color-text-on-dark: #FFFFFF;
@@ -18,8 +17,8 @@
   --font-sans: 'Outfit', 'DM Sans', system-ui, sans-serif;
   --radius: 12px;
   --radius-lg: 20px;
-  --shadow: 0 4px 24px rgba(40, 53, 98, 0.08);
-  --shadow-lg: 0 12px 48px rgba(40, 53, 98, 0.12);
+  --shadow: 0 4px 24px rgba(30, 30, 85, 0.08);
+  --shadow-lg: 0 12px 48px rgba(30, 30, 85, 0.12);
   --transition: 0.3s ease;
 }
 
@@ -2197,7 +2196,7 @@ a:hover {
   padding-bottom: 1rem;
 }
 .privacy-hero {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 50%, #1e3a5f 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 50%, #12123d 100%);
   color: var(--color-text-on-dark);
   padding: 2.5rem 0;
   text-align: center;
@@ -2324,7 +2323,7 @@ a:hover {
 
 /* ---- For Realtors page ---- */
 .realtor-hero {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 50%, #1e3a5f 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 50%, #12123d 100%);
   color: var(--color-text-on-dark);
   padding: 2.5rem 0;
   text-align: center;
