@@ -15,8 +15,8 @@ self.addEventListener('push', function (event) {
   }
   const options = {
     body: body,
-    icon: '/images/Logo%20v3%20Inverted.jpg',
-    badge: '/images/Logo%20v3%20Inverted.jpg',
+    icon: '/images/Logo%20v4.0%20Inverted.jpg',
+    badge: '/images/Logo%20v4.0%20Inverted.jpg',
     tag: 'ths-form',
     requireInteraction: false,
     data: { url: '/#admin' }
