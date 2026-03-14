@@ -24,9 +24,15 @@ async function submitToOwnApi(payload) {
     });
     if (!res.ok) {
       const text = await res.text();
-      console.warn('[Trusted Home] API submit failed:', res.status, url, text || res.statusText);
+      let errMsg = text;
+      try {
+        const j = JSON.parse(text);
+        if (j && typeof j.error === 'string') errMsg = j.error;
+      } catch (_) {}
+      console.warn('[Trusted Home] API submit failed:', res.status, url, errMsg);
+      return false;
     }
-    return res.ok;
+    return true;
   } catch (err) {
     console.warn('[Trusted Home] API submit error:', url, err?.message || err);
     return false;
@@ -557,27 +563,20 @@ function RealtorFormModal({ open, onClose }) {
     setValidationErrors(errors);
     if (errors.length > 0) return;
     const form = e.target;
-    const data = new FormData(form);
+    const messageVal = (new FormData(form).get('message') || '').trim() || undefined;
     const payload = {
       type: 'realtor',
-      name: data.get('name'),
-      email: data.get('email'),
-      phone: data.get('phone') || '',
-      message: data.get('message') || '',
+      name: name.trim(),
+      email: email.trim() || undefined,
+      phone: phone.trim() || undefined,
+      message: messageVal,
     };
     const ok = await submitToOwnApi(payload);
     if (ok) {
       setSubmitted(true);
       return;
     }
-    const formId = import.meta.env.VITE_FORMSPREE_REALTOR;
-    if (formId) {
-      const fallbackOk = await submitToFormspree(formId, payload);
-      if (fallbackOk) setSubmitted(true);
-      else setValidationErrors(['submit']);
-    } else {
-      setValidationErrors(['submit']);
-    }
+    setValidationErrors(['submit']);
   };
 
   const handleClose = () => {
@@ -998,15 +997,14 @@ function QuoteForm() {
 
     const payload = {
       type: 'quote',
-      wholeHouse,
-      propertyType: quoteData.propertyType,
-      size: quoteData.size,
-      areas: wholeHouse ? 'whole house' : quoteData.areas,
-      work: quoteData.work,
+      propertyType: quoteData.propertyType || undefined,
+      size: quoteData.size || undefined,
+      areas: wholeHouse ? 'whole house' : (quoteData.areas || undefined),
+      work: quoteData.work || undefined,
       name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      message,
+      email: email.trim() || undefined,
+      phone: phone.trim() || undefined,
+      message: message.trim() || undefined,
     };
 
     const ok = await submitToOwnApi(payload);
@@ -1014,14 +1012,7 @@ function QuoteForm() {
       setSubmitted(true);
       return;
     }
-    const formId = import.meta.env.VITE_FORMSPREE_QUOTE;
-    if (formId) {
-      const fallbackOk = await submitToFormspree(formId, payload);
-      if (fallbackOk) setSubmitted(true);
-      else setValidationErrors(['submit']);
-    } else {
-      setValidationErrors(['submit']);
-    }
+    setValidationErrors(['submit']);
   };
 
   return (

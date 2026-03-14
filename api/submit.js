@@ -96,10 +96,10 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { checkRateLimit } = await import('../server-lib/rate-limit.js');
-  const rl = await checkRateLimit(req, 'submit', 10, 60);
+  const rl = await checkRateLimit(req, 'submit', 30, 60);
   if (!rl.allowed) {
     res.setHeader('Retry-After', String(rl.retryAfter ?? 60));
-    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+    return res.status(429).json({ error: 'Too many requests. Please try again in a minute.' });
   }
 
   let body;
