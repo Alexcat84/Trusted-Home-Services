@@ -1,6 +1,6 @@
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
-self.addEventListener('fetch', () => {});
+// No fetch listener: let all requests (including POST /api/submit) go to the network.
 
 self.addEventListener('push', function (event) {
   if (!event.data) return;
