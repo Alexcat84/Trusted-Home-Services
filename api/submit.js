@@ -1,8 +1,17 @@
 /**
  * POST /api/submit
- * Body: { type: 'realtor'|'quote', ...fields }
- * - Stores in Prisma DB (if DATABASE_URL set) or Vercel KV (if KV_* set)
- * - Sends email alert (if RESEND_API_KEY + ADMIN_EMAIL set)
+ * Body: { type: 'realtor'|'quote'|'partner'|'franchise', name, email?, phone?, message?, work?, areas?, propertyType?, size? }
+ *
+ * Notifications are sent by THIS serverless function (Vercel). Same logic for all 4 types.
+ * Config: Vercel project → Settings → Environment Variables.
+ *
+ * Storage (required): POSTGRES_URL or DATABASE_URL (Prisma), or KV_REST_API_URL + KV_REST_API_TOKEN.
+ * Email: RESEND_API_KEY + ADMIN_EMAIL. Optional: NOTIFY_FROM_EMAIL.
+ * SMS: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, ADMIN_PHONE.
+ * Push: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY. Optional: VAPID_MAILTO.
+ * Notify.Events: NOTIFY_EVENTS_SOURCE_TOKEN.
+ *
+ * Check config: GET /api/notifications-config returns which channels are set (no secrets).
  */
 
 const KV_KEY = 'submissions';
@@ -207,5 +216,5 @@ export default async function handler(req, res) {
   await sendAdminNotifyEvents(type, payload).catch((e) => console.error('[submit] Notify.Events error:', e.message));
 
   console.log('[submit] success 200 type=', type);
-  return res.status(200).json({ ok: true });
+  return res.status(200).json({ ok: true, type });
 }

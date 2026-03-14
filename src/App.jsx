@@ -32,6 +32,8 @@ async function submitToOwnApi(payload) {
       console.warn('[Trusted Home] API submit failed:', res.status, url, errMsg);
       return false;
     }
+    const data = await res.json().catch(() => ({}));
+    if (data && data.type) console.log('[Trusted Home] API submit OK type=', data.type);
     return true;
   } catch (err) {
     console.warn('[Trusted Home] API submit error:', url, err?.message || err);
