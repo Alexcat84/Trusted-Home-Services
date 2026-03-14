@@ -93,9 +93,10 @@ async function sendAdminEmail(type, payload) {
       },
       body: JSON.stringify({ from, to: [to], subject, html, text }),
     });
-    if (!r.ok) console.error('Resend email error:', await r.text());
+    if (!r.ok) console.error('[submit] Resend email error type=', type, await r.text());
+    else console.log('[submit] Resend OK type=', type);
   } catch (e) {
-    console.error('Resend error:', e.message);
+    console.error('[submit] Resend exception type=', type, e.message);
   }
 }
 
@@ -197,19 +198,16 @@ export default async function handler(req, res) {
   const payload = { name, email, phone, message, work, areas, propertyType, size };
   if (flags.email) {
     await sendAdminEmail(type, payload);
-    console.log('[submit] email sent (Resend)');
   } else {
-    console.log('[submit] email skipped (flags.email=false or no RESEND_API_KEY/ADMIN_EMAIL)');
+    console.log('[submit] email skipped type=', type);
   }
-  // Notifications are sent for all types: quote, realtor, partner, franchise.
   const { sendAdminSms } = await import('../server-lib/sms.js');
   const { sendPushToAll } = await import('../server-lib/push.js');
   const { sendAdminNotifyEvents } = await import('../server-lib/notify-events.js');
   if (flags.sms) {
-    await sendAdminSms(type, payload).catch((e) => console.error('[submit] SMS error:', e.message));
-    console.log('[submit] SMS sent (Twilio)');
+    await sendAdminSms(type, payload).catch((e) => console.error('[submit] SMS error type=', type, e.message));
   } else {
-    console.log('[submit] SMS skipped (flags.sms=false or no Twilio env)');
+    console.log('[submit] SMS skipped type=', type);
   }
   await sendPushToAll(type, payload).catch((e) => console.error('[submit] Push error:', e.message));
   console.log('[submit] push/Notify.Events invoked');

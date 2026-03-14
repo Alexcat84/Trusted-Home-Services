@@ -24,8 +24,9 @@ export async function sendAdminSms(type, payload) {
         body: new URLSearchParams({ To: toNumber, From: fromNumber, Body: body }).toString(),
       }
     );
-    if (!r.ok) console.error('Twilio SMS error:', await r.text());
+    if (!r.ok) console.error('[submit] Twilio SMS error type=', type, await r.text());
+    else console.log('[submit] Twilio OK type=', type);
   } catch (e) {
-    console.error('Twilio error:', e.message);
+    console.error('[submit] Twilio exception type=', type, e.message);
   }
 }
