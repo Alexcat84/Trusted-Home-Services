@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://trusted-home-services.vercel.app/sitemap.xml
+Sitemap: https://trustedhomeservices.ca/sitemap.xml

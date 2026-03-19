@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://trusted-home-services.vercel.app/</loc>
+    <loc>https://trustedhomeservices.ca/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://trusted-home-services.vercel.app/#privacy</loc>
+    <loc>https://trustedhomeservices.ca/#privacy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://trusted-home-services.vercel.app/#terms</loc>
+    <loc>https://trustedhomeservices.ca/#terms</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://trusted-home-services.vercel.app/#faq</loc>
+    <loc>https://trustedhomeservices.ca/#faq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

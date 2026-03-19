@@ -4,7 +4,7 @@
  * - `publicCors`: endpoints públicos (evitar `Access-Control-Allow-Origin: *`).
  */
 const ADMIN_TRUSTED_ORIGINS = new Set([
-  'https://trusted-home-services.vercel.app',
+  'https://trustedhomeservices.ca',
   'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:8080',
@@ -12,10 +12,9 @@ const ADMIN_TRUSTED_ORIGINS = new Set([
 
 function getAllowedOrigin(req) {
   const allowed = new Set(ADMIN_TRUSTED_ORIGINS);
-  if (process.env.VERCEL_URL) allowed.add(`https://${process.env.VERCEL_URL}`);
   const origin = req.headers?.origin;
   if (origin && allowed.has(origin)) return origin;
-  return 'https://trusted-home-services.vercel.app';
+  return 'https://trustedhomeservices.ca';
 }
 
 export function adminCors(req, res, methods = 'GET, PATCH, DELETE, OPTIONS', headers = 'Content-Type, Authorization') {
@@ -39,7 +38,6 @@ function getPublicAllowedOrigin(req) {
     : [];
 
   const trustedOrigins = new Set([
-    ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
     ...trustedEnv,
   ]);
 
