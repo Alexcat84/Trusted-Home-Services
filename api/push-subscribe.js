@@ -5,15 +5,10 @@
  * Stores subscription for sending push when a form is submitted.
  */
 
-function cors(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  return res;
-}
+import { publicCors } from '../server-lib/cors.js';
 
 async function auth(req) {
-  const token = req.query.token || req.headers.authorization?.replace(/^Bearer\s+/i, '');
+  const token = req.headers.authorization?.replace(/^Bearer\s+/i, '') ?? '';
   const secret = process.env.ADMIN_SECRET;
   if (!secret || !token) return false;
   if (token === secret) return true;
@@ -26,7 +21,7 @@ async function auth(req) {
 }
 
 export default async function handler(req, res) {
-  cors(res);
+  publicCors(req, res, 'POST, OPTIONS', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   if (!(await auth(req))) return res.status(401).json({ error: 'Unauthorized' });
@@ -39,8 +34,33 @@ export default async function handler(req, res) {
   }
 
   const sub = body.subscription;
-  if (!sub || !sub.endpoint || !sub.keys || !sub.keys.p256dh || !sub.keys.auth) {
-    return res.status(400).json({ error: 'Missing subscription.endpoint or subscription.keys.p256dh/auth' });
+  const MAX_ENDPOINT_LENGTH = 2048;
+  const isNonEmptyBase64Url = (v) => typeof v === 'string' && v.length > 0 && /^[A-Za-z0-9_-]+$/.test(v);
+
+  if (!sub || typeof sub.endpoint !== 'string') {
+    return res.status(400).json({ error: 'Missing/Invalid subscription.endpoint or subscription.keys' });
+  }
+
+  const endpoint = sub.endpoint;
+  if (endpoint.length === 0 || endpoint.length > MAX_ENDPOINT_LENGTH) {
+    return res.status(400).json({ error: 'Missing/Invalid subscription.endpoint or subscription.keys' });
+  }
+
+  let endpointUrl;
+  try {
+    endpointUrl = new URL(endpoint);
+  } catch {
+    return res.status(400).json({ error: 'Missing/Invalid subscription.endpoint or subscription.keys' });
+  }
+
+  if (endpointUrl.protocol !== 'https:') {
+    return res.status(400).json({ error: 'Missing/Invalid subscription.endpoint or subscription.keys' });
+  }
+
+  const p256dh = sub.keys?.p256dh;
+  const authKey = sub.keys?.auth;
+  if (!isNonEmptyBase64Url(p256dh) || !isNonEmptyBase64Url(authKey)) {
+    return res.status(400).json({ error: 'Missing/Invalid subscription.endpoint or subscription.keys' });
   }
 
   const userAgent = req.headers['user-agent'] || null;

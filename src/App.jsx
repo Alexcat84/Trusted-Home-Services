@@ -164,11 +164,14 @@ function Hero({ skipAnimation = false }) {
   const outOfView = !heroInView;
 
   useEffect(() => {
+    if (!heroInView) return;
+
     const id = setInterval(() => {
       setBgActive((prev) => (prev === 'first' ? 'casa' : prev === 'casa' ? 'luxury' : prev === 'luxury' ? 'tools' : 'first'));
     }, HERO_BG_INTERVAL_MS);
+
     return () => clearInterval(id);
-  }, []);
+  }, [heroInView]);
 
   const quoteHash = getSectionHash(lang, 'quote');
   return (

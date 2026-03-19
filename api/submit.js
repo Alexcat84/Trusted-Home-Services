@@ -14,94 +14,14 @@
  * Check config: GET /api/notifications-config returns which channels are set (no secrets).
  */
 
+import { publicCors } from '../server-lib/cors.js';
+import { sendSubmissionNotifications } from '../server-lib/notifications-sender.js';
+
 const KV_KEY = 'submissions';
 const MAX_SUBMISSIONS = 500;
 
-function cors(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  return res;
-}
-
-async function getNotificationFlags() {
-  // Defaults if settings have never been saved.
-  const defaults = { email: true, sms: true };
-
-  const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-  if (dbUrl) {
-    try {
-      const { prisma } = await import('../server-lib/prisma.js');
-      const row = await prisma.notificationSettings.findUnique({ where: { id: 'default' } });
-      if (row) {
-        return {
-          email: typeof row.email === 'boolean' ? row.email : defaults.email,
-          sms: typeof row.sms === 'boolean' ? row.sms : defaults.sms,
-        };
-      }
-    } catch (e) {
-      console.error('NotificationFlags DB read error:', e.message);
-    }
-  }
-
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-  if (kvUrl && kvToken) {
-    try {
-      const { kv } = await import('@vercel/kv');
-      const raw = await kv.get('notification_settings');
-      if (raw) {
-        const obj = typeof raw === 'string' ? JSON.parse(raw) : raw;
-        return {
-          email: typeof obj.email === 'boolean' ? obj.email : defaults.email,
-          sms: typeof obj.sms === 'boolean' ? obj.sms : defaults.sms,
-        };
-      }
-    } catch (e) {
-      console.error('NotificationFlags KV read error:', e.message);
-    }
-  }
-
-  return defaults;
-}
-
-async function sendAdminEmail(type, payload) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.ADMIN_EMAIL;
-  const from = process.env.NOTIFY_FROM_EMAIL || 'Trusted Home Services <onboarding@resend.dev>';
-  if (!apiKey || !to) return;
-
-  const typeLabel = type === 'realtor' ? 'Realtor' : type === 'franchise' ? 'Franchise' : type === 'partner' ? 'Partner' : 'Quote';
-  const subject = type === 'realtor' ? 'New realtor contact – Trusted Home Services' : type === 'franchise' ? 'New franchise request – Trusted Home Services' : type === 'partner' ? 'New partner request – Trusted Home Services' : 'New quote – Trusted Home Services';
-  const name = payload.name || 'No name';
-  const lines = [
-    `Type: ${typeLabel}`,
-    `Name: ${name}`,
-    `Email: ${payload.email || '–'}`,
-    `Phone: ${payload.phone || '–'}`,
-    (type === 'realtor' || type === 'franchise' || type === 'partner') ? `Message: ${payload.message || '–'}` : `Work: ${payload.work || '–'}\nAreas: ${payload.areas || '–'}\nProperty type: ${payload.propertyType || '–'}\nSize: ${payload.size || '–'}`,
-  ];
-  const text = lines.join('\n');
-  const html = '<p>' + lines.map((l) => l.replace(/&/g, '&amp;').replace(/</g, '&lt;')).join('</p><p>') + '</p>';
-
-  try {
-    const r = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({ from, to: [to], subject, html, text }),
-    });
-    if (!r.ok) console.error('[submit] Resend email error type=', type, await r.text());
-    else console.log('[submit] Resend OK type=', type);
-  } catch (e) {
-    console.error('[submit] Resend exception type=', type, e.message);
-  }
-}
-
 export default async function handler(req, res) {
-  cors(res);
+  publicCors(req, res, 'GET, POST, OPTIONS', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
@@ -122,7 +42,7 @@ export default async function handler(req, res) {
   const type = (body.type === 'realtor' || body.type === 'quote' || body.type === 'franchise' || body.type === 'partner') ? body.type : null;
   if (!type) return res.status(400).json({ error: 'Missing or invalid type' });
 
-  console.log('[submit] request type=', type, 'name=', body.name);
+  console.log('[submit] request type=', type);
 
   const LIMITS = { name: 200, email: 254, phone: 50, message: 5000, work: 5000, areas: 1000, propertyType: 200, size: 100 };
   const trim = (v, max) => (v == null ? v : String(v).trim().slice(0, max) || null);
@@ -193,25 +113,9 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Storage error. Configure POSTGRES_URL (and run: npx prisma db push) or KV in Vercel.' });
   }
 
-  const flags = await getNotificationFlags().catch(() => ({ email: true, sms: true }));
-
   const payload = { name, email, phone, message, work, areas, propertyType, size };
-  if (flags.email) {
-    await sendAdminEmail(type, payload);
-  } else {
-    console.log('[submit] email skipped type=', type);
-  }
-  const { sendAdminSms } = await import('../server-lib/sms.js');
-  const { sendPushToAll } = await import('../server-lib/push.js');
-  const { sendAdminNotifyEvents } = await import('../server-lib/notify-events.js');
-  if (flags.sms) {
-    await sendAdminSms(type, payload).catch((e) => console.error('[submit] SMS error type=', type, e.message));
-  } else {
-    console.log('[submit] SMS skipped type=', type);
-  }
-  await sendPushToAll(type, payload).catch((e) => console.error('[submit] Push error:', e.message));
-  console.log('[submit] push/Notify.Events invoked');
-  await sendAdminNotifyEvents(type, payload).catch((e) => console.error('[submit] Notify.Events error:', e.message));
+
+  await sendSubmissionNotifications(type, payload);
 
   console.log('[submit] success 200 type=', type);
   return res.status(200).json({ ok: true, type });

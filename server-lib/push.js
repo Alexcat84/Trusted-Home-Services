@@ -22,7 +22,7 @@ export async function sendPushToAll(type, payload) {
         keys: { p256dh: r.keysP256dh, auth: r.keysAuth },
       }));
     } catch (e) {
-      console.error('Push fetch Prisma error:', e.message);
+      console.error('Push fetch Prisma error');
       return;
     }
   } else {
@@ -44,7 +44,7 @@ export async function sendPushToAll(type, payload) {
         })
         .filter(Boolean);
     } catch (e) {
-      console.error('Push fetch KV error:', e.message);
+      console.error('Push fetch KV error');
       return;
     }
   }
@@ -80,7 +80,7 @@ export async function sendPushToAll(type, payload) {
           }
         } catch (_) {}
       }
-      console.error('Push send error:', e.message);
+      console.error('Push send error:', e.statusCode ?? 'unknown');
     }
   }
 }

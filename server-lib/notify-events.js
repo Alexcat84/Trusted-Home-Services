@@ -19,7 +19,7 @@ export async function sendNotifyEvents(title, content, options = {}) {
   try {
     const url = token.startsWith('http') ? token : `${EXECUTE_URL}/${token.replace(/\/$/, '')}/execute`;
     const r = await fetch(url, { method: 'POST', body: form });
-    if (!r.ok) console.error('Notify.Events error:', r.status, await r.text());
+    if (!r.ok) console.error('Notify.Events error:', r.status);
   } catch (e) {
     console.error('Notify.Events request error:', e.message);
   }

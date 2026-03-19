@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLang } from '../context/LangContext';
 import { getSectionHash } from '../translations';
 
@@ -8,10 +8,18 @@ export default function Header() {
   const { lang, setLang, t } = useLang();
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentHash, setCurrentHash] = useState('');
+  const rafPendingRef = useRef(false);
+  const rafIdRef = useRef(null);
+  const sectionElsRef = useRef([]);
+  const lastActiveIdRef = useRef('');
   const hash = (key) => getSectionHash(lang, key);
 
   useEffect(() => {
-    const updateHash = () => setCurrentHash((window.location.hash || '').slice(1).toLowerCase());
+    const updateHash = () => {
+      const nextHash = (window.location.hash || '').slice(1).toLowerCase();
+      lastActiveIdRef.current = nextHash;
+      setCurrentHash(nextHash);
+    };
     updateHash();
     window.addEventListener('hashchange', updateHash);
     return () => window.removeEventListener('hashchange', updateHash);
@@ -19,11 +27,17 @@ export default function Header() {
 
   useEffect(() => {
     const sectionIds = NAV_KEYS.map((key) => getSectionHash(lang, key));
+    sectionElsRef.current = sectionIds.map((id) => document.getElementById(id));
+    lastActiveIdRef.current = '';
+
     const updateActiveFromScroll = () => {
+      rafPendingRef.current = false;
+      rafIdRef.current = null;
+
       const refY = window.innerHeight * 0.5;
       let activeId = sectionIds[0];
       for (let i = 0; i < sectionIds.length; i++) {
-        const el = document.getElementById(sectionIds[i]);
+        const el = sectionElsRef.current[i];
         if (!el) continue;
         const { top, bottom } = el.getBoundingClientRect();
         if (top <= refY && bottom >= refY) {
@@ -32,12 +46,27 @@ export default function Header() {
         }
         if (top <= refY) activeId = sectionIds[i];
       }
-      setCurrentHash(activeId.toLowerCase());
+
+      const nextActiveId = activeId.toLowerCase();
+      if (nextActiveId !== lastActiveIdRef.current) {
+        lastActiveIdRef.current = nextActiveId;
+        setCurrentHash(nextActiveId);
+      }
     };
-    const onScroll = () => window.requestAnimationFrame(updateActiveFromScroll);
+
+    const onScroll = () => {
+      if (rafPendingRef.current) return;
+      rafPendingRef.current = true;
+      rafIdRef.current = window.requestAnimationFrame(updateActiveFromScroll);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     updateActiveFromScroll();
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (rafIdRef.current != null) window.cancelAnimationFrame(rafIdRef.current);
+      rafPendingRef.current = false;
+      rafIdRef.current = null;
+    };
   }, [lang]);
 
   return (
