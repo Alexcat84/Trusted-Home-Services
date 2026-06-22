@@ -14,3 +14,17 @@ updates:
         dependency-type: development
         patterns:
           - "*"
+    # Major bumps need manual migration (Prisma 7 config, React 19, etc.)
+    ignore:
+      - dependency-name: "prisma"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@prisma/client"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "framer-motion"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vercel/kv"
+        update-types: ["version-update:semver-major"]
