@@ -1,7 +1,7 @@
 {
   "name": "Trusted Home Services",
   "short_name": "Trusted Home",
-  "description": "Admin – Leads & Quotes. Ver envíos de formularios.",
+  "description": "Admin panel – form submissions and leads.",
   "start_url": "/#admin",
   "display": "standalone",
   "background_color": "#0f172a",

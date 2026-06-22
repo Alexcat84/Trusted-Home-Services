@@ -287,83 +287,6 @@ function HomeStatsBlock() {
   );
 }
 
-function About() {
-  const { t, lang } = useLang();
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
-  const values = ['trust', 'family', 'quality', 'respect'];
-
-  return (
-    <AnimatedSection id={getSectionHash(lang, 'about')} className="section section-mvv">
-      <div className="container">
-        <h2 className="section-title"><AnimatedSectionTitle text={t('about.title')} /></h2>
-        <p className="section-intro">{t('about.intro')}</p>
-        <motion.div
-          ref={ref}
-          className="mvv-grid"
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-          variants={container}
-        >
-          <motion.article
-            className="mvv-card mvv-card--mission"
-            variants={item}
-            whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
-          >
-            <div className="mvv-icon">M</div>
-            <h3>{t('about.mission.title')}</h3>
-            <p>{t('about.mission.text')}</p>
-          </motion.article>
-          <motion.article
-            className="mvv-card mvv-card--vision"
-            variants={item}
-            whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
-          >
-            <div className="mvv-icon">V</div>
-            <h3>{t('about.vision.title')}</h3>
-            <p>{t('about.vision.text')}</p>
-          </motion.article>
-          <motion.article
-            className="mvv-card mvv-card--values"
-            variants={item}
-            whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
-          >
-            <div className="mvv-icon">V</div>
-            <h3>{t('about.values.title')}</h3>
-            <ul className="mvv-values-list">
-              {values.map((key) => {
-                const text = t(`about.values.${key}`);
-                const colon = text.indexOf(':');
-                const label = colon >= 0 ? text.slice(0, colon) : text;
-                const desc = colon >= 0 ? text.slice(colon + 1).trim() : '';
-                return (
-                  <motion.li
-                    key={key}
-                    className="mvv-value-item"
-                    whileHover={{ x: 4, transition: { duration: 0.2 } }}
-                  >
-                    <span className="mvv-value-dot" />
-                    <span>{desc ? <><strong>{label}</strong>: {desc}</> : <strong>{label}</strong>}</span>
-                  </motion.li>
-                );
-              })}
-            </ul>
-          </motion.article>
-        </motion.div>
-        <motion.div className="about-extra-row" initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.4 }}>
-          <div className="about-extra-seal-large" aria-hidden="true">
-            <img src="/images/quality%20guarantee%20luxury.png" alt="" />
-          </div>
-          <div className="about-extra">
-            <p className="about-extra-title">{t('about.qualityGuaranteed')}</p>
-            <p className="about-extra-desc">{t('about.extra')}</p>
-          </div>
-        </motion.div>
-      </div>
-    </AnimatedSection>
-  );
-}
-
 function Services() {
   const { t, lang } = useLang();
   const ref = React.useRef(null);
@@ -1892,10 +1815,35 @@ function AdminPage() {
 
   useEffect(() => {
     if (!token.trim()) return;
+    const POLL_MS = 30_000;
     fetchNotificationSettings();
     fetchList();
-    const interval = setInterval(fetchList, 5000);
-    return () => clearInterval(interval);
+
+    let intervalId = null;
+    const startPolling = () => {
+      if (intervalId != null) return;
+      intervalId = setInterval(fetchList, POLL_MS);
+    };
+    const stopPolling = () => {
+      if (intervalId == null) return;
+      clearInterval(intervalId);
+      intervalId = null;
+    };
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchList();
+        startPolling();
+      } else {
+        stopPolling();
+      }
+    };
+
+    if (document.visibilityState === 'visible') startPolling();
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      stopPolling();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
   }, [token, fetchList, fetchNotificationSettings]);
 
   const updateNotificationSettings = async (next) => {

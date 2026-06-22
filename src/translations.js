@@ -13,21 +13,6 @@ export const TRANSLATIONS = {
       qualityDesc: 'We have never required a deposit. You pay when the work is complete and your expectations are met.',
       freeQuoteCard: 'Free quote'
     },
-    about: {
-      title: 'About Us',
-      intro: 'Your home deserves care you can trust. We work for property owners and real estate professionals.',
-      mission: { title: 'Our Mission', text: 'To make your house feel like home again: one team for painting, cleaning, repairs and curb appeal. Whether you\'re selling, moving in or refreshing your space, we\'re here so your home looks and feels its best.' },
-      vision: { title: 'Our Vision', text: 'To be the name Ottawa families and property owners think of first when their home needs care: reliable, on time and with standards that show in every room we touch.' },
-      values: {
-        title: 'Our Values',
-        trust: 'Trust: no deposit, even on large projects. You pay when the work is done.',
-        family: 'Family and team: over 30 years working together, same standards every time.',
-        quality: 'Quality: we grow by referrals and repeat clients, not just advertisements.',
-        respect: 'Respect for your home: we treat your space like our own.'
-      },
-      qualityGuaranteed: 'Quality guaranteed',
-      extra: 'We have never required a deposit. You pay when the work is complete and your expectations are met.'
-    },
     services: {
       title: 'Our Services',
       intro: 'Everything you need to get your home ready for sale, move-in or everyday peace of mind.',
@@ -378,7 +363,7 @@ export const TRANSLATIONS = {
         errors: { name: 'Please enter your name.', contact: 'Please enter at least one of email or phone.', consent: 'Please accept the consent.', submit: 'Could not send. Please try again or call (613) 204-8000.' }
       }
     },
-    footer: { desc: 'Property preparation for sale and move-in. Ottawa, Ontario.', home: 'Home', about: 'About', services: 'Services', how: 'How We Work', projects: 'Our Projects', realtors: 'For Realtors', quote: 'Quote', partners: 'Become a Partner', rights: '© 2026 Trusted Home Services. All rights reserved.', quickLinks: 'Quick Links', support: 'Support', faq: 'FAQ', privacyPolicy: 'Privacy Policy', termsOfService: 'Terms of Service' },
+    footer: { desc: 'Property preparation for sale and move-in. Ottawa, Ontario.', home: 'Home', services: 'Services', how: 'How We Work', projects: 'Our Projects', realtors: 'For Realtors', quote: 'Quote', partners: 'Become a Partner', rights: '© 2026 Trusted Home Services. All rights reserved.', quickLinks: 'Quick Links', support: 'Support', faq: 'FAQ', privacyPolicy: 'Privacy Policy', termsOfService: 'Terms of Service' },
     cookieConsent: { message: 'We use cookies to improve your experience and analyse site traffic. By clicking Accept you agree to our use of cookies. See our', privacyLink: 'Privacy Policy', accept: 'Accept', decline: 'Decline' }
   },
   fr: {
@@ -394,21 +379,6 @@ export const TRANSLATIONS = {
       qualityTitle: 'Qualité garantie',
       qualityDesc: 'Nous n\'avons jamais demandé d\'acompte. Vous ne payez que lorsque les travaux sont terminés et vos attentes satisfaites.',
       freeQuoteCard: 'Devis gratuit'
-    },
-    about: {
-      title: 'À propos de nous',
-      intro: 'Votre maison mérite des soins en qui vous pouvez avoir confiance. Nous travaillons pour les propriétaires et les professionnels de l\'immobilier.',
-      mission: { title: 'Notre mission', text: 'Faire de votre maison un chez-soi : une seule équipe pour la peinture, le nettoyage, les réparations et l\'attrait de la rue. Que vous vendiez, emménagiez ou rafraîchissiez, nous sommes là pour que votre maison soit à son meilleur.' },
-      vision: { title: 'Notre vision', text: 'Être le nom auquel les familles et propriétaires d\'Ottawa pensent en premier quand leur maison a besoin de soins.' },
-      values: {
-        title: 'Nos valeurs',
-        trust: 'Confiance : pas d\'acompte, même sur les grands projets.',
-        family: 'Famille et équipe : plus de 30 ans ensemble.',
-        quality: 'Qualité : nous grandissons par les références et les clients fidèles.',
-        respect: 'Respect de votre maison : nous traitons votre espace comme le nôtre.'
-      },
-      qualityGuaranteed: 'Qualité garantie',
-      extra: 'Nous n\'avons jamais demandé d\'acompte. Vous ne payez que lorsque les travaux sont terminés et vos attentes satisfaites.'
     },
     services: {
       title: 'Nos services',
@@ -760,7 +730,7 @@ export const TRANSLATIONS = {
         errors: { name: 'Veuillez entrer votre nom.', contact: 'Veuillez entrer au moins le courriel ou le téléphone.', consent: 'Veuillez accepter le consentement.', submit: 'Envoi impossible. Réessayez ou appelez le (613) 204-8000.' }
       }
     },
-    footer: { desc: 'Préparation de propriétés. Ottawa, Ontario.', home: 'Accueil', about: 'À propos', services: 'Services', how: 'Notre processus', projects: 'Nos projets', realtors: 'Pour courtiers', quote: 'Devis', partners: 'Devenir partenaire', rights: '© 2026 Trusted Home Services. Tous droits réservés.', quickLinks: 'Liens rapides', support: 'Support', faq: 'FAQ', privacyPolicy: 'Politique de confidentialité', termsOfService: 'Conditions d\'utilisation' },
+    footer: { desc: 'Préparation de propriétés. Ottawa, Ontario.', home: 'Accueil', services: 'Services', how: 'Notre processus', projects: 'Nos projets', realtors: 'Pour courtiers', quote: 'Devis', partners: 'Devenir partenaire', rights: '© 2026 Trusted Home Services. Tous droits réservés.', quickLinks: 'Liens rapides', support: 'Support', faq: 'FAQ', privacyPolicy: 'Politique de confidentialité', termsOfService: 'Conditions d\'utilisation' },
     cookieConsent: { message: 'Nous utilisons des cookies pour améliorer votre expérience et analyser le trafic. En cliquant sur Accepter, vous acceptez notre utilisation des cookies. Voir notre', privacyLink: 'Politique de confidentialité', accept: 'Accepter', decline: 'Refuser' }
   },
   es: {
@@ -776,21 +746,6 @@ export const TRANSLATIONS = {
       qualityTitle: 'Calidad garantizada',
       qualityDesc: 'Nunca hemos pedido depósito. Usted paga cuando el trabajo está terminado y sus expectativas cumplidas.',
       freeQuoteCard: 'Cotización gratuita'
-    },
-    about: {
-      title: 'Nosotros',
-      intro: 'Tu hogar merece un cuidado en el que puedas confiar. Trabajamos para propietarios y profesionales inmobiliarios.',
-      mission: { title: 'Nuestra misión', text: 'Hacer que tu casa vuelva a sentirse como hogar: un solo equipo para pintura, limpieza, reparaciones y vista exterior.' },
-      vision: { title: 'Nuestra visión', text: 'Ser el nombre al que las familias y propietarios de Ottawa piensan primero cuando su hogar necesita cuidado.' },
-      values: {
-        title: 'Nuestros valores',
-        trust: 'Confianza: sin depósito, incluso en proyectos grandes.',
-        family: 'Familia y equipo: más de 30 años trabajando juntos.',
-        quality: 'Calidad: crecemos por referidos y clientes repetidos.',
-        respect: 'Respeto por tu hogar: tratamos tu espacio como el nuestro.'
-      },
-      qualityGuaranteed: 'Calidad garantizada',
-      extra: 'Nunca hemos pedido depósito. Usted paga cuando el trabajo esté terminado y sus expectativas satisfechas.'
     },
     services: {
       title: 'Nuestros servicios',
@@ -1141,7 +1096,7 @@ export const TRANSLATIONS = {
         errors: { name: 'Por favor indique su nombre.', contact: 'Por favor indique al menos email o teléfono.', consent: 'Por favor acepte el consentimiento.', submit: 'No se pudo enviar. Intente de nuevo o llame al (613) 204-8000.' }
       }
     },
-    footer: { desc: 'Preparación de propiedades. Ottawa, Ontario.', home: 'Inicio', about: 'Nosotros', services: 'Servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', realtors: 'Para agentes', quote: 'Cotización', partners: 'Ser socio', rights: '© 2026 Trusted Home Services. Todos los derechos reservados.', quickLinks: 'Enlaces rápidos', support: 'Soporte', faq: 'FAQ', privacyPolicy: 'Política de privacidad', termsOfService: 'Términos de servicio' },
+    footer: { desc: 'Preparación de propiedades. Ottawa, Ontario.', home: 'Inicio', services: 'Servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', realtors: 'Para agentes', quote: 'Cotización', partners: 'Ser socio', rights: '© 2026 Trusted Home Services. Todos los derechos reservados.', quickLinks: 'Enlaces rápidos', support: 'Soporte', faq: 'FAQ', privacyPolicy: 'Política de privacidad', termsOfService: 'Términos de servicio' },
     cookieConsent: { message: 'Usamos cookies para mejorar tu experiencia y analizar el tráfico. Al hacer clic en Aceptar aceptas su uso. Consulta nuestra', privacyLink: 'Política de privacidad', accept: 'Aceptar', decline: 'Rechazar' }
   }
 };

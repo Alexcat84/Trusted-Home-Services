@@ -653,19 +653,14 @@ a:hover {
   z-index: 2;
   padding: 4.5rem 0;
 }
-/* About Us: más espacio arriba y abajo para centrado vertical y título completo visible */
-.section-mvv {
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-}
 .section:nth-child(even) {
   background: var(--color-bg-alt);
 }
 
 /* Al hacer scroll por ancla, el título queda visible bajo el header fijo (~72px) */
-#about-us, #services, #how-we-work, #quote,
-#a-propos, #notre-processus, #devis,
-#nosotros, #servicios, #como-funciona, #cotizacion {
+#services, #how-we-work, #quote,
+#notre-processus, #devis,
+#servicios, #como-funciona, #cotizacion {
   scroll-margin-top: 4.5rem;
 }
 #home, #accueil, #inicio {
@@ -780,187 +775,6 @@ a:hover {
 [data-animate-delay="3"] { transition-delay: 240ms; }
 [data-animate-delay="4"] { transition-delay: 320ms; }
 
-/* ---- Misión Visión Valores ---- */
-.mvv-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-top: -1.25rem;
-  margin-bottom: 2rem;
-}
-
-/* Misma animación que la galería de GemSpots: translateY(-10px) scale(1.02) + sombra + resaltado en hover */
-.mvv-card {
-  background: var(--color-bg);
-  padding: 2rem;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--color-border);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
-}
-/* Transform del hover va en Framer Motion (whileHover); resaltado por borde + sombra más marcada (sin cambiar fondo) */
-.mvv-card:hover {
-  border-color: rgba(0, 0, 0, 0.12);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-.mvv-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 1rem;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: var(--color-text-on-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1.25rem;
-  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-.mvv-card:hover .mvv-icon {
-  background: #c96b1f;
-  transform: scale(1.08);
-  box-shadow: 0 4px 12px rgba(201, 107, 31, 0.4);
-}
-
-.mvv-card h3 {
-  font-size: 1.25rem;
-  color: var(--color-primary);
-  margin: 0 0 0.5rem;
-  text-align: center;
-  transition: color 0.2s ease;
-}
-.mvv-card:hover h3 {
-  color: #c96b1f;
-}
-.mvv-card p {
-  margin: 0;
-  color: var(--color-text);
-  font-size: 0.9375rem;
-  text-align: justify;
-}
-.mvv-card--values h3 { margin-bottom: 0.35rem; }
-.mvv-card--values .mvv-values-list { margin-top: 0; }
-.mvv-value-item {
-  text-align: justify;
-}
-.mvv-value-item > span:last-child {
-  flex: 1;
-  min-width: 0;
-  text-align: justify;
-}
-
-.mvv-values-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.mvv-value-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin-bottom: 0.4rem;
-  padding: 0.25rem 0.75rem 0.2rem;
-  border-radius: var(--radius);
-  color: var(--color-text);
-  font-size: 0.9375rem;
-  transition: background 0.25s ease, transform 0.2s ease, padding-left 0.25s ease;
-}
-.mvv-value-item:last-child {
-  margin-bottom: 0;
-}
-.mvv-value-item:hover {
-  background: rgba(249, 119, 43, 0.08);
-  padding-left: 1rem;
-}
-.mvv-value-dot {
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  margin-top: 0.45em;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.mvv-value-item:hover .mvv-value-dot {
-  transform: scale(1.35);
-  box-shadow: 0 0 0 3px rgba(249, 119, 43, 0.25);
-}
-
-.about-extra-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  max-width: 900px;
-  margin: -1.5rem auto 0;
-  padding: 0 1rem;
-  border-radius: var(--radius-lg);
-  box-shadow: inset 0 0 0 2px rgba(34, 49, 81, 0.25);
-}
-
-.about-extra {
-  text-align: left;
-  padding: 0.5rem 0;
-  max-width: 640px;
-}
-.about-extra:hover .about-extra-title {
-  color: var(--color-accent);
-}
-.about-extra-seal-large {
-  flex-shrink: 0;
-  width: 130px;
-  height: 130px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.35s ease, filter 0.35s ease;
-}
-.about-extra-seal-large:hover {
-  transform: scale(1.08);
-  filter: drop-shadow(0 6px 16px rgba(249, 119, 43, 0.35));
-}
-.about-extra-seal-large img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.about-extra-text {
-  flex: 1;
-  min-width: 0;
-}
-.about-extra-title {
-  margin: 0 0 0.5rem;
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  letter-spacing: 0.02em;
-  transition: color 0.3s ease;
-}
-.about-extra-desc {
-  margin: 0;
-  font-style: italic;
-  color: var(--color-text);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-.about-extra p.about-extra-desc {
-  margin: 0;
-}
-
-@media (max-width: 768px) {
-  .about-extra-row {
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .about-extra-seal-large {
-    width: 110px;
-    height: 110px;
-  }
-}
 .typewriter-cursor {
   display: inline-block;
   margin-left: 2px;
