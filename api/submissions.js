@@ -18,16 +18,8 @@ async function cors(req, res) {
 }
 
 async function auth(req) {
-  const token = req.headers.authorization?.replace(/^Bearer\s+/i, '') || '';
-  const secret = process.env.ADMIN_SECRET;
-  if (!secret || !token) return false;
-  if (token === secret) return true;
-  if (token.includes('.') && token.split('.').length === 3) {
-    const { verifyJWT } = await import('../server-lib/auth.js');
-    const payload = verifyJWT(token, secret);
-    return payload && payload.admin === true;
-  }
-  return false;
+  const { verifyAdminRequest } = await import('../server-lib/admin-auth.js');
+  return verifyAdminRequest(req);
 }
 
 const LEGACY_STATUS_MAP = { nuevo: 'new', tomado: 'contacted', en_proceso: 'work_in_progress', finalizado: 'work_done' };

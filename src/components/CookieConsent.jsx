@@ -6,15 +6,16 @@ const GA_ID = 'G-C4H7QVDMLH';
 
 function loadGoogleAnalytics() {
   if (window.gtag) return;
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function gtag() { window.dataLayer.push(arguments); };
-  window.gtag('js', new Date());
-  window.gtag('config', GA_ID);
 
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  document.head.appendChild(script);
+  const gtagScript = document.createElement('script');
+  gtagScript.async = true;
+  gtagScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+  document.head.appendChild(gtagScript);
+
+  const initScript = document.createElement('script');
+  initScript.src = '/ga-init.js';
+  initScript.dataset.gaId = GA_ID;
+  document.head.appendChild(initScript);
 }
 
 export default function CookieConsent() {

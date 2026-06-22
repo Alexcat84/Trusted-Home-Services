@@ -1627,7 +1627,7 @@ function BecomePartnerPage() {
   );
 }
 
-const ADMIN_TOKEN_KEY = 'th_admin_token';
+const ADMIN_FETCH = { credentials: 'include' };
 
 const ADMIN_QUOTE_STATUS_OPTIONS = [
   { value: 'new', label: 'New' },
@@ -1705,7 +1705,8 @@ function getAdminStatusLabel(status, type) {
 function AdminPage() {
   const { lang } = useLang();
   const homeHash = getSectionHash(lang, 'home');
-  const [token, setToken] = useState(() => typeof window !== 'undefined' ? localStorage.getItem(ADMIN_TOKEN_KEY) || '' : '');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const [submissions, setSubmissions] = useState([]);
   const [error, setError] = useState(null);
   const [loginUsername, setLoginUsername] = useState('');
@@ -1729,27 +1730,22 @@ function AdminPage() {
   const [notifyLoading, setNotifyLoading] = useState(false);
   const [notifyError, setNotifyError] = useState(null);
 
-  const saveToken = (t) => {
-    setToken(t);
-    if (typeof window !== 'undefined') {
-      if (t) localStorage.setItem(ADMIN_TOKEN_KEY, t);
-      else localStorage.removeItem(ADMIN_TOKEN_KEY);
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST', ...ADMIN_FETCH });
+    } catch {
+      // ignore network errors; clear local state anyway
     }
-  };
-
-  const handleLogout = () => {
-    saveToken('');
+    setIsAuthenticated(false);
     setError(null);
     setSubmissions([]);
     setLoginError(null);
   };
 
-  const authHeaders = useCallback(() => ({ Authorization: `Bearer ${token}` }), [token]);
-
   const fetchNotificationSettings = useCallback(async () => {
-    if (!token.trim()) return;
+    if (!isAuthenticated) return;
     try {
-      const res = await fetch('/api/notification-settings', { headers: authHeaders() });
+      const res = await fetch('/api/notification-settings', ADMIN_FETCH);
       if (!res.ok) return;
       const data = await res.json().catch(() => ({}));
       if (typeof data.email === 'boolean') setNotifyEmail(data.email);
@@ -1757,7 +1753,7 @@ function AdminPage() {
     } catch {
       // ignore; fall back to defaults
     }
-  }, [token, authHeaders]);
+  }, [isAuthenticated]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -1771,24 +1767,19 @@ function AdminPage() {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        ...ADMIN_FETCH,
         body: JSON.stringify({ username: loginUsername.trim(), password: loginPassword }),
       });
       const data = await res.json().catch(() => ({}));
-      if (res.ok && data.token) {
-        saveToken(data.token);
+      if (res.ok && data.ok) {
+        setIsAuthenticated(true);
         setLoginUsername('');
         setLoginPassword('');
         setError(null);
-        // Fetch notification settings after successful login
-        try {
-          await fetchNotificationSettings();
-        } catch {
-          // ignore
-        }
       } else {
         setLoginError(data.error || 'Invalid username or password');
       }
-    } catch (e) {
+    } catch {
       setLoginError('Network error');
     } finally {
       setLoginLoading(false);
@@ -1796,10 +1787,11 @@ function AdminPage() {
   };
 
   const fetchList = useCallback(async () => {
-    if (!token.trim()) return;
+    if (!isAuthenticated) return;
     try {
-      const res = await fetch('/api/submissions', { headers: authHeaders() });
+      const res = await fetch('/api/submissions', ADMIN_FETCH);
       if (res.status === 401) {
+        setIsAuthenticated(false);
         setError('Session expired. Please log in again.');
         setSubmissions([]);
         return;
@@ -1807,14 +1799,29 @@ function AdminPage() {
       setError(null);
       const data = await res.json();
       setSubmissions(data.submissions || []);
-    } catch (e) {
+    } catch {
       setError('Network error');
       setSubmissions([]);
     }
-  }, [token, authHeaders]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
-    if (!token.trim()) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/admin/session', ADMIN_FETCH);
+        if (!cancelled && res.ok) setIsAuthenticated(true);
+      } catch {
+        // not logged in
+      } finally {
+        if (!cancelled) setAuthChecked(true);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
     const POLL_MS = 30_000;
     fetchNotificationSettings();
     fetchList();
@@ -1844,16 +1851,17 @@ function AdminPage() {
       stopPolling();
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
-  }, [token, fetchList, fetchNotificationSettings]);
+  }, [isAuthenticated, fetchList, fetchNotificationSettings]);
 
   const updateNotificationSettings = async (next) => {
-    if (!token.trim()) return;
+    if (!isAuthenticated) return;
     setNotifyLoading(true);
     setNotifyError(null);
     try {
       const res = await fetch('/api/notification-settings', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        headers: { 'Content-Type': 'application/json' },
+        ...ADMIN_FETCH,
         body: JSON.stringify(next),
       });
       const data = await res.json().catch(() => ({}));
@@ -1901,7 +1909,8 @@ function AdminPage() {
     try {
       const res = await fetch('/api/submissions', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        headers: { 'Content-Type': 'application/json' },
+        ...ADMIN_FETCH,
         body: JSON.stringify({ id, status: newStatus }),
       });
       if (res.ok) {
@@ -1916,7 +1925,7 @@ function AdminPage() {
     const confirmed = window.confirm(`Delete the record for "${name || 'this contact'}"? This action cannot be undone.`);
     if (!confirmed) return;
     try {
-      const res = await fetch(`/api/submissions?id=${encodeURIComponent(id)}`, { method: 'DELETE', headers: authHeaders() });
+      const res = await fetch(`/api/submissions?id=${encodeURIComponent(id)}`, { method: 'DELETE', ...ADMIN_FETCH });
       if (res.ok) {
         setSubmissions((prev) => prev.filter((s) => s.id !== id));
       }
@@ -1932,7 +1941,8 @@ function AdminPage() {
   };
 
   const escapeCsvCell = (v) => {
-    const s = String(v ?? '').trim();
+    let s = String(v ?? '').trim();
+    if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
     if (s.includes(',') || s.includes('"') || s.includes('\n')) return `"${s.replace(/"/g, '""')}"`;
     return s || '';
   };
@@ -1969,7 +1979,7 @@ function AdminPage() {
           <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Home">
             <img src="/images/Logo v4.0 Inverted.jpg" alt="" className="privacy-logo" />
           </a>
-          {token ? (
+          {isAuthenticated ? (
             <div className="privacy-header-actions">
               <button type="button" className="btn btn-secondary admin-logout-btn" onClick={handleLogout}>Log out</button>
             </div>
@@ -1980,7 +1990,9 @@ function AdminPage() {
         <div className="container privacy-content" style={{ paddingTop: '2rem' }}>
           <h1 className="privacy-hero-title" style={{ marginBottom: '1rem' }}>Admin – Leads &amp; Quotes</h1>
 
-          {!token ? (
+          {!authChecked ? (
+            <p className="admin-empty">Checking session…</p>
+          ) : !isAuthenticated ? (
             <div className="admin-login-wrap">
               <p className="admin-install-hint">To add to home screen: open Chrome menu (⋮) and choose <strong>Add to Home screen</strong> (you may need to scroll down in the menu).</p>
               <form className="admin-login-form" onSubmit={handleLogin}>
@@ -2111,7 +2123,7 @@ function AdminPage() {
               </div>
             </div>
             <div className="admin-toolbar">
-              <p className="admin-updated">Updates every 5 seconds. Total: {filteredSubmissions.length} (of {submissions.length})</p>
+              <p className="admin-updated">Updates every 30 seconds. Total: {filteredSubmissions.length} (of {submissions.length})</p>
             </div>
             <p className="admin-csv-hint">Apply filters above (type, status, date range, or any text field). The CSV exports only the rows currently shown.</p>
             <table className="admin-table">
@@ -2177,7 +2189,7 @@ function AdminPage() {
                 ))}
               </tbody>
             </table>
-            {filteredSubmissions.length === 0 && !error && token && <p className="admin-empty">No records match the current filters.</p>}
+            {filteredSubmissions.length === 0 && !error && isAuthenticated && <p className="admin-empty">No records match the current filters.</p>}
           </div>
             </>
           )}

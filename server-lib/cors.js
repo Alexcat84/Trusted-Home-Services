@@ -5,6 +5,7 @@
  */
 const ADMIN_TRUSTED_ORIGINS = new Set([
   'https://trustedhomeservices.ca',
+  'https://trusted-home-services.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:8080',
@@ -21,6 +22,7 @@ export function adminCors(req, res, methods = 'GET, PATCH, DELETE, OPTIONS', hea
   res.setHeader('Access-Control-Allow-Origin', getAllowedOrigin(req));
   res.setHeader('Access-Control-Allow-Methods', methods);
   res.setHeader('Access-Control-Allow-Headers', headers);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   return res;
 }
 

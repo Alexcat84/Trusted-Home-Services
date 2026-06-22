@@ -1,9 +1,9 @@
 /**
- * GET /api/notification-settings  (Authorization: Bearer <JWT or ADMIN_SECRET>)
+ * GET /api/notification-settings  (Authorization: Bearer JWT or HttpOnly cookie)
  *  -> { email: boolean, sms: boolean }
  * PATCH /api/notification-settings
  *  Body: { email?: boolean, sms?: boolean }
- *  Auth: token (admin JWT or ADMIN_SECRET)
+ *  Auth: admin JWT (Bearer or HttpOnly cookie th_admin)
  *
  * Uses Postgres (NotificationSettings table) when available; otherwise falls back
  * to Vercel KV under key "notification_settings". Defaults are email=true, sms=true.
@@ -17,20 +17,8 @@ async function cors(req, res) {
 }
 
 async function auth(req) {
-  const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '').trim();
-  const secret = process.env.ADMIN_SECRET;
-  if (!secret || !token) return false;
-  if (token === secret) return true;
-  if (token.includes('.') && token.split('.').length === 3) {
-    try {
-      const { verifyJWT } = await import('../server-lib/auth.js');
-      const payload = verifyJWT(token, secret);
-      return payload && payload.admin === true;
-    } catch {
-      return false;
-    }
-  }
-  return false;
+  const { verifyAdminRequest } = await import('../server-lib/admin-auth.js');
+  return verifyAdminRequest(req);
 }
 
 const DEFAULT_FLAGS = { email: true, sms: true };

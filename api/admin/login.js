@@ -1,8 +1,8 @@
 /**
  * POST /api/admin/login
  * Body: { username, password }
- * Returns: { token } (JWT) or 401
- * Env: ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_SECRET (for signing JWT)
+ * Sets HttpOnly session cookie and returns { ok: true }
+ * Env: ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_SECRET
  */
 
 export default async function handler(req, res) {
@@ -38,12 +38,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Username and password required' });
   }
 
-  if (u !== username || p !== password) {
+  const { safeStringEqual, signJWT } = await import('../../server-lib/auth.js');
+  if (!safeStringEqual(u, username) || !safeStringEqual(p, password)) {
     return res.status(401).json({ error: 'Invalid username or password' });
   }
 
-  const { signJWT } = await import('../../server-lib/auth.js');
   const token = signJWT({ admin: true }, secret);
+  const { setAdminSessionCookie } = await import('../../server-lib/cookies.js');
+  setAdminSessionCookie(res, token);
 
-  return res.status(200).json({ token });
+  return res.status(200).json({ ok: true });
 }

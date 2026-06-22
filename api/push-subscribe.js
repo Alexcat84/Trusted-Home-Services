@@ -1,27 +1,19 @@
 /**
  * POST /api/push-subscribe
  * Body: { subscription: { endpoint, keys: { p256dh, auth } } }
- * Auth: token (admin JWT or ADMIN_SECRET)
+ * Auth: admin JWT (Bearer or HttpOnly cookie th_admin)
  * Stores subscription for sending push when a form is submitted.
  */
 
-import { publicCors } from '../server-lib/cors.js';
+import { adminCors } from '../server-lib/cors.js';
 
 async function auth(req) {
-  const token = req.headers.authorization?.replace(/^Bearer\s+/i, '') ?? '';
-  const secret = process.env.ADMIN_SECRET;
-  if (!secret || !token) return false;
-  if (token === secret) return true;
-  if (token.includes('.') && token.split('.').length === 3) {
-    const { verifyJWT } = await import('../server-lib/auth.js');
-    const payload = verifyJWT(token, secret);
-    return payload && payload.admin === true;
-  }
-  return false;
+  const { verifyAdminRequest } = await import('../server-lib/admin-auth.js');
+  return verifyAdminRequest(req);
 }
 
 export default async function handler(req, res) {
-  publicCors(req, res, 'POST, OPTIONS', 'Content-Type, Authorization');
+  adminCors(req, res, 'POST, OPTIONS', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   if (!(await auth(req))) return res.status(401).json({ error: 'Unauthorized' });
