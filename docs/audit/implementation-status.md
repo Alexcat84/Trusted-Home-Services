@@ -40,6 +40,9 @@ report-uri /api/csp-report
 
 ## Backlog opcional
 
-- [ ] Acortar JWT a 8 h si el admin se usa poco
-- [ ] Dashboard externo para reportes CSP (hoy solo logs Vercel)
 - [ ] Search Console + sitemap cuando el dominio custom esté activo
+- [ ] Fotos/redes del cliente en Our Projects y footer
+
+## Toolchain
+
+- **Vite 8** + `@vitejs/plugin-react` 6 (2026-06-22) — build verificado; `npm audit` 0 vulnerabilidades
