@@ -10,9 +10,9 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "^6.0.0",
+    "@prisma/client": "^6.19.3",
     "@vercel/kv": "^2.0.0",
-    "animejs": "^4.3.6",
+    "animejs": "^4.5.0",
     "framer-motion": "^11.11.17",
     "prisma": "^6.0.0",
     "react": "^18.3.1",
