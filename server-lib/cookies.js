@@ -22,12 +22,13 @@ export function isProductionEnv() {
   return process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
 }
 
+import { ADMIN_SESSION_TTL_SECONDS } from './admin-session.js';
+
 export function setAdminSessionCookie(res, token) {
-  const maxAge = 60 * 60 * 24 * 7;
   const secure = isProductionEnv() ? '; Secure' : '';
   res.setHeader(
     'Set-Cookie',
-    `th_admin=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${maxAge}${secure}`
+    `th_admin=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${ADMIN_SESSION_TTL_SECONDS}${secure}`
   );
 }
 

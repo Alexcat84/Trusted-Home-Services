@@ -1730,6 +1730,27 @@ function AdminPage() {
   const [notifyLoading, setNotifyLoading] = useState(false);
   const [notifyError, setNotifyError] = useState(null);
 
+  useEffect(() => {
+    let robotsMeta = document.querySelector('meta[name="robots"]');
+    const created = !robotsMeta;
+    if (!robotsMeta) {
+      robotsMeta = document.createElement('meta');
+      robotsMeta.setAttribute('name', 'robots');
+      document.head.appendChild(robotsMeta);
+    }
+    const previous = robotsMeta.getAttribute('content');
+    robotsMeta.setAttribute('content', 'noindex, nofollow');
+    return () => {
+      if (created) {
+        robotsMeta.remove();
+      } else if (previous) {
+        robotsMeta.setAttribute('content', previous);
+      } else {
+        robotsMeta.removeAttribute('content');
+      }
+    };
+  }, []);
+
   const handleLogout = async () => {
     try {
       await fetch('/api/admin/logout', { method: 'POST', ...ADMIN_FETCH });

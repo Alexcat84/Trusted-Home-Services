@@ -39,11 +39,12 @@ export default async function handler(req, res) {
   }
 
   const { safeStringEqual, signJWT } = await import('../../server-lib/auth.js');
+  const { ADMIN_SESSION_TTL_SECONDS } = await import('../../server-lib/admin-session.js');
   if (!safeStringEqual(u, username) || !safeStringEqual(p, password)) {
     return res.status(401).json({ error: 'Invalid username or password' });
   }
 
-  const token = signJWT({ admin: true }, secret);
+  const token = signJWT({ admin: true }, secret, ADMIN_SESSION_TTL_SECONDS);
   const { setAdminSessionCookie } = await import('../../server-lib/cookies.js');
   setAdminSessionCookie(res, token);
 
