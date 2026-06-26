@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useLang } from '../context/LangContext';
+import { useState, useEffect } from 'react';
+import { useLang } from '../context/useLang';
 
 const CONSENT_KEY = 'trusted_cookie_consent';
 const GA_ID = 'G-C4H7QVDMLH';
@@ -18,28 +18,29 @@ function loadGoogleAnalytics() {
   document.head.appendChild(initScript);
 }
 
+function getStoredConsent() {
+  try {
+    return localStorage.getItem(CONSENT_KEY);
+  } catch {
+    return null;
+  }
+}
+
 export default function CookieConsent() {
   const { t } = useLang();
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(() => {
+    const saved = getStoredConsent();
+    return saved !== 'accepted' && saved !== 'declined';
+  });
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(CONSENT_KEY);
-      if (saved === 'accepted') {
-        loadGoogleAnalytics();
-        return;
-      }
-      if (saved === 'declined') return;
-      setVisible(true);
-    } catch {
-      setVisible(true);
-    }
+    if (getStoredConsent() === 'accepted') loadGoogleAnalytics();
   }, []);
 
   const accept = () => {
     try {
       localStorage.setItem(CONSENT_KEY, 'accepted');
-    } catch {}
+    } catch { /* storage unavailable (e.g. private mode); ignore */ }
     loadGoogleAnalytics();
     setVisible(false);
   };
@@ -47,7 +48,7 @@ export default function CookieConsent() {
   const decline = () => {
     try {
       localStorage.setItem(CONSENT_KEY, 'declined');
-    } catch {}
+    } catch { /* storage unavailable (e.g. private mode); ignore */ }
     setVisible(false);
   };
 

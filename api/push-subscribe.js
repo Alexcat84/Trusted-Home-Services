@@ -16,6 +16,14 @@ export default async function handler(req, res) {
   adminCors(req, res, 'POST, OPTIONS', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const { checkRateLimit } = await import('../server-lib/rate-limit.js');
+  const rl = await checkRateLimit(req, 'admin-api', 60, 60);
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter ?? 60));
+    return res.status(429).json({ error: 'Too many requests. Please try again shortly.' });
+  }
+
   if (!(await auth(req))) return res.status(401).json({ error: 'Unauthorized' });
 
   let body;
@@ -86,7 +94,7 @@ export default async function handler(req, res) {
   const kvToken = process.env.KV_REST_API_TOKEN;
   if (kvUrl && kvToken) {
     try {
-      const { kv } = await import('@vercel/kv');
+      const { kv } = await import('../server-lib/kv.js');
       const key = 'push_subscriptions';
       const raw = await kv.get(key);
       const list = Array.isArray(raw) ? raw : raw ? [raw] : [];

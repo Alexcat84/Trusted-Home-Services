@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useLang } from '../context/LangContext';
+import { useState, useEffect, useRef } from 'react';
+import { useLang } from '../context/useLang';
 import { getSectionHash } from '../translations';
 
 const NAV_KEYS = ['home', 'services', 'how', 'projects', 'realtors', 'partners', 'quote'];

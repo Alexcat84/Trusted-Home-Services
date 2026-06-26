@@ -11,6 +11,7 @@ export async function sendPushToAll(type, payload) {
   const title = `New: ${typeLabel}`;
   const body = `${name} – ${payload.email || payload.phone || 'no contact'}`.slice(0, 100);
 
+  // eslint-disable-next-line no-useless-assignment -- default kept for the early-return paths below
   let subscriptions = [];
   const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
   if (dbUrl) {
@@ -21,7 +22,7 @@ export async function sendPushToAll(type, payload) {
         endpoint: r.endpoint,
         keys: { p256dh: r.keysP256dh, auth: r.keysAuth },
       }));
-    } catch (e) {
+    } catch {
       console.error('Push fetch Prisma error');
       return;
     }
@@ -30,7 +31,7 @@ export async function sendPushToAll(type, payload) {
     const kvToken = process.env.KV_REST_API_TOKEN;
     if (!kvUrl || !kvToken) return;
     try {
-      const { kv } = await import('@vercel/kv');
+      const { kv } = await import('./kv.js');
       const raw = await kv.get('push_subscriptions');
       const list = Array.isArray(raw) ? raw : raw ? [raw] : [];
       subscriptions = list
@@ -43,7 +44,7 @@ export async function sendPushToAll(type, payload) {
           }
         })
         .filter(Boolean);
-    } catch (e) {
+    } catch {
       console.error('Push fetch KV error');
       return;
     }
@@ -69,7 +70,7 @@ export async function sendPushToAll(type, payload) {
             const { prisma } = await import('./prisma.js');
             await prisma.pushSubscription.deleteMany({ where: { endpoint: sub.endpoint } });
           } else {
-            const { kv } = await import('@vercel/kv');
+            const { kv } = await import('./kv.js');
             const raw = await kv.get('push_subscriptions');
             const list = Array.isArray(raw) ? raw : raw ? [raw] : [];
             const filtered = list.filter((s) => {
@@ -78,7 +79,7 @@ export async function sendPushToAll(type, payload) {
             });
             await kv.set('push_subscriptions', filtered);
           }
-        } catch (_) {}
+        } catch { /* best-effort cleanup; ignore */ }
       }
       console.error('Push send error:', e.statusCode ?? 'unknown');
     }

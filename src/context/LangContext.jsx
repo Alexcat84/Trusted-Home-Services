@@ -1,7 +1,6 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { t, getSectionHash, getSectionKeyFromHash } from '../translations';
-
-const LangContext = createContext(null);
+import { LangContext } from './langContextInstance';
 
 const STORAGE_KEY = 'trusted_lang';
 
@@ -18,7 +17,7 @@ export function LangProvider({ children }) {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, lang);
-    } catch {}
+    } catch { /* storage unavailable (e.g. private mode); ignore */ }
     document.documentElement.lang = lang === 'es' ? 'es' : lang === 'fr' ? 'fr' : 'en';
     const hash = window.location.hash.slice(1);
     const sectionKey = getSectionKeyFromHash(hash);
@@ -36,10 +35,4 @@ export function LangProvider({ children }) {
       {children}
     </LangContext.Provider>
   );
-}
-
-export function useLang() {
-  const ctx = useContext(LangContext);
-  if (!ctx) throw new Error('useLang must be used within LangProvider');
-  return ctx;
 }

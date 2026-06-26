@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { animate, stagger } from 'animejs';
-import { useLang } from './context/LangContext';
+import { useLang } from './context/useLang';
 import { getSectionHash } from './translations';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -28,7 +28,7 @@ async function submitToOwnApi(payload) {
       try {
         const j = JSON.parse(text);
         if (j && typeof j.error === 'string') errMsg = j.error;
-      } catch (_) {}
+      } catch { /* response body wasn't JSON; keep raw text */ }
       console.warn('[Trusted Home] API submit failed:', res.status, url, errMsg);
       return false;
     }
@@ -37,21 +37,6 @@ async function submitToOwnApi(payload) {
     return true;
   } catch (err) {
     console.warn('[Trusted Home] API submit error:', url, err?.message || err);
-    return false;
-  }
-}
-
-/** Envía el payload a Formspree si existe VITE_FORMSPREE_* para ese tipo. Devuelve true si se envió y ok. */
-async function submitToFormspree(formId, payload) {
-  if (!formId || typeof formId !== 'string') return false;
-  try {
-    const res = await fetch(`https://formspree.io/f/${formId.trim()}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    return res.ok;
-  } catch {
     return false;
   }
 }
@@ -94,42 +79,8 @@ function AnimatedSectionTitle({ text }) {
   );
 }
 
-/** Efecto de texto escribiéndose; arranca cuando el bloque entra en vista */
-function Typewriter({ text, speed = 42, showCursor = true }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-30px' });
-  const [length, setLength] = useState(0);
-
-  useEffect(() => {
-    setLength(0);
-  }, [text]);
-
-  useEffect(() => {
-    if (!inView || !text) return;
-    if (length >= text.length) return;
-    const t = setTimeout(() => setLength((n) => Math.min(n + 1, text.length)), speed);
-    return () => clearTimeout(t);
-  }, [inView, text, length, speed]);
-
-  if (!text) return null;
-  return (
-    <span ref={ref}>
-      {text.slice(0, length)}
-      {showCursor && length < text.length && <span className="typewriter-cursor" aria-hidden="true">|</span>}
-    </span>
-  );
-}
-
 const container = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
 const item = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
-
-function Section({ id, className, children }) {
-  return (
-    <section id={id} className={className}>
-      {children}
-    </section>
-  );
-}
 
 function AnimatedSection({ id, className, children }) {
   const ref = useRef(null);
@@ -240,53 +191,6 @@ function Hero({ skipAnimation = false }) {
   );
 }
 
-function HomeStatsBlock() {
-  const { t, lang } = useLang();
-  const quoteHash = getSectionHash(lang, 'quote');
-  return (
-    <section className="home-stats" aria-label="Key facts">
-      <div className="container">
-        <div className="home-stats-grid">
-          <div className="realtor-proof-stat-box">
-            <span className="realtor-proof-stat-emoji" aria-hidden="true">🏠</span>
-            <span className="realtor-proof-stat-value">{t('realtorPage.proofStats1Value')}</span>
-            <span className="realtor-proof-stat-label">{t('realtorPage.proofStats1Label')}</span>
-          </div>
-          <div className="realtor-proof-stat-box">
-            <span className="realtor-proof-stat-emoji" aria-hidden="true">🏆</span>
-            <span className="realtor-proof-stat-value">{t('realtorPage.proofStats4Value')}</span>
-            <span className="realtor-proof-stat-label">{t('realtorPage.proofStats4Label')}</span>
-          </div>
-          <div className="realtor-proof-stat-box">
-            <span className="realtor-proof-stat-emoji" aria-hidden="true">📍</span>
-            <span className="realtor-proof-stat-value">{t('realtorPage.proofStats3Value')}</span>
-            <span className="realtor-proof-stat-label">{t('realtorPage.proofStats3Label')}</span>
-          </div>
-          <div className="realtor-proof-stat-box">
-            <span className="realtor-proof-stat-emoji" aria-hidden="true">⚡</span>
-            <span className="realtor-proof-stat-value">{t('realtorPage.proofStats2Value')}</span>
-            <span className="realtor-proof-stat-label">{t('realtorPage.proofStats2Label')}</span>
-          </div>
-          <a href={`#${quoteHash}`} className="realtor-proof-stat-box home-stats-quote-card">
-            <span className="realtor-proof-stat-emoji" aria-hidden="true">📋</span>
-            <span className="realtor-proof-stat-value">{t('homeStats.freeQuoteCard')}</span>
-            <span className="realtor-proof-stat-label" aria-hidden="true">&nbsp;</span>
-          </a>
-        </div>
-        <div className="home-stats-seal">
-          <div className="home-stats-seal-img" aria-hidden="true">
-            <img src="/images/quality%20guarantee%20luxury.png" alt="" />
-          </div>
-          <div className="home-stats-seal-text">
-            <p className="home-stats-seal-title">{t('homeStats.qualityTitle')}</p>
-            <p className="home-stats-seal-desc">{t('homeStats.qualityDesc')}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function Services() {
   const { t, lang } = useLang();
   const ref = React.useRef(null);
@@ -316,7 +220,7 @@ function Services() {
           animate={inView ? 'visible' : 'hidden'}
           variants={container}
         >
-          {services.map((s, i) => (
+          {services.map((s) => (
             <motion.article
               key={s.key}
               className={`service-card-flip ${flippedKey === s.key ? 'flipped' : ''}`}
@@ -346,37 +250,6 @@ function Services() {
         </motion.div>
       </div>
     </AnimatedSection>
-  );
-}
-
-function ServiceModal({ serviceKey, onClose }) {
-  const { t, lang } = useLang();
-  if (!serviceKey) return null;
-  return (
-    <motion.div
-      className="service-modal"
-      role="dialog"
-      aria-modal="true"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
-      <div className="service-modal-backdrop" />
-      <motion.div
-        className="service-modal-content"
-        initial={{ opacity: 0, scale: 0.96, y: -16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button type="button" className="service-modal-close" onClick={onClose} aria-label={t('realtors.form.close')}>&times;</button>
-        <h2 className="service-modal-title">{t(`services.${serviceKey}.title`)}</h2>
-        <div className="service-modal-body">{t(`services.${serviceKey}.text`)}</div>
-        <a href={`#${getSectionHash(lang, 'quote')}`} className="btn btn-primary service-modal-cta" onClick={onClose}>{t('nav.quote')}</a>
-      </motion.div>
-    </motion.div>
   );
 }
 
@@ -421,7 +294,7 @@ function HowWeWork() {
 }
 
 function Testimonials() {
-  const { t, lang } = useLang();
+  const { t } = useLang();
   const [activeIndex, setActiveIndex] = useState(0);
   const items = [
     { nameKey: 'testimonials.name1', roleKey: 'testimonials.role1', quoteKey: 'testimonials.quote1', img: '/images/woman1.jpg' },
@@ -480,7 +353,6 @@ function RealtorFormModal({ open, onClose }) {
   const [validationErrors, setValidationErrors] = useState([]);
 
   const hasContact = (email.trim() !== '' || phone.trim() !== '');
-  const canSubmit = name.trim() !== '' && hasContact && consent;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -827,28 +699,6 @@ function FranchiseFormModal({ open, onClose }) {
   );
 }
 
-function Realtors() {
-  const { t, lang } = useLang();
-  const realtorsHash = getSectionHash(lang, 'realtors');
-  return (
-    <AnimatedSection className="section section-realtors">
-      <div className="container">
-        <motion.div
-          className="realtors-inner"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="section-title">{t('realtors.title')}</h2>
-          <p>{t('realtors.text')}</p>
-          <a href={`#${realtorsHash}`} className="btn btn-primary">{t('realtorPage.ctaPrimary')}</a>
-          <p className="realtors-hint">{t('realtors.form.hint')}</p>
-        </motion.div>
-      </div>
-    </AnimatedSection>
-  );
-}
-
 function QuoteForm() {
   const { t, lang } = useLang();
   const formRef = useRef(null);
@@ -864,7 +714,6 @@ function QuoteForm() {
   const [quoteData, setQuoteData] = useState({ propertyType: '', size: '', areas: '', work: '' });
 
   const hasContact = (email.trim() !== '' || phone.trim() !== '');
-  const canSubmit = name.trim() !== '' && hasContact && consent;
 
   const totalSteps = wholeHouse ? 4 : 5;
   const progressRaw = totalSteps > 1 ? ((step <= 2 ? step : step - (wholeHouse ? 0 : 1)) - 1) / (totalSteps - 1) * 100 : 0;
@@ -873,10 +722,6 @@ function QuoteForm() {
   const handleNext = (next) => {
     if (next === 3 && wholeHouse) setStep(4);
     else setStep(next);
-  };
-  const handlePrev = (prev) => {
-    if (prev === 3 && wholeHouse) setStep(2);
-    else setStep(prev);
   };
 
   const validateStep2 = () => {
@@ -1844,6 +1689,9 @@ function AdminPage() {
   useEffect(() => {
     if (!isAuthenticated) return;
     const POLL_MS = 30_000;
+    // Both are async; any setState happens after their internal `await fetch(...)`,
+    // not synchronously in this effect body — standard React fetch-on-mount pattern.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchNotificationSettings();
     fetchList();
 
@@ -2227,22 +2075,27 @@ function getSubPageFromHash(h) {
   return null;
 }
 
+function getLegalPageFromHash(h) {
+  return h === 'privacy' ? 'privacy' : h === 'terms' ? 'terms' : h === 'faq' ? 'faq' : h === 'admin' ? 'admin' : null;
+}
+
+function getCurrentHash() {
+  return (window.location.hash || '').replace('#', '').toLowerCase();
+}
+
 export default function App() {
-  const [legalPage, setLegalPage] = useState(null);
-  const [subPage, setSubPage] = useState(null);
+  const [legalPage, setLegalPage] = useState(() => getLegalPageFromHash(getCurrentHash()));
+  const [subPage, setSubPage] = useState(() => getSubPageFromHash(getCurrentHash()));
   const prevSubPageRef = useRef(null);
   const prevLegalPageRef = useRef(null);
   const isFirstRenderRef = useRef(true);
   useEffect(() => {
-    const h = (window.location.hash || '').replace('#', '').toLowerCase();
-    setLegalPage(h === 'privacy' ? 'privacy' : h === 'terms' ? 'terms' : h === 'faq' ? 'faq' : h === 'admin' ? 'admin' : null);
-    setSubPage(getSubPageFromHash(h));
     const onHashChange = () => {
-      const hash = (window.location.hash || '').replace('#', '').toLowerCase();
+      const hash = getCurrentHash();
       const isLegal = ['privacy', 'terms', 'faq', 'admin'].includes(hash);
       const isSub = getSubPageFromHash(hash) != null;
       if (isLegal || isSub) window.scrollTo(0, 0);
-      setLegalPage(hash === 'privacy' ? 'privacy' : hash === 'terms' ? 'terms' : hash === 'faq' ? 'faq' : hash === 'admin' ? 'admin' : null);
+      setLegalPage(getLegalPageFromHash(hash));
       setSubPage(getSubPageFromHash(hash));
     };
     window.addEventListener('hashchange', onHashChange);
@@ -2254,8 +2107,12 @@ export default function App() {
   useLayoutEffect(() => {
     if (legalPage || subPage) window.scrollTo(0, 0);
   }, [legalPage, subPage]);
+  // Reads refs during render on purpose: an effect+state version of this caused a visible white-screen
+  // flicker on first load (see commits f5d5e61 / 2c37807 / 5c94276) and was deliberately replaced with this.
+  // eslint-disable-next-line react-hooks/refs
   const wasOnSubOrLegal = prevSubPageRef.current != null || prevLegalPageRef.current != null;
   const nowOnMain = !subPage && !legalPage;
+  // eslint-disable-next-line react-hooks/refs
   const skipHeroAnimation = isFirstRenderRef.current || (wasOnSubOrLegal && nowOnMain);
   useEffect(() => {
     prevSubPageRef.current = subPage;

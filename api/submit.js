@@ -98,7 +98,7 @@ export default async function handler(req, res) {
     const kvToken = process.env.KV_REST_API_TOKEN;
     if (kvUrl && kvToken) {
       try {
-        const { kv } = await import('@vercel/kv');
+        const { kv } = await import('../server-lib/kv.js');
         await kv.lpush(KV_KEY, JSON.stringify(record));
         await kv.ltrim(KV_KEY, 0, MAX_SUBMISSIONS - 1);
         stored = true;

@@ -51,7 +51,7 @@ export async function checkRateLimit(req, prefix, limit = 10, windowSeconds = 60
   }
 
   try {
-    const { kv } = await import('@vercel/kv');
+    const { kv } = await import('./kv.js');
     const count = await kv.incr(key);
     if (count === 1) await kv.expire(key, windowSeconds);
     if (count > limit) {

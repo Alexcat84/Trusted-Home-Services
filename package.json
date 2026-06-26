@@ -7,20 +7,33 @@
     "dev": "vite",
     "build": "prisma generate && vite build",
     "preview": "vite preview",
+    "lint": "eslint .",
+    "test": "vitest run",
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "^6.0.0",
-    "@vercel/kv": "^2.0.0",
-    "animejs": "^4.3.6",
-    "framer-motion": "^11.11.17",
-    "prisma": "^6.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "@upstash/redis": "^1.38.0",
+    "animejs": "^4.5.0",
+    "framer-motion": "^12.42.0",
+    "prisma": "^7.8.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "web-push": "^3.6.7"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^6.0.2",
-    "vite": "^8.0.16"
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-react": "^6.0.3",
+    "dotenv": "^17.4.2",
+    "eslint": "^10.5.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "vite": "^8.1.0",
+    "vitest": "^4.1.9"
+  },
+  "overrides": {
+    "@prisma/dev": "0.24.14"
   }
 }

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useLang } from '../context/LangContext';
+import { useLang } from '../context/useLang';
 import { getSectionHash } from '../translations';
 
 export default function Footer() {

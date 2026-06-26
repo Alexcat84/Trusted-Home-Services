@@ -33,7 +33,7 @@ export async function getNotificationFlags() {
   const kvToken = process.env.KV_REST_API_TOKEN;
   if (kvUrl && kvToken) {
     try {
-      const { kv } = await import('@vercel/kv');
+      const { kv } = await import('./kv.js');
       const raw = await kv.get('notification_settings');
       if (raw) {
         const obj = typeof raw === 'string' ? JSON.parse(raw) : raw;

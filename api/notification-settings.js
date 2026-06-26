@@ -59,7 +59,7 @@ async function getFlagsFromKv() {
   const kvToken = process.env.KV_REST_API_TOKEN;
   if (!kvUrl || !kvToken) return null;
   try {
-    const { kv } = await import('@vercel/kv');
+    const { kv } = await import('../server-lib/kv.js');
     const raw = await kv.get(KV_KEY);
     if (!raw) return null;
     const obj = typeof raw === 'string' ? JSON.parse(raw) : raw;
@@ -78,7 +78,7 @@ async function saveFlagsToKv(flags) {
   const kvToken = process.env.KV_REST_API_TOKEN;
   if (!kvUrl || !kvToken) return false;
   try {
-    const { kv } = await import('@vercel/kv');
+    const { kv } = await import('../server-lib/kv.js');
     await kv.set(KV_KEY, flags);
     return true;
   } catch (e) {
@@ -106,6 +106,14 @@ async function saveFlags(flags) {
 export default async function handler(req, res) {
   await cors(req, res);
   if (req.method === 'OPTIONS') return res.status(200).end();
+
+  const { checkRateLimit } = await import('../server-lib/rate-limit.js');
+  const rl = await checkRateLimit(req, 'admin-api', 60, 60);
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter ?? 60));
+    return res.status(429).json({ error: 'Too many requests. Please try again shortly.' });
+  }
+
   if (!(await auth(req))) return res.status(401).json({ error: 'Unauthorized' });
 
   if (req.method === 'GET') {

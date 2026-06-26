@@ -46,6 +46,14 @@ function toAdminShape(row) {
 export default async function handler(req, res) {
   await cors(req, res);
   if (req.method === 'OPTIONS') return res.status(200).end();
+
+  const { checkRateLimit } = await import('../server-lib/rate-limit.js');
+  const rl = await checkRateLimit(req, 'admin-api', 60, 60);
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter ?? 60));
+    return res.status(429).json({ error: 'Too many requests. Please try again shortly.' });
+  }
+
   if (!(await auth(req))) return res.status(401).json({ error: 'Unauthorized' });
 
   if (req.method === 'GET') {
@@ -69,7 +77,7 @@ export default async function handler(req, res) {
     const kvToken = process.env.KV_REST_API_TOKEN;
     if (!kvUrl || !kvToken) return res.status(200).json({ submissions: [] });
     try {
-      const { kv } = await import('@vercel/kv');
+      const { kv } = await import('../server-lib/kv.js');
       const raw = await kv.lrange(KV_KEY, 0, limit - 1);
       const submissions = raw
         .map((s) => {
