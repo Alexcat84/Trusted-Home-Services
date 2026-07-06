@@ -351,10 +351,7 @@ a:hover {
   height: 100dvh;
   max-height: 100vh;
   max-height: 100dvh;
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  padding: 5.5rem 0 0;
+  padding: 0;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -422,14 +419,13 @@ a:hover {
   width: 100%;
 }
 .hero-content--split {
+  position: absolute;
+  inset: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr; /* exactly 3 columns */
   align-items: stretch;
   column-gap: 0;
-  flex: 1;
-  align-self: stretch;
   height: 100%;
-  min-height: 0;
   max-width: none;
   width: 100%;
   margin: 0;
@@ -440,14 +436,18 @@ a:hover {
 .hero-col--left {
   outline: 3px solid #ff3860;
   outline-offset: -3px;
+  align-items: flex-start;
 }
 .hero-col--center {
   outline: 3px solid #48c774;
   outline-offset: -3px;
+  align-items: center;
+  text-align: center;
 }
 .hero-col--right {
   outline: 3px solid #3298dc;
   outline-offset: -3px;
+  align-items: flex-end;
 }
 .hero-col {
   display: flex;
@@ -456,25 +456,7 @@ a:hover {
   min-height: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding: clamp(1rem, 2vw, 2rem);
-}
-.hero-col--left {
-  align-items: flex-start;
-}
-.hero-col--center {
-  align-items: center;
-}
-.hero-col--right {
-  align-items: flex-end;
-}
-.hero-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  max-width: none;
+  padding: calc(5.5rem + 1rem) clamp(1rem, 2vw, 2rem) clamp(1rem, 2vw, 2rem);
 }
 .hero-copy {
   display: flex;
@@ -483,7 +465,7 @@ a:hover {
   width: 100%;
   max-width: 360px;
 }
-.hero-testimonials-col {
+.hero-col--right .hero-testimonials {
   width: 100%;
   max-width: 400px;
 }
@@ -536,10 +518,13 @@ a:hover {
     overflow: visible;
   }
   .hero-content--split {
+    position: relative;
+    inset: auto;
     grid-template-columns: 1fr;
     gap: 0;
     max-width: none;
     padding: 0;
+    height: auto;
   }
   .hero-col {
     min-height: auto;
@@ -561,7 +546,7 @@ a:hover {
     max-width: 400px;
     align-items: center;
   }
-  .hero-testimonials-col {
+  .hero-col--right .hero-testimonials {
     max-width: 400px;
   }
   .hero-content--split .hero-title,
@@ -769,9 +754,7 @@ a:hover {
 .hero-content--no-animate .hero-subtitle,
 .hero-content--no-animate .hero-actions,
 .hero-content--no-animate .hero-quality,
-.hero-content--no-animate .hero-center,
-.hero-content--no-animate .hero-col,
-.hero-content--no-animate .hero-testimonials-col {
+.hero-content--no-animate .hero-col {
   animation: none;
   opacity: 1;
   transform: translateY(0);

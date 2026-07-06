@@ -137,7 +137,8 @@ function Hero({ skipAnimation = false }) {
         initial={skipAnimation ? 'visible' : 'hidden'}
         animate="visible"
       >
-        <div className="hero-col hero-col--left hero-copy">
+        <div className="hero-col hero-col--left">
+          <div className="hero-copy">
           <motion.div className="hero-actions" variants={item}>
             <a href={`#${quoteHash}`} className="btn btn-primary">{t('hero.cta1')}</a>
             <span className="btn btn-primary" aria-hidden="true">{t('hero.cta2')}</span>
@@ -151,12 +152,13 @@ function Hero({ skipAnimation = false }) {
               <p className="home-stats-seal-desc">{t('homeStats.qualityDesc')}</p>
             </div>
           </motion.div>
+          </div>
         </div>
-        <div className="hero-col hero-col--center hero-center">
+        <div className="hero-col hero-col--center">
           <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
           <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
         </div>
-        <motion.div className="hero-col hero-col--right hero-testimonials-col" variants={item}>
+        <motion.div className="hero-col hero-col--right" variants={item}>
           <Testimonials variant="hero" />
         </motion.div>
       </motion.div>
