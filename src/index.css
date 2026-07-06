@@ -433,8 +433,14 @@ a:hover {
   text-align: left;
 }
 .hero-center {
-  min-height: 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  text-align: center;
   width: 100%;
+  max-width: 560px;
 }
 .hero-copy {
   display: flex;
@@ -448,10 +454,13 @@ a:hover {
 }
 .hero-content--split .hero-title,
 .hero-content--split .hero-subtitle {
-  text-align: left;
+  text-align: center;
 }
 .hero-content--split .hero-actions {
   justify-content: flex-start;
+}
+.hero-content--split .hero-copy .hero-actions {
+  margin-top: 0;
 }
 .hero-quality {
   width: 100%;
@@ -498,12 +507,25 @@ a:hover {
     padding: 0 1.25rem;
   }
   .hero-center {
-    display: none;
+    order: 1;
+    max-width: none;
   }
-  .hero-copy,
+  .hero-copy {
+    order: 2;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-testimonials-col {
+    order: 3;
+    justify-self: center;
+    width: 100%;
+    max-width: 400px;
+  }
   .hero-content--split .hero-title,
   .hero-content--split .hero-subtitle {
-    align-items: center;
     text-align: center;
   }
   .hero-content--split .hero-actions {
@@ -707,6 +729,7 @@ a:hover {
 .hero-content--no-animate .hero-subtitle,
 .hero-content--no-animate .hero-actions,
 .hero-content--no-animate .hero-quality,
+.hero-content--no-animate .hero-center,
 .hero-content--no-animate .hero-testimonials-col {
   animation: none;
   opacity: 1;

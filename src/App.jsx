@@ -138,8 +138,6 @@ function Hero({ skipAnimation = false }) {
         animate="visible"
       >
         <div className="hero-copy">
-          <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
-          <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
           <motion.div className="hero-actions" variants={item}>
             <a href={`#${quoteHash}`} className="btn btn-primary">{t('hero.cta1')}</a>
             <span className="btn btn-primary" aria-hidden="true">{t('hero.cta2')}</span>
@@ -154,7 +152,10 @@ function Hero({ skipAnimation = false }) {
             </div>
           </motion.div>
         </div>
-        <div className="hero-center" aria-hidden="true" />
+        <div className="hero-center">
+          <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
+          <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
+        </div>
         <motion.div className="hero-testimonials-col" variants={item}>
           <Testimonials variant="hero" />
         </motion.div>
