@@ -432,6 +432,23 @@ a:hover {
   padding: 0 clamp(0.35rem, 1vw, 0.75rem) 0 clamp(1rem, 3vw, 2.5rem);
   text-align: left;
 }
+/* TEMP: hero layout debug — remove when distribution is approved */
+.hero-content--split {
+  outline: 2px dashed #ffdd57;
+  outline-offset: -2px;
+}
+.hero-copy {
+  outline: 3px solid #ff3860;
+  outline-offset: -3px;
+}
+.hero-center {
+  outline: 3px solid #48c774;
+  outline-offset: -3px;
+}
+.hero-testimonials-col {
+  outline: 3px solid #3298dc;
+  outline-offset: -3px;
+}
 .hero-center {
   display: flex;
   flex-direction: column;
