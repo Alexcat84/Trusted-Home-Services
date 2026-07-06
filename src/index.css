@@ -352,9 +352,9 @@ a:hover {
   max-height: 100vh;
   max-height: 100dvh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 7rem 0 1.25rem;
+  align-items: stretch;
+  justify-content: stretch;
+  padding: 5.5rem 0 0;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -423,51 +423,69 @@ a:hover {
 }
 .hero-content--split {
   display: grid;
-  grid-template-columns: auto minmax(clamp(12rem, 42vw, 56rem), 1fr) auto;
-  align-items: center;
-  column-gap: clamp(1.25rem, 3vw, 2.5rem);
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: stretch;
+  column-gap: 0;
+  flex: 1;
+  align-self: stretch;
+  height: 100%;
+  min-height: 0;
   max-width: none;
   width: 100%;
-  margin: 0 auto;
-  padding: 0 clamp(0.35rem, 1vw, 0.75rem) 0 clamp(1rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
   text-align: left;
 }
 /* TEMP: hero layout debug — remove when distribution is approved */
-.hero-content--split {
-  outline: 2px dashed #ffdd57;
-  outline-offset: -2px;
-}
-.hero-copy {
+.hero-col--left {
   outline: 3px solid #ff3860;
   outline-offset: -3px;
 }
-.hero-center {
+.hero-col--center {
   outline: 3px solid #48c774;
   outline-offset: -3px;
 }
-.hero-testimonials-col {
+.hero-col--right {
   outline: 3px solid #3298dc;
   outline-offset: -3px;
+}
+.hero-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: clamp(1rem, 2vw, 2rem);
+}
+.hero-col--left {
+  align-items: flex-start;
+}
+.hero-col--center {
+  align-items: center;
+}
+.hero-col--right {
+  align-items: flex-end;
 }
 .hero-center {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  justify-self: center;
   text-align: center;
   width: 100%;
-  max-width: 560px;
+  max-width: none;
 }
 .hero-copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: min(100%, 360px);
+  width: 100%;
+  max-width: 360px;
 }
 .hero-testimonials-col {
-  width: min(100%, 400px);
-  justify-self: end;
+  width: 100%;
+  max-width: 400px;
 }
 .hero-content--split .hero-title,
 .hero-content--split .hero-subtitle {
@@ -519,26 +537,31 @@ a:hover {
   }
   .hero-content--split {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
-    max-width: 640px;
-    padding: 0 1.25rem;
-  }
-  .hero-center {
-    order: 1;
+    gap: 0;
     max-width: none;
+    padding: 0;
   }
-  .hero-copy {
+  .hero-col {
+    min-height: auto;
+    height: auto;
+    padding: 1.25rem;
+  }
+  .hero-col--center {
+    order: 1;
+  }
+  .hero-col--left {
     order: 2;
     align-items: center;
-    width: 100%;
+  }
+  .hero-col--right {
+    order: 3;
+    align-items: center;
+  }
+  .hero-copy {
     max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
+    align-items: center;
   }
   .hero-testimonials-col {
-    order: 3;
-    justify-self: center;
-    width: 100%;
     max-width: 400px;
   }
   .hero-content--split .hero-title,
@@ -747,6 +770,7 @@ a:hover {
 .hero-content--no-animate .hero-actions,
 .hero-content--no-animate .hero-quality,
 .hero-content--no-animate .hero-center,
+.hero-content--no-animate .hero-col,
 .hero-content--no-animate .hero-testimonials-col {
   animation: none;
   opacity: 1;
