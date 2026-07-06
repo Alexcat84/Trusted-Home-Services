@@ -407,6 +407,90 @@ a:hover {
   max-width: 960px;
   width: 100%;
 }
+.hero-content--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 440px);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: 1180px;
+  text-align: left;
+}
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.hero-content--split .hero-title,
+.hero-content--split .hero-subtitle {
+  text-align: left;
+}
+.hero-content--split .hero-actions {
+  justify-content: flex-start;
+}
+.hero-quality {
+  width: 100%;
+  max-width: 680px;
+  margin-top: 2.5rem;
+}
+.hero-testimonials-col {
+  width: 100%;
+}
+.hero-testimonials {
+  width: 100%;
+}
+.hero-testimonials-panel {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.hero-testimonials-title {
+  margin: 0 0 1.25rem;
+  color: var(--color-primary);
+  font-size: clamp(1.65rem, 3vw, 2.3rem);
+  line-height: 1.15;
+  text-align: center;
+}
+.hero-testimonials .testimonials-strip {
+  min-height: 250px;
+}
+.hero-testimonials .testimonial-quote {
+  font-size: clamp(1rem, 1.45vw, 1.15rem);
+}
+@media (max-width: 980px) {
+  .hero {
+    min-height: auto;
+    padding-top: 8rem;
+  }
+  .hero-content--split {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .hero-copy,
+  .hero-content--split .hero-title,
+  .hero-content--split .hero-subtitle {
+    align-items: center;
+    text-align: center;
+  }
+  .hero-content--split .hero-actions {
+    justify-content: center;
+  }
+  .hero-quality {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media (max-width: 640px) {
+  .hero-testimonials-panel {
+    padding: 1.25rem;
+  }
+  .hero-testimonials .testimonials-strip {
+    min-height: 275px;
+  }
+}
 .hero-title {
   margin-bottom: 1.25rem;
 }
@@ -590,7 +674,9 @@ a:hover {
 /* Al volver a Home desde otra página: sin parpadeo, contenido visible de inmediato */
 .hero-content--no-animate .hero-title,
 .hero-content--no-animate .hero-subtitle,
-.hero-content--no-animate .hero-actions {
+.hero-content--no-animate .hero-actions,
+.hero-content--no-animate .hero-quality,
+.hero-content--no-animate .hero-testimonials-col {
   animation: none;
   opacity: 1;
   transform: translateY(0);

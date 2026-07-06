@@ -109,7 +109,6 @@ const HERO_BG_INTERVAL_MS = 4000;
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
   const [bgActive, setBgActive] = useState('first');
-  const [heroRealtorModalOpen, setHeroRealtorModalOpen] = useState(false);
   const heroRef = useRef(null);
   const heroInView = useInView(heroRef, { margin: '-1px' });
   const outOfView = !heroInView;
@@ -126,7 +125,6 @@ function Hero({ skipAnimation = false }) {
 
   const quoteHash = getSectionHash(lang, 'quote');
   return (
-    <>
     <section ref={heroRef} id={getSectionHash(lang, 'home')} className={`hero ${outOfView ? 'hero--no-bg' : ''}`}>
       <div className={`hero-bg hero-bg-first ${bgActive !== 'first' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
       <div className={`hero-bg hero-bg-casa ${bgActive !== 'casa' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
@@ -134,22 +132,33 @@ function Hero({ skipAnimation = false }) {
       <div className={`hero-bg hero-bg-tools ${bgActive !== 'tools' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
       <div className={`hero-bg-overlay ${outOfView ? 'hero-bg-overlay--out-of-view' : ''}`} aria-hidden="true" />
       <motion.div
-        className={`container hero-content ${skipAnimation ? 'hero-content--no-animate' : ''}`}
+        className={`container hero-content hero-content--split ${skipAnimation ? 'hero-content--no-animate' : ''}`}
         variants={container}
         initial={skipAnimation ? 'visible' : 'hidden'}
         animate="visible"
       >
-        <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
-        <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
-        <motion.div className="hero-actions" variants={item}>
-          <a href={`#${quoteHash}`} className="btn btn-primary">{t('hero.cta1')}</a>
-          <button type="button" className="btn btn-primary" onClick={() => setHeroRealtorModalOpen(true)}>{t('realtorPage.ctaPrimary')}</button>
-          <span className="btn btn-primary" aria-hidden="true">{t('hero.cta2')}</span>
+        <div className="hero-copy">
+          <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
+          <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
+          <motion.div className="hero-actions" variants={item}>
+            <a href={`#${quoteHash}`} className="btn btn-primary">{t('hero.cta1')}</a>
+            <span className="btn btn-primary" aria-hidden="true">{t('hero.cta2')}</span>
+          </motion.div>
+          <motion.div className="home-stats-seal hero-stats-seal hero-quality" variants={item}>
+            <div className="home-stats-seal-img" aria-hidden="true">
+              <img src="/images/quality%20guarantee%20luxury.png" alt="" />
+            </div>
+            <div className="home-stats-seal-text">
+              <p className="home-stats-seal-title">{t('homeStats.qualityTitle')}</p>
+              <p className="home-stats-seal-desc">{t('homeStats.qualityDesc')}</p>
+            </div>
+          </motion.div>
+        </div>
+        <motion.div className="hero-testimonials-col" variants={item}>
+          <Testimonials variant="hero" />
         </motion.div>
       </motion.div>
     </section>
-    <RealtorFormModal open={heroRealtorModalOpen} onClose={() => setHeroRealtorModalOpen(false)} />
-    </>
   );
 }
 
@@ -255,9 +264,10 @@ function HowWeWork() {
   );
 }
 
-function Testimonials() {
+function Testimonials({ variant = 'section' }) {
   const { t } = useLang();
   const [activeIndex, setActiveIndex] = useState(0);
+  const isHero = variant === 'hero';
   const items = [
     { nameKey: 'testimonials.name1', roleKey: 'testimonials.role1', quoteKey: 'testimonials.quote1', img: '/images/woman1.jpg' },
     { nameKey: 'testimonials.name2', roleKey: 'testimonials.role2', quoteKey: 'testimonials.quote2', img: '/images/man1.jpg' },
@@ -271,9 +281,12 @@ function Testimonials() {
   }, [items.length]);
 
   return (
-    <section className="section section-testimonials" aria-label={t('testimonials.title')}>
-      <div className="container">
-        <h2 className="section-title">{t('testimonials.title')}</h2>
+    <section
+      className={isHero ? 'hero-testimonials' : 'section section-testimonials'}
+      aria-label={t('testimonials.title')}
+    >
+      <div className={isHero ? 'hero-testimonials-panel' : 'container'}>
+        <h2 className={isHero ? 'hero-testimonials-title' : 'section-title'}>{t('testimonials.title')}</h2>
         <div className="testimonials-strip">
           {items.map((item, i) => (
             <div
@@ -2095,7 +2108,6 @@ export default function App() {
         <Hero skipAnimation={skipHeroAnimation} />
         <Services />
         <HowWeWork />
-        <Testimonials />
         <QuoteForm />
       </main>
       <Footer />
