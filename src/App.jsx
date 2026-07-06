@@ -132,7 +132,7 @@ function Hero({ skipAnimation = false }) {
       <div className={`hero-bg hero-bg-tools ${bgActive !== 'tools' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
       <div className={`hero-bg-overlay ${outOfView ? 'hero-bg-overlay--out-of-view' : ''}`} aria-hidden="true" />
       <motion.div
-        className={`container hero-content hero-content--split ${skipAnimation ? 'hero-content--no-animate' : ''}`}
+        className={`hero-content hero-content--split ${skipAnimation ? 'hero-content--no-animate' : ''}`}
         variants={container}
         initial={skipAnimation ? 'visible' : 'hidden'}
         animate="visible"
@@ -154,6 +154,7 @@ function Hero({ skipAnimation = false }) {
             </div>
           </motion.div>
         </div>
+        <div className="hero-center" aria-hidden="true" />
         <motion.div className="hero-testimonials-col" variants={item}>
           <Testimonials variant="hero" />
         </motion.div>
