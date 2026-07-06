@@ -146,44 +146,6 @@ function Hero({ skipAnimation = false }) {
           <button type="button" className="btn btn-primary" onClick={() => setHeroRealtorModalOpen(true)}>{t('realtorPage.ctaPrimary')}</button>
           <span className="btn btn-primary" aria-hidden="true">{t('hero.cta2')}</span>
         </motion.div>
-        <div className="hero-stats-wrap" aria-label="Key facts">
-          <div className="home-stats-grid hero-stats-grid">
-            <div className="realtor-proof-stat-box">
-              <span className="realtor-proof-stat-emoji" aria-hidden="true">🏠</span>
-              <span className="realtor-proof-stat-value">{t('realtorPage.proofStats1Value')}</span>
-              <span className="realtor-proof-stat-label">{t('realtorPage.proofStats1Label')}</span>
-            </div>
-            <div className="realtor-proof-stat-box">
-              <span className="realtor-proof-stat-emoji" aria-hidden="true">🏆</span>
-              <span className="realtor-proof-stat-value">{t('realtorPage.proofStats4Value')}</span>
-              <span className="realtor-proof-stat-label">{t('realtorPage.proofStats4Label')}</span>
-            </div>
-            <div className="realtor-proof-stat-box">
-              <span className="realtor-proof-stat-emoji" aria-hidden="true">📍</span>
-              <span className="realtor-proof-stat-value">{t('realtorPage.proofStats3Value')}</span>
-              <span className="realtor-proof-stat-label">{t('realtorPage.proofStats3Label')}</span>
-            </div>
-            <div className="realtor-proof-stat-box">
-              <span className="realtor-proof-stat-emoji" aria-hidden="true">⚡</span>
-              <span className="realtor-proof-stat-value">{t('realtorPage.proofStats2Value')}</span>
-              <span className="realtor-proof-stat-label">{t('realtorPage.proofStats2Label')}</span>
-            </div>
-            <a href={`#${quoteHash}`} className="realtor-proof-stat-box home-stats-quote-card">
-              <span className="realtor-proof-stat-emoji" aria-hidden="true">📋</span>
-              <span className="realtor-proof-stat-value">{t('homeStats.freeQuoteCard')}</span>
-              <span className="realtor-proof-stat-label" aria-hidden="true">&nbsp;</span>
-            </a>
-          </div>
-          <div className="home-stats-seal hero-stats-seal">
-            <div className="home-stats-seal-img" aria-hidden="true">
-              <img src="/images/quality%20guarantee%20luxury.png" alt="" />
-            </div>
-            <div className="home-stats-seal-text">
-              <p className="home-stats-seal-title">{t('homeStats.qualityTitle')}</p>
-              <p className="home-stats-seal-desc">{t('homeStats.qualityDesc')}</p>
-            </div>
-          </div>
-        </div>
       </motion.div>
     </section>
     <RealtorFormModal open={heroRealtorModalOpen} onClose={() => setHeroRealtorModalOpen(false)} />
