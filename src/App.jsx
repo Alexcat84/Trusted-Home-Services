@@ -126,6 +126,11 @@ function Hero({ skipAnimation = false }) {
   const quoteHash = getSectionHash(lang, 'quote');
   return (
     <section ref={heroRef} id={getSectionHash(lang, 'home')} className={`hero ${outOfView ? 'hero--no-bg' : ''}`}>
+      <div className={`hero-bg hero-bg-first ${bgActive !== 'first' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
+      <div className={`hero-bg hero-bg-casa ${bgActive !== 'casa' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
+      <div className={`hero-bg hero-bg-luxury ${bgActive !== 'luxury' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
+      <div className={`hero-bg hero-bg-tools ${bgActive !== 'tools' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
+      <div className={`hero-bg-overlay ${outOfView ? 'hero-bg-overlay--out-of-view' : ''}`} aria-hidden="true" />
       <motion.div
         className={`hero-content hero-content--split ${skipAnimation ? 'hero-content--no-animate' : ''}`}
         variants={container}
@@ -153,13 +158,6 @@ function Hero({ skipAnimation = false }) {
           <div className="hero-center-copy">
             <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
             <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
-          </div>
-          <div className="hero-center-bg">
-            <div className={`hero-bg hero-bg-first ${bgActive !== 'first' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
-            <div className={`hero-bg hero-bg-casa ${bgActive !== 'casa' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
-            <div className={`hero-bg hero-bg-luxury ${bgActive !== 'luxury' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
-            <div className={`hero-bg hero-bg-tools ${bgActive !== 'tools' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
-            <div className={`hero-bg-overlay ${outOfView ? 'hero-bg-overlay--out-of-view' : ''}`} aria-hidden="true" />
           </div>
         </div>
         <motion.div className="hero-col hero-col--right" variants={item}>

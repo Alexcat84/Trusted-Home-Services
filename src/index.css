@@ -354,12 +354,15 @@ a:hover {
   padding: 0;
   overflow: hidden;
   box-sizing: border-box;
-  background: var(--color-primary);
 }
 
 .hero-bg {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  height: 100dvh;
   z-index: 0;
   background-color: var(--color-primary);
   background-repeat: no-repeat;
@@ -391,8 +394,12 @@ a:hover {
   pointer-events: none;
 }
 .hero-bg-overlay {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  height: 100dvh;
   z-index: 1;
   background: linear-gradient(135deg, rgba(34, 49, 81, 0.48) 0%, rgba(26, 39, 64, 0.52) 50%, rgba(21, 29, 53, 0.56) 100%);
   pointer-events: none;
@@ -463,11 +470,10 @@ a:hover {
 }
 .hero-col.hero-col--center {
   justify-content: flex-start;
-  align-items: stretch;
+  align-items: center;
   padding-top: calc(5.5rem + 0.75rem);
   padding-left: 0;
   padding-right: 0;
-  padding-bottom: 0;
 }
 .hero-col--center .hero-subtitle {
   margin-bottom: 0;
@@ -481,24 +487,6 @@ a:hover {
   padding: 0 clamp(1rem, 2vw, 2rem);
   text-align: center;
   box-sizing: border-box;
-  position: relative;
-  z-index: 2;
-  flex-shrink: 0;
-}
-/* TEMP: hero layout debug — background image zone */
-.hero-center-bg {
-  position: relative;
-  flex: 1 1 auto;
-  width: 100%;
-  min-height: 0;
-  overflow: hidden;
-  outline: 3px solid #9b59b6;
-  outline-offset: -3px;
-}
-.hero-center-bg .hero-bg,
-.hero-center-bg .hero-bg-overlay {
-  position: absolute;
-  inset: 0;
 }
 .hero-copy {
   display: flex;
@@ -575,11 +563,6 @@ a:hover {
   }
   .hero-col--center {
     order: 1;
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .hero-center-bg {
-    min-height: clamp(220px, 38vw, 320px);
   }
   .hero-col--left {
     order: 2;
