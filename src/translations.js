@@ -2,8 +2,8 @@ export const TRANSLATIONS = {
   en: {
     nav: { home: 'Home', services: 'Our Services', how: 'How We Work', projects: 'Our Projects', realtors: 'For Realtors', partners: 'Become a Partner', quote: 'Free Quote' },
     hero: {
-      title: 'Your listing, market-ready.',
-      subtitle: 'Smart fixes, clean execution, a smoother sale. For homeowners and real estate professionals.',
+      title: 'Your listing, market-ready',
+      subtitle: 'Smart fixes, clean execution, a smoother sale. For homeowners and real estate professionals',
       cta1: 'Get a free quote',
       cta2: 'Call (613) 204-8000',
       scroll: 'Scroll'
@@ -369,8 +369,8 @@ export const TRANSLATIONS = {
   fr: {
     nav: { home: 'Accueil', services: 'Nos services', how: 'Notre processus', projects: 'Nos projets', realtors: 'Pour les courtiers', partners: 'Devenir partenaire', quote: 'Devis gratuit' },
     hero: {
-      title: 'Votre annonce, prête pour le marché.',
-      subtitle: 'Réparations intelligentes, exécution soignée, vente plus fluide. Pour propriétaires et professionnels de l\'immobilier.',
+      title: 'Votre annonce, prête pour le marché',
+      subtitle: 'Réparations intelligentes, exécution soignée, vente plus fluide. Pour propriétaires et professionnels de l\'immobilier',
       cta1: 'Obtenir un devis gratuit',
       cta2: 'Appeler (613) 204-8000',
       scroll: 'Défiler'
@@ -736,8 +736,8 @@ export const TRANSLATIONS = {
   es: {
     nav: { home: 'Inicio', services: 'Nuestros servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', realtors: 'Para agentes', partners: 'Ser socio', quote: 'Cotización gratuita' },
     hero: {
-      title: 'Su listado, listo para el mercado.',
-      subtitle: 'Arreglos inteligentes, ejecución impecable, venta más fluida. Para propietarios y profesionales inmobiliarios.',
+      title: 'Su listado, listo para el mercado',
+      subtitle: 'Arreglos inteligentes, ejecución impecable, venta más fluida. Para propietarios y profesionales inmobiliarios',
       cta1: 'Pedir cotización gratuita',
       cta2: 'Llamar (613) 204-8000',
       scroll: 'Desplazar'
