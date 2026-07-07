@@ -442,12 +442,17 @@ a:hover {
   outline: 3px solid #48c774;
   outline-offset: -3px;
   align-items: center;
+  justify-content: flex-start;
   text-align: center;
+  padding-top: 6.25rem;
 }
 .hero-col--right {
   outline: 3px solid #3298dc;
   outline-offset: -3px;
-  align-items: flex-end;
+  align-items: stretch;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
 }
 .hero-col {
   display: flex;
@@ -468,6 +473,31 @@ a:hover {
 .hero-col--right .hero-testimonials {
   width: 100%;
   max-width: 100%;
+  min-width: 0;
+}
+.hero-col--center .hero-subtitle {
+  margin-bottom: 0;
+}
+.hero-col--right .hero-testimonials-panel {
+  width: 100%;
+  max-width: 100%;
+  padding: clamp(0.85rem, 1.5vw, 1.25rem);
+  box-sizing: border-box;
+}
+.hero-col--right .hero-testimonials-title {
+  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+  margin-bottom: 0.75rem;
+}
+.hero-col--right .hero-testimonials .testimonials-strip {
+  min-height: 0;
+}
+.hero-col--right .hero-testimonials .testimonial-quote {
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  line-height: 1.4;
+}
+.hero-col--right .hero-testimonials .testimonial-avatar {
+  width: 2.75rem;
+  height: 2.75rem;
 }
 .hero-content--split .hero-title,
 .hero-content--split .hero-subtitle {
