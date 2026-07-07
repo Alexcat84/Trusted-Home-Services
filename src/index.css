@@ -476,6 +476,14 @@ a:hover {
 .hero-col--center .hero-subtitle {
   margin-bottom: 0;
 }
+/* TEMP: hero layout debug — central copy box */
+.hero-center-copy {
+  outline: 3px solid #ff44cc;
+  outline-offset: -3px;
+  width: fit-content;
+  max-width: 100%;
+  text-align: center;
+}
 .hero-copy {
   display: flex;
   flex-direction: column;

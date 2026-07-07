@@ -155,8 +155,10 @@ function Hero({ skipAnimation = false }) {
           </div>
         </div>
         <div className="hero-col hero-col--center">
-          <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
-          <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
+          <div className="hero-center-copy">
+            <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
+            <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
+          </div>
         </div>
         <motion.div className="hero-col hero-col--right" variants={item}>
           <Testimonials variant="hero" />
