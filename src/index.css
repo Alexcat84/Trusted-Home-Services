@@ -472,6 +472,8 @@ a:hover {
   justify-content: flex-start;
   align-items: center;
   padding-top: calc(5.5rem + 0.75rem);
+  padding-left: 0;
+  padding-right: 0;
 }
 .hero-col--center .hero-subtitle {
   margin-bottom: 0;
@@ -480,9 +482,11 @@ a:hover {
 .hero-center-copy {
   outline: 3px solid #ff44cc;
   outline-offset: -3px;
-  width: fit-content;
+  width: 100%;
   max-width: 100%;
+  padding: 0 clamp(1rem, 2vw, 2rem);
   text-align: center;
+  box-sizing: border-box;
 }
 .hero-copy {
   display: flex;
