@@ -436,7 +436,17 @@ a:hover {
 .hero-col--left {
   outline: 3px solid #ff3860;
   outline-offset: -3px;
-  align-items: flex-start;
+  align-items: center;
+}
+.hero-col--left .hero-copy {
+  align-items: center;
+  text-align: center;
+}
+.hero-col--left .hero-actions {
+  justify-content: center;
+}
+.hero-col--left .home-stats-seal-text {
+  text-align: center;
 }
 .hero-col--center {
   outline: 3px solid #48c774;
@@ -481,8 +491,8 @@ a:hover {
 .hero-content--split .hero-subtitle {
   text-align: center;
 }
-.hero-content--split .hero-actions {
-  justify-content: flex-start;
+.hero-content--split .hero-col--left .hero-actions {
+  justify-content: center;
 }
 .hero-content--split .hero-copy .hero-actions {
   margin-top: 0;
