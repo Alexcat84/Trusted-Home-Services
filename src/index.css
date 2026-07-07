@@ -461,7 +461,7 @@ a:hover {
 .hero-col.hero-col--center {
   justify-content: flex-start;
   align-items: center;
-  padding-top: calc(5.5rem + 0.35rem);
+  padding-top: calc(5.5rem + 0.75rem);
 }
 .hero-col--center .hero-subtitle {
   margin-bottom: 0;
