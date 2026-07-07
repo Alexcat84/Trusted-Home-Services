@@ -104,33 +104,12 @@ const REALTORS_PAGE_HASHES = ['for-realtors', 'pour-realtors', 'para-realtors'];
 const PARTNERS_PAGE_HASHES = ['partners', 'partenaires', 'socios'];
 const PROJECTS_PAGE_HASHES = ['our-projects', 'nos-projets', 'nuestros-proyectos'];
 
-const HERO_BG_INTERVAL_MS = 4000;
-
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
-  const [bgActive, setBgActive] = useState('first');
-  const heroRef = useRef(null);
-  const heroInView = useInView(heroRef, { margin: '-1px' });
-  const outOfView = !heroInView;
-
-  useEffect(() => {
-    if (!heroInView) return;
-
-    const id = setInterval(() => {
-      setBgActive((prev) => (prev === 'first' ? 'casa' : prev === 'casa' ? 'luxury' : prev === 'luxury' ? 'tools' : 'first'));
-    }, HERO_BG_INTERVAL_MS);
-
-    return () => clearInterval(id);
-  }, [heroInView]);
 
   const quoteHash = getSectionHash(lang, 'quote');
   return (
-    <section ref={heroRef} id={getSectionHash(lang, 'home')} className={`hero ${outOfView ? 'hero--no-bg' : ''}`}>
-      <div className={`hero-bg hero-bg-first ${bgActive !== 'first' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
-      <div className={`hero-bg hero-bg-casa ${bgActive !== 'casa' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
-      <div className={`hero-bg hero-bg-luxury ${bgActive !== 'luxury' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
-      <div className={`hero-bg hero-bg-tools ${bgActive !== 'tools' ? 'hero-bg--hidden' : ''} ${outOfView ? 'hero-bg--out-of-view' : ''}`} aria-hidden="true" />
-      <div className={`hero-bg-overlay ${outOfView ? 'hero-bg-overlay--out-of-view' : ''}`} aria-hidden="true" />
+    <section id={getSectionHash(lang, 'home')} className="hero">
       <motion.div
         className={`hero-content hero-content--split ${skipAnimation ? 'hero-content--no-animate' : ''}`}
         variants={container}

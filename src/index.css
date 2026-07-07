@@ -354,61 +354,12 @@ a:hover {
   padding: 0;
   overflow: hidden;
   box-sizing: border-box;
+  background: #fff;
 }
 
-.hero-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  height: 100dvh;
-  z-index: 0;
-  background-color: var(--color-primary);
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  transition: opacity 1s ease-in-out, filter 1s ease-in-out;
-  filter: blur(0);
-}
-.hero-bg-first {
-  background-image: url("/images/wmremove-transformed.jpeg");
-}
-.hero-bg-casa {
-  background-image: url("/images/Casa%20interior.jpeg");
-}
-.hero-bg-luxury {
-  background-image: url("/images/luxury-house.jpeg");
-}
-.hero-bg-tools {
-  background-image: url("/images/Multiple tools.png");
-}
-.hero-bg--hidden {
-  opacity: 0;
-  pointer-events: none;
-  filter: blur(10px);
-}
-.hero-bg--out-of-view {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
+.hero-bg,
 .hero-bg-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  height: 100dvh;
-  z-index: 1;
-  background: linear-gradient(135deg, rgba(34, 49, 81, 0.48) 0%, rgba(26, 39, 64, 0.52) 50%, rgba(21, 29, 53, 0.56) 100%);
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-}
-.hero-bg-overlay--out-of-view {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  display: none;
 }
 
 .hero-content {
@@ -691,11 +642,11 @@ a:hover {
   color: var(--color-text) !important;
 }
 .hero-stats-seal {
-  background: rgba(34, 49, 81, 0.09);
+  background: rgba(34, 49, 81, 0.08);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(34, 49, 81, 0.2);
+  color: var(--color-text);
   padding: 1.25rem 1.5rem;
   border-radius: var(--radius);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -718,18 +669,18 @@ a:hover {
 .hero-stats-seal .home-stats-seal-title {
   font-size: 1.4rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.98);
+  color: var(--color-primary);
 }
 .hero-stats-seal .home-stats-seal-desc {
   font-size: 1.25rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--color-text-muted);
 }
 
 .hero-title {
   font-size: clamp(2.1rem, 5vw, 3.35rem);
   font-weight: 700;
-  color: var(--color-text-on-dark);
+  color: var(--color-primary);
   margin: 0 0 1rem;
   line-height: 1.2;
   opacity: 0;
@@ -738,7 +689,7 @@ a:hover {
 
 .hero-subtitle {
   font-size: 1.5rem;
-  color: rgba(255,255,255,0.92);
+  color: var(--color-text);
   margin: 0 0 2.5rem;
   line-height: 1.45;
   opacity: 0;
@@ -2713,23 +2664,23 @@ a:hover {
 
 /* Sello dentro del hero: fondo transparente (anula el fondo claro de .home-stats-seal) */
 .hero .home-stats-seal {
-  background: rgba(34, 49, 81, 0.09) !important;
+  background: rgba(34, 49, 81, 0.08) !important;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(34, 49, 81, 0.2);
+  color: var(--color-text);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .hero .home-stats-seal:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .hero .home-stats-seal .home-stats-seal-title {
-  color: rgba(255, 255, 255, 0.98) !important;
+  color: var(--color-primary) !important;
   font-size: 1.4rem !important;
 }
 .hero .home-stats-seal .home-stats-seal-desc {
-  color: rgba(255, 255, 255, 0.88) !important;
+  color: var(--color-text-muted) !important;
   font-size: 1.25rem !important;
   line-height: 1.5;
 }
