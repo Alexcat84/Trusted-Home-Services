@@ -442,6 +442,7 @@ a:hover {
   outline: 3px solid #48c774;
   outline-offset: -3px;
   align-items: center;
+  justify-content: flex-start;
   text-align: center;
 }
 .hero-col--right {
