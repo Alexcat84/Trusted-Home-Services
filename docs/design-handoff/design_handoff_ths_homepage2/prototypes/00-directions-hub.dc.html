@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  #hub, #hub *, #hub *::before, #hub *::after { box-sizing: border-box; }
+  #hub { font-family: 'DM Sans', system-ui, sans-serif; color: #21303f; background: #eef1f4; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  #hub h1, #hub h2, #hub h3, #hub .disp { font-family: 'Outfit', system-ui, sans-serif; }
+  #hub a { color: #0a233c; text-decoration: none; }
+  #hub ::selection { background: #F9772B; color: #fff; }
+  @media (max-width: 980px) { #hub [data-grid] { grid-template-columns: 1fr !important; } }
+  @media (max-width: 700px) { #hub [data-table] { min-width: 720px; } }
+</style>
+</helmet>
+<div id="hub">
+  <header style="background:#0a233c;color:#fff;">
+    <div style="max-width:1180px;margin:0 auto;padding:2.6rem 1.75rem;">
+      <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:1.4rem;">
+        <span style="display:inline-block;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:15px solid #F9772B;"></span>
+        <span class="disp" style="font-weight:800;font-size:1.05rem;">Trusted Home Services</span>
+        <span style="margin-left:auto;font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;color:#9fb0c2;font-weight:700;">Homepage redesign · 6 directions</span>
+      </div>
+      <h1 style="font-size:clamp(1.9rem,4vw,3rem);font-weight:800;letter-spacing:-0.02em;margin:0 0 0.8rem;max-width:22ch;">Six directions, six theses. One brand, one set of must-haves.</h1>
+      <p style="color:#b9c7d6;font-size:1.1rem;margin:0;max-width:64ch;">Every direction answers the same question differently — what does a visitor see first, and how do they reach the nine services? All share navy + orange, Outfit / DM Sans, the no-deposit promise up front, 500+ homes, the phone with no scroll, EN/FR/ES, Electrical &amp; Home Inspection badged NEW, both audience paths, a floating multi-step quote modal (focus-trapped), and a hero video slot that flips 16:9 ↔ 9:16. Open each card for a fully wired, responsive page.</p>
+    </div>
+  </header>
+
+  <main style="max-width:1180px;margin:0 auto;padding:2.5rem 1.75rem 4rem;">
+    <div data-grid style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <sc-for list="{{ dirs }}" as="d" hint-placeholder-count="6">
+        <a href="{{ d.href }}" style="display:flex;flex-direction:column;background:#fff;border:1px solid #dfe4ea;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(10,35,60,0.05);" style-hover="box-shadow:0 22px 50px -20px rgba(10,35,60,0.35);transform:translateY(-3px);">
+          <div style="aspect-ratio:16/9;background:{{ d.thumbBg }};position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:1.3rem;color:#fff;overflow:hidden;">
+            <span style="position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.05) 0,rgba(255,255,255,0.05) 2px,transparent 2px,transparent 13px);"></span>
+            <span style="position:absolute;top:1.1rem;left:1.1rem;font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.85);">{{ d.no }}</span>
+            <div style="position:relative;"><div style="font-size:0.72rem;letter-spacing:0.13em;text-transform:uppercase;color:#ffb888;font-weight:700;margin-bottom:0.3rem;">{{ d.kicker }}</div><div class="disp" style="font-size:1.7rem;font-weight:800;line-height:1;">{{ d.name }}</div></div>
+          </div>
+          <div style="padding:1.4rem 1.5rem 1.6rem;flex:1;display:flex;flex-direction:column;">
+            <p style="margin:0 0 1rem;font-size:1rem;color:#3c4a58;font-weight:500;">{{ d.thesis }}</p>
+            <div style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:#8895a4;font-weight:700;margin-bottom:0.3rem;">Menu solved as</div>
+            <p style="margin:0 0 1.1rem;font-size:0.92rem;color:#556575;">{{ d.menu }}</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;margin-top:auto;">
+              <div><div style="font-size:0.74rem;font-weight:700;color:#1f9d55;margin-bottom:0.3rem;">FOR</div><p style="margin:0;font-size:0.86rem;color:#556575;">{{ d.pro }}</p></div>
+              <div><div style="font-size:0.74rem;font-weight:700;color:#d1603a;margin-bottom:0.3rem;">AGAINST</div><p style="margin:0;font-size:0.86rem;color:#556575;">{{ d.con }}</p></div>
+            </div>
+            <span style="margin-top:1.3rem;display:inline-flex;align-items:center;gap:0.45rem;color:#F9772B;font-weight:700;font-size:0.95rem;">Open the full page →</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+
+    <section style="margin-top:2.5rem;background:#fff;border:1px solid #dfe4ea;border-radius:20px;padding:1.75rem;overflow-x:auto;">
+      <h2 style="font-size:1.4rem;font-weight:800;color:#0a233c;margin:0 0 1.2rem;">Side by side</h2>
+      <table data-table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+        <thead>
+          <tr style="text-align:left;">
+            <sc-for list="{{ cols }}" as="c" hint-placeholder-count="5"><th style="padding:0.6rem 0.8rem;border-bottom:2px solid #e6e9ee;color:#0a233c;font-family:'Outfit',sans-serif;font-weight:700;white-space:nowrap;">{{ c }}</th></sc-for>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+            <tr style="vertical-align:top;">
+              <td style="padding:0.7rem 0.8rem;border-bottom:1px solid #eef1f4;"><a href="{{ r.href }}" style="font-weight:700;color:#0a233c;" style-hover="color:#F9772B;">{{ r.name }}</a></td>
+              <td style="padding:0.7rem 0.8rem;border-bottom:1px solid #eef1f4;color:#41505f;">{{ r.hero }}</td>
+              <td style="padding:0.7rem 0.8rem;border-bottom:1px solid #eef1f4;color:#41505f;">{{ r.menu }}</td>
+              <td style="padding:0.7rem 0.8rem;border-bottom:1px solid #eef1f4;color:#41505f;">{{ r.best }}</td>
+              <td style="padding:0.7rem 0.8rem;border-bottom:1px solid #eef1f4;color:#41505f;">{{ r.risk }}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </section>
+
+    <section style="margin-top:2rem;background:#0a233c;color:#fff;border-radius:20px;padding:2.2rem;">
+      <div style="font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;color:#ffb888;font-weight:700;margin-bottom:0.8rem;">My recommendation</div>
+      <h2 style="font-size:clamp(1.5rem,2.6vw,2rem);font-weight:800;margin:0 0 1rem;letter-spacing:-0.01em;">Lead with <a href="01-the-promise.dc.html" style="color:#F9772B;">The Promise</a> — then bolt on the best of the rest.</h2>
+      <p style="color:#c3d0dd;margin:0 0 1rem;max-width:70ch;">In a low-trust category, the no-deposit guarantee is the single most disarming thing this business can say — and today it's buried in a sidebar. Leading with it is the most defensible, least template-like opening, and unlike the video-first route it doesn't depend on an asset that doesn't exist yet. It also reads as "impactful and professional" without a darkened stock hero.</p>
+      <p style="color:#c3d0dd;margin:0 0 0.4rem;max-width:70ch;font-weight:600;color:#fff;">What I'd borrow from the others:</p>
+      <ul style="margin:0;padding-left:1.2rem;color:#c3d0dd;max-width:70ch;">
+        <li style="margin-bottom:0.4rem;"><strong style="color:#fff;">The Transformation</strong> — drop its three-column video hero in as the section right below the fold, so the reserved before/after reel has a home the day it's shot.</li>
+        <li style="margin-bottom:0.4rem;"><strong style="color:#fff;">The Concierge</strong> — use its interactive trades board as the <em>/services</em> index page; it scales past nine without a crowded dropdown.</li>
+        <li style="margin-bottom:0.4rem;"><strong style="color:#fff;">The Sequence</strong> — make its day-1-to-sold roadmap the <em>How We Work</em> page; it's the clearest way to set expectations.</li>
+        <li style="margin-bottom:0;"><strong style="color:#fff;">Two Doors + The Local</strong> — take Two Doors' audience toggle for the services section, and The Local's Ottawa neighbourhood proof as a trust band before the footer.</li>
+      </ul>
+      <p style="color:#9fb0c2;margin:1.2rem 0 0;font-size:0.9rem;max-width:70ch;">If the client's priority is instead "show the work immediately," swap the lead for The Transformation — same borrowed parts, just reordered. Tell me which way to consolidate and I'll build the single merged homepage.</p>
+    </section>
+
+    <div style="margin-top:1.5rem;background:#e4e8ed;border:1px solid #d5dbe2;border-radius:16px;padding:1.4rem 1.6rem;font-size:0.9rem;color:#41505f;">
+      <strong style="color:#0a233c;">How to review:</strong> open each page, resize to test mobile, click <em>Services</em> for that direction's menu answer, and hit <em>Free Quote</em> anywhere to run the focus-trapped multi-step form (Esc / backdrop / ✕ all close it and return focus).
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const dirs = [
+      { no:'01', href:'01-the-promise.dc.html', name:'The Promise', kicker:'Trust before features', thumbBg:'linear-gradient(135deg,#0a233c,#14324f)',
+        thesis:'The no-deposit promise is the headline. You read the reason to trust us before a single service.',
+        menu:'A grouped panel — "Make it show-ready" vs. "Fix & verify" — so nine services read as two clear jobs.',
+        pro:'Leads with the strongest differentiator; calm, premium, uncluttered.',
+        con:'Slower to show the actual work; visual-first buyers wait a scroll.' },
+      { no:'02', href:'02-the-transformation.dc.html', name:'The Transformation', kicker:'Show the outcome first', thumbBg:'linear-gradient(135deg,#12324f,#0a233c)',
+        thesis:'The before/after video is the hero, flanked by contact and testimonials — the brief\u2019s three-column layout, done cleanly.',
+        menu:'A full-width mega-menu of visual tiles, with the two NEW trades promoted in an orange feature column.',
+        pro:'Instantly proves quality; matches the reserved-video vision exactly.',
+        con:'Leans on a video that doesn\u2019t exist yet; the poster must carry it until shot.' },
+      { no:'03', href:'03-the-concierge.dc.html', name:'The Concierge', kicker:'One call, every trade', thumbBg:'linear-gradient(135deg,#0a233c,#0f2b45)',
+        thesis:'The single point of contact is the pitch — one big phone number, then a board that turns the nine trades into the navigation.',
+        menu:'A two-pane trades board: pick a trade on the left, see what\u2019s included on the right.',
+        pro:'Sells the real value (no juggling contractors); scales past nine cleanly.',
+        con:'The richest menu needs a click to reach; more to build and maintain.' },
+      { no:'04', href:'04-two-doors.dc.html', name:'Two Doors', kicker:'Fork the audience', thumbBg:'linear-gradient(135deg,#0a233c,#123350)',
+        thesis:'Two entry doors — homeowner vs. realtor — then the whole page reframes its copy and services for who you are.',
+        menu:'An audience-segmented list: a Homeowners / Realtors toggle reframes every service by that reader\u2019s benefit.',
+        pro:'Speaks directly to each visitor; the door preselects the quote form\u2019s role.',
+        con:'Splits attention up front; the toggle is a concept some users won\u2019t notice.' },
+      { no:'05', href:'05-the-sequence.dc.html', name:'The Sequence', kicker:'Day one to sold', thumbBg:'linear-gradient(135deg,#12324f,#0a233c)',
+        thesis:'The site is a prep timeline. You see the whole plan — assess, repair, refresh, present — before you commit.',
+        menu:'A chronological roadmap: the nine services sit in the phase (and rough day-range) when they actually happen.',
+        pro:'Sets expectations and sells the "managed plan" value; great for the How-We-Work story.',
+        con:'Imposes one narrative; a visitor who just wants one service has to read the arc.' },
+      { no:'06', href:'06-the-local.dc.html', name:'The Local', kicker:'On your street', thumbBg:'linear-gradient(135deg,#0a233c,#16344f)',
+        thesis:'Trust by proximity — Ottawa neighbourhoods, a service-area map, and recent local results carry the page.',
+        menu:'A searchable services directory: type "paint" or "electrical" and the nine filter live.',
+        pro:'Strong local credibility; the search scales and feels effortless.',
+        con:'Depends on real neighbourhood proof (photos, results) the client must supply to land.' }
+    ];
+    return {
+      dirs,
+      cols: ['Direction','Hero leads with','Services menu','Best for','Biggest risk'],
+      rows: [
+        { name:'01 The Promise', href:'01-the-promise.dc.html', hero:'The no-deposit guarantee', menu:'Grouped 2-job panel', best:'Trust-first positioning', risk:'Work shown late' },
+        { name:'02 The Transformation', href:'02-the-transformation.dc.html', hero:'Before/after video', menu:'Visual mega-menu', best:'Proving quality fast', risk:'Needs the real video' },
+        { name:'03 The Concierge', href:'03-the-concierge.dc.html', hero:'One number, all trades', menu:'Interactive trades board', best:'The "one contact" value', risk:'Menu is a click away' },
+        { name:'04 Two Doors', href:'04-two-doors.dc.html', hero:'Audience fork', menu:'Audience-segmented list', best:'Two distinct audiences', risk:'Splits focus up front' },
+        { name:'05 The Sequence', href:'05-the-sequence.dc.html', hero:'Day-1-to-sold roadmap', menu:'Chronological roadmap', best:'Setting expectations', risk:'One imposed narrative' },
+        { name:'06 The Local', href:'06-the-local.dc.html', hero:'Ottawa proximity proof', menu:'Searchable directory', best:'Local credibility', risk:'Needs real local proof' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

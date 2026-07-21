@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  #d3, #d3 *, #d3 *::before, #d3 *::after { box-sizing: border-box; }
+  #d3 { font-family: 'DM Sans', system-ui, sans-serif; color: #22303e; background: #f7f4ef; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  #d3 h1, #d3 h2, #d3 h3, #d3 .disp { font-family: 'Outfit', system-ui, sans-serif; }
+  #d3 a { color: #0a233c; text-decoration: none; }
+  #d3 a:hover { color: #F9772B; }
+  #d3 button { font-family: inherit; }
+  #d3 ::selection { background: #F9772B; color: #fff; }
+  @keyframes d3up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  @keyframes d3fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes d3pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(43,180,110,0.5); } 50% { box-shadow: 0 0 0 7px rgba(43,180,110,0); } }
+  #d3 [data-reveal] { opacity: 0; animation: d3up .7s cubic-bezier(.2,.7,.3,1) forwards; }
+  @media (prefers-reduced-motion: reduce) { #d3 [data-reveal], #d3 [data-live] { animation: none !important; opacity: 1; } }
+  #d3 [data-burger] { display: none; }
+  @media (max-width: 1080px) {
+    #d3 [data-desknav] { display: none !important; }
+    #d3 [data-burger] { display: inline-flex !important; }
+    #d3 [data-headcta] { display: none !important; }
+  }
+  @media (max-width: 940px) {
+    #d3 [data-hero] { grid-template-columns: 1fr !important; }
+    #d3 [data-board] { grid-template-columns: 1fr !important; }
+    #d3 [data-board-detail] { min-height: 0 !important; }
+    #d3 [data-two] { grid-template-columns: 1fr !important; }
+    #d3 [data-steps] { grid-template-columns: 1fr !important; }
+    #d3 [data-foot] { grid-template-columns: 1fr !important; }
+  }
+</style>
+</helmet>
+<div id="d3">
+  <header style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(247,244,239,0.94);backdrop-filter:blur(10px);color:#0a233c;border-bottom:1px solid #e8e1d5;">
+    <div style="max-width:1300px;margin:0 auto;display:flex;align-items:center;gap:1.5rem;padding:0.85rem 1.75rem;">
+      <a href="#top" style="display:flex;align-items:center;gap:0.6rem;color:#0a233c;flex-shrink:0;">
+        <span style="display:inline-block;width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-bottom:16px solid #F9772B;"></span>
+        <span style="display:flex;flex-direction:column;line-height:1;">
+          <span class="disp" style="font-weight:800;font-size:1.06rem;letter-spacing:-0.01em;">Trusted Home</span>
+          <span style="font-size:0.62rem;letter-spacing:0.34em;color:#8a7f70;font-weight:600;">SERVICES · OTTAWA</span>
+        </span>
+      </a>
+      <nav data-desknav style="margin-left:auto;display:flex;align-items:center;gap:0.15rem;">
+        <button onClick="{{ toggleServices }}" aria-expanded="{{ servicesOpen }}" style="display:inline-flex;align-items:center;gap:0.35rem;background:none;border:0;color:#22303e;font-size:0.92rem;font-weight:600;padding:0.55rem 0.85rem;border-radius:8px;cursor:pointer;" style-hover="background:#ece5da;">{{ t.services }} <span style="font-size:0.6rem;opacity:0.7;">▾</span></button>
+        <a href="#how" style="color:#22303e;font-size:0.92rem;font-weight:600;padding:0.55rem 0.85rem;border-radius:8px;" style-hover="background:#ece5da;">{{ t.how }}</a>
+        <a href="#realtors" style="color:#22303e;font-size:0.92rem;font-weight:600;padding:0.55rem 0.85rem;border-radius:8px;" style-hover="background:#ece5da;">{{ t.realtors }}</a>
+        <a href="#projects" style="color:#22303e;font-size:0.92rem;font-weight:600;padding:0.55rem 0.85rem;border-radius:8px;" style-hover="background:#ece5da;">{{ t.projects }}</a>
+      </nav>
+      <div data-headcta style="display:flex;align-items:center;gap:0.9rem;flex-shrink:0;">
+        <div role="group" aria-label="Language" style="display:flex;border:1px solid #cfc6b8;border-radius:7px;overflow:hidden;">
+          <sc-for list="{{ langs }}" as="lg" hint-placeholder-count="3"><button onClick="{{ lg.set }}" aria-pressed="{{ lg.active }}" style="border:0;cursor:pointer;padding:0.3rem 0.5rem;font-size:0.7rem;font-weight:700;background:{{ lg.bg }};color:{{ lg.fg }};">{{ lg.code }}</button></sc-for>
+        </div>
+        <a href="tel:+16132048000" style="display:inline-flex;align-items:center;gap:0.4rem;color:#0a233c;font-weight:700;font-size:0.95rem;" style-hover="color:#F9772B;"><span style="width:8px;height:8px;border-radius:50%;background:#2bb46e;animation:d3pulse 2s infinite;" data-live></span> (613) 204-8000</a>
+        <button onClick="{{ openQuote }}" style="background:#F9772B;color:#fff;border:0;font-weight:700;font-size:0.9rem;padding:0.6rem 1.1rem;border-radius:9px;cursor:pointer;" style-hover="background:#e06a20;">{{ t.quote }}</button>
+      </div>
+      <button data-burger onClick="{{ toggleNav }}" aria-label="Menu" style="margin-left:auto;align-items:center;justify-content:center;width:44px;height:44px;background:#ece5da;border:0;border-radius:9px;color:#0a233c;cursor:pointer;font-size:1.3rem;">☰</button>
+    </div>
+
+    <sc-if value="{{ servicesOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:1px solid #e8e1d5;background:#fdfbf8;animation:d3fade .2s ease;">
+        <div style="max-width:1300px;margin:0 auto;padding:1.5rem 1.75rem 1.8rem;">
+          <div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#8a7f70;font-weight:700;margin-bottom:1rem;">One coordinator handles all of it</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem 1.5rem;">
+            <sc-for list="{{ menuServices }}" as="s" hint-placeholder-count="9">
+              <a href="{{ s.href }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 0.4rem;border-radius:8px;color:#22303e;" style-hover="background:#f2ede4;color:#0a233c;">
+                <span style="font-size:1.05rem;">{{ s.icon }}</span>
+                <span style="font-weight:600;font-size:0.95rem;">{{ s.name }}</span>
+                <sc-if value="{{ s.isNew }}" hint-placeholder-val="{{ false }}"><span style="font-size:0.58rem;font-weight:800;letter-spacing:0.06em;background:#F9772B;color:#fff;padding:0.12rem 0.4rem;border-radius:4px;">NEW</span></sc-if>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </header>
+
+  <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:1200;background:#0a233c;color:#fff;padding:1.5rem;overflow-y:auto;animation:d3fade .2s ease;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <span class="disp" style="font-weight:800;">Trusted Home</span>
+        <button onClick="{{ toggleNav }}" aria-label="Close" style="width:44px;height:44px;background:rgba(255,255,255,0.1);border:0;border-radius:9px;color:#fff;font-size:1.3rem;cursor:pointer;">✕</button>
+      </div>
+      <a href="#services" onClick="{{ toggleNav }}" style="display:block;color:#fff;font-size:1.3rem;font-weight:600;padding:0.7rem 0;border-bottom:1px solid rgba(255,255,255,0.1);">{{ t.services }}</a>
+      <a href="#how" onClick="{{ toggleNav }}" style="display:block;color:#fff;font-size:1.3rem;font-weight:600;padding:0.7rem 0;border-bottom:1px solid rgba(255,255,255,0.1);">{{ t.how }}</a>
+      <a href="#realtors" onClick="{{ toggleNav }}" style="display:block;color:#fff;font-size:1.3rem;font-weight:600;padding:0.7rem 0;border-bottom:1px solid rgba(255,255,255,0.1);">{{ t.realtors }}</a>
+      <a href="#projects" onClick="{{ toggleNav }}" style="display:block;color:#fff;font-size:1.3rem;font-weight:600;padding:0.7rem 0;border-bottom:1px solid rgba(255,255,255,0.1);">{{ t.projects }}</a>
+      <a href="tel:+16132048000" style="display:block;color:#F9772B;font-size:1.3rem;font-weight:700;padding:0.9rem 0;">☎ (613) 204-8000</a>
+      <button onClick="{{ openQuote }}" style="width:100%;background:#F9772B;color:#fff;border:0;font-weight:700;font-size:1.05rem;padding:0.9rem;border-radius:10px;cursor:pointer;margin-top:0.5rem;">{{ t.quote }}</button>
+    </div>
+  </sc-if>
+
+  <main id="top" style="padding-top:70px;">
+    <section data-hero style="max-width:1300px;margin:0 auto;padding:clamp(2.5rem,6vw,5rem) 1.75rem clamp(2rem,4vw,3.5rem);display:grid;grid-template-columns:1.1fr 0.9fr;gap:clamp(2rem,4vw,3.5rem);align-items:center;">
+      <div>
+        <div data-reveal style="display:inline-flex;align-items:center;gap:0.5rem;font-size:0.78rem;letter-spacing:0.13em;text-transform:uppercase;color:#8a7f70;font-weight:700;margin-bottom:1.4rem;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#2bb46e;" data-live></span>Ottawa · one call, every trade
+        </div>
+        <h1 data-reveal style="font-size:clamp(2.6rem,5.4vw,4.1rem);line-height:1.0;letter-spacing:-0.03em;font-weight:800;color:#0a233c;margin:0 0 1.3rem;">One number.<br>Every trade<br><span style="color:#F9772B;">handled.</span></h1>
+        <p data-reveal style="font-size:clamp(1.05rem,1.5vw,1.25rem);color:#4a5866;max-width:38ch;margin:0 0 2rem;">Stop calling a painter, an electrician and a cleaner separately. One coordinator manages all nine trades to get your home market-ready.</p>
+        <div data-reveal style="display:flex;flex-wrap:wrap;align-items:stretch;gap:0.9rem;margin-bottom:1.6rem;">
+          <a href="tel:+16132048000" style="display:flex;flex-direction:column;justify-content:center;background:#0a233c;color:#fff;padding:0.8rem 1.5rem;border-radius:13px;min-width:220px;" style-hover="background:#081b30;color:#fff;">
+            <span style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:#9fb0c2;">Call us now</span>
+            <span class="disp" style="font-size:1.5rem;font-weight:800;line-height:1.1;">(613) 204-8000</span>
+          </a>
+          <button onClick="{{ openQuote }}" style="background:#F9772B;color:#fff;border:0;font-weight:700;font-size:1.02rem;padding:0 1.7rem;border-radius:13px;cursor:pointer;box-shadow:0 8px 20px rgba(249,119,43,0.28);" style-hover="background:#e06a20;">Get a free quote →</button>
+        </div>
+        <div data-reveal style="display:flex;flex-wrap:wrap;align-items:center;gap:1.5rem;">
+          <span style="display:inline-flex;align-items:center;gap:0.5rem;font-weight:700;color:#0a233c;font-size:0.95rem;">🛡 No deposit — pay when it's done</span>
+          <span style="color:#8a7f70;">·</span>
+          <span style="color:#4a5866;font-size:0.95rem;"><strong style="color:#0a233c;">500+</strong> homes in 6 years</span>
+        </div>
+      </div>
+
+      <div data-reveal style="position:relative;">
+        <div style="position:relative;aspect-ratio:{{ videoAspect }};max-width:{{ videoMax }};margin-left:auto;border-radius:20px;overflow:hidden;background:linear-gradient(135deg,#0a233c,#14324f);box-shadow:0 30px 70px -22px rgba(10,35,60,0.5);">
+          <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.04) 0,rgba(255,255,255,0.04) 2px,transparent 2px,transparent 12px);"></div>
+          <div style="position:absolute;top:1rem;left:1rem;font-family:ui-monospace,monospace;font-size:0.66rem;letter-spacing:0.05em;color:rgba(255,255,255,0.55);">MEET THE CREW · loop · muted · {{ videoAspect }}</div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;">
+            <button onClick="{{ openQuote }}" aria-label="Play video" style="width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,0.95);border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);" style-hover="transform:scale(1.06);">
+              <span style="display:inline-block;width:0;height:0;border-top:12px solid transparent;border-bottom:12px solid transparent;border-left:20px solid #0a233c;margin-left:5px;"></span>
+            </button>
+            <span style="font-family:ui-monospace,monospace;font-size:0.72rem;color:rgba(255,255,255,0.6);">a real Ottawa project</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" style="background:#fff;border-top:1px solid #ece5da;border-bottom:1px solid #ece5da;">
+      <div style="max-width:1300px;margin:0 auto;padding:clamp(3rem,6vw,4.5rem) 1.75rem;">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:2rem;">
+          <div>
+            <div style="font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;color:#F9772B;font-weight:700;margin-bottom:0.6rem;">The trades board</div>
+            <h2 style="font-size:clamp(1.8rem,3.2vw,2.5rem);font-weight:800;color:#0a233c;margin:0;letter-spacing:-0.02em;">Pick a trade — we coordinate the rest</h2>
+          </div>
+          <p style="max-width:32ch;color:#6a7684;margin:0;">Nine services, one point of contact. Two brand-new for 2026.</p>
+        </div>
+        <div data-board style="display:grid;grid-template-columns:0.85fr 1.15fr;gap:1.25rem;">
+          <div style="display:flex;flex-direction:column;gap:0.3rem;">
+            <sc-for list="{{ tradeList }}" as="s" hint-placeholder-count="9">
+              <button onClick="{{ s.select }}" style="display:flex;align-items:center;gap:0.85rem;text-align:left;padding:0.8rem 1rem;border-radius:12px;border:1px solid {{ s.border }};background:{{ s.bg }};cursor:pointer;color:#22303e;transition:all .18s;">
+                <span aria-hidden="true" style="width:40px;height:40px;flex-shrink:0;border-radius:10px;background:{{ s.iconBg }};display:flex;align-items:center;justify-content:center;font-size:1.15rem;">{{ s.icon }}</span>
+                <span style="flex:1;font-weight:700;font-size:1rem;">{{ s.name }}</span>
+                <sc-if value="{{ s.isNew }}" hint-placeholder-val="{{ false }}"><span style="font-size:0.58rem;font-weight:800;letter-spacing:0.06em;background:#F9772B;color:#fff;padding:0.14rem 0.42rem;border-radius:4px;">NEW</span></sc-if>
+                <span style="color:{{ s.arrow }};font-size:1.1rem;">→</span>
+              </button>
+            </sc-for>
+          </div>
+          <div data-board-detail style="background:linear-gradient(160deg,#0a233c,#12324f);border-radius:18px;padding:2rem;color:#fff;min-height:440px;display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;">
+              <span aria-hidden="true" style="width:56px;height:56px;border-radius:14px;background:rgba(249,119,43,0.18);display:flex;align-items:center;justify-content:center;font-size:1.6rem;">{{ activeTrade.icon }}</span>
+              <div>
+                <h3 style="font-size:1.5rem;font-weight:800;margin:0;color:#fff;">{{ activeTrade.name }}</h3>
+                <div style="color:#9fb0c2;font-size:0.9rem;">{{ activeTrade.desc }}</div>
+              </div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,0.12);margin-bottom:1.2rem;"></div>
+            <div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#ffb888;font-weight:700;margin-bottom:0.9rem;">What's included</div>
+            <div style="display:flex;flex-direction:column;gap:0.7rem;flex:1;">
+              <sc-for list="{{ activeTrade.bullets }}" as="b" hint-placeholder-count="4">
+                <div style="display:flex;gap:0.65rem;align-items:flex-start;color:#dbe4ec;font-size:0.98rem;"><span style="color:#F9772B;font-weight:800;">✓</span> {{ b }}</div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.6rem;">
+              <button onClick="{{ openQuote }}" style="background:#F9772B;color:#fff;border:0;font-weight:700;padding:0.75rem 1.4rem;border-radius:10px;cursor:pointer;" style-hover="background:#e06a20;">Get a quote for this</button>
+              <a href="{{ activeTrade.href }}" style="display:inline-flex;align-items:center;color:#fff;font-weight:700;padding:0.75rem 1rem;border:1px solid rgba(255,255,255,0.3);border-radius:10px;" style-hover="border-color:#fff;color:#fff;">See full details →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" style="max-width:1300px;margin:0 auto;padding:clamp(3rem,6vw,5rem) 1.75rem;">
+      <h2 style="font-size:clamp(1.8rem,3.2vw,2.5rem);font-weight:800;color:#0a233c;margin:0 0 0.6rem;text-align:center;letter-spacing:-0.02em;">What one call sets in motion</h2>
+      <p style="text-align:center;color:#6a7684;max-width:44ch;margin:0 auto 3rem;">You talk to one person. We handle the scheduling, the trades and the follow-through.</p>
+      <div data-steps style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+        <sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
+          <div style="background:#fff;border:1px solid #ece5da;border-radius:16px;padding:1.75rem;">
+            <div class="disp" style="font-size:2.2rem;font-weight:800;color:#F9772B;line-height:1;margin-bottom:0.8rem;">{{ st.n }}</div>
+            <h3 style="font-size:1.2rem;font-weight:700;color:#0a233c;margin:0 0 0.5rem;">{{ st.t }}</h3>
+            <p style="margin:0;color:#556575;font-size:0.96rem;">{{ st.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="realtors" style="background:#fff;border-top:1px solid #ece5da;">
+      <div style="max-width:1300px;margin:0 auto;padding:clamp(3rem,6vw,5rem) 1.75rem;">
+        <div data-two style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+          <sc-for list="{{ audiences }}" as="a" hint-placeholder-count="2">
+            <div style="border-radius:20px;padding:2.5rem;background:{{ a.bg }};color:{{ a.fg }};border:1px solid {{ a.brd }};">
+              <div style="font-size:0.76rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;opacity:0.8;margin-bottom:0.8rem;">{{ a.tag }}</div>
+              <h3 style="font-size:1.7rem;font-weight:800;margin:0 0 0.8rem;color:inherit;">{{ a.title }}</h3>
+              <p style="margin:0 0 1.6rem;opacity:0.85;font-size:1rem;max-width:36ch;">{{ a.body }}</p>
+              <button onClick="{{ a.action }}" style="background:{{ a.btnBg }};color:{{ a.btnFg }};border:0;font-weight:700;padding:0.8rem 1.4rem;border-radius:10px;cursor:pointer;font-size:0.95rem;" style-hover="opacity:0.9;">{{ a.cta }}</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" style="background:#0a233c;color:#fff;">
+      <div style="max-width:1300px;margin:0 auto;padding:clamp(3rem,6vw,5rem) 1.75rem;">
+        <div style="text-align:center;margin-bottom:2.5rem;">
+          <div style="font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;color:#ffb888;font-weight:700;margin-bottom:0.7rem;">What our clients say</div>
+          <h2 style="font-size:clamp(1.8rem,3.2vw,2.5rem);font-weight:800;margin:0;letter-spacing:-0.02em;">One point of contact, zero headaches</h2>
+        </div>
+        <div style="max-width:720px;margin:0 auto;text-align:center;min-height:200px;">
+          <sc-for list="{{ testimonials }}" as="tm" hint-placeholder-count="1">
+            <div style="display:{{ tm.display }};animation:d3fade .5s ease;">
+              <div style="color:#F9772B;font-size:1.2rem;letter-spacing:0.15em;margin-bottom:1.2rem;">★★★★★</div>
+              <p style="font-size:clamp(1.2rem,2.2vw,1.55rem);font-family:'Outfit',sans-serif;font-weight:500;line-height:1.4;margin:0 0 1.5rem;color:#eef3f8;">“{{ tm.quote }}”</p>
+              <div style="font-weight:700;">{{ tm.name }}</div>
+              <div style="color:#9fb0c2;font-size:0.9rem;">{{ tm.role }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:center;gap:0.6rem;margin-top:1.8rem;">
+          <sc-for list="{{ dots }}" as="d" hint-placeholder-count="4"><button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width:10px;height:10px;border-radius:50%;border:0;cursor:pointer;padding:0;background:{{ d.bg }};"></button></sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#F9772B;">
+      <div style="max-width:1300px;margin:0 auto;padding:clamp(2.5rem,5vw,4rem) 1.75rem;text-align:center;">
+        <h2 style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:#fff;margin:0 0 0.6rem;letter-spacing:-0.02em;">One call. We take it from here.</h2>
+        <p style="color:rgba(255,255,255,0.9);margin:0 0 1.8rem;font-size:1.05rem;">Free quote within 24 hours. No deposit until the work is done.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.9rem;justify-content:center;">
+          <a href="tel:+16132048000" style="display:inline-flex;align-items:center;gap:0.5rem;background:#0a233c;color:#fff;font-weight:700;font-size:1.02rem;padding:0.95rem 1.8rem;border-radius:11px;" style-hover="background:#081b30;color:#fff;">☎ (613) 204-8000</a>
+          <button onClick="{{ openQuote }}" style="background:rgba(255,255,255,0.15);color:#fff;font-weight:700;font-size:1.02rem;padding:0.95rem 1.6rem;border-radius:11px;border:1px solid rgba(255,255,255,0.4);cursor:pointer;" style-hover="background:rgba(255,255,255,0.25);">Get my free quote</button>
+        </div>
+      </div>
+    </section>
+
+    <footer style="background:#081b30;color:#c3d0dd;">
+      <div data-foot style="max-width:1300px;margin:0 auto;padding:3rem 1.75rem 1.5rem;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2rem;">
+        <div>
+          <div style="display:flex;align-items:center;gap:0.6rem;color:#fff;margin-bottom:1rem;">
+            <span style="display:inline-block;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:13px solid #F9772B;"></span>
+            <span class="disp" style="font-weight:800;font-size:1.05rem;">Trusted Home Services</span>
+          </div>
+          <p style="margin:0 0 1rem;max-width:38ch;font-size:0.92rem;">Family-run in Ottawa, Ontario. One coordinator, every trade, no deposit — 500+ homes prepared in 6 years.</p>
+          <a href="tel:+16132048000" style="color:#F9772B;font-weight:700;font-size:1.05rem;">☎ (613) 204-8000</a>
+        </div>
+        <div>
+          <div style="color:#fff;font-weight:600;margin-bottom:0.8rem;font-size:0.95rem;">Services</div>
+          <sc-for list="{{ menuServices }}" as="f" hint-placeholder-count="9"><a href="{{ f.href }}" style="display:block;color:#a9bacb;font-size:0.88rem;padding:0.2rem 0;" style-hover="color:#F9772B;">{{ f.name }}</a></sc-for>
+        </div>
+        <div>
+          <div style="color:#fff;font-weight:600;margin-bottom:0.8rem;font-size:0.95rem;">Company</div>
+          <a href="#how" style="display:block;color:#a9bacb;font-size:0.88rem;padding:0.2rem 0;" style-hover="color:#F9772B;">How We Work</a>
+          <a href="#realtors" style="display:block;color:#a9bacb;font-size:0.88rem;padding:0.2rem 0;" style-hover="color:#F9772B;">For Realtors</a>
+          <a href="#projects" style="display:block;color:#a9bacb;font-size:0.88rem;padding:0.2rem 0;" style-hover="color:#F9772B;">Our Projects</a>
+          <a href="#" style="display:block;color:#a9bacb;font-size:0.88rem;padding:0.2rem 0;" style-hover="color:#F9772B;">Become a Partner</a>
+          <a href="#" style="display:block;color:#a9bacb;font-size:0.88rem;padding:0.2rem 0;" style-hover="color:#F9772B;">FAQ</a>
+        </div>
+      </div>
+      <div style="max-width:1300px;margin:0 auto;padding:1.2rem 1.75rem;border-top:1px solid rgba(255,255,255,0.1);display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:space-between;font-size:0.8rem;color:#8496a8;">
+        <span>© 2026 Trusted Home Services. All rights reserved.</span>
+        <span style="display:flex;gap:1.2rem;"><a href="#" style="color:#8496a8;" style-hover="color:#F9772B;">Privacy Policy</a><a href="#" style="color:#8496a8;" style-hover="color:#F9772B;">Terms of Service</a></span>
+      </div>
+    </footer>
+  </main>
+
+  <sc-if value="{{ quoteOpen }}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-modal="true" aria-label="Get a free quote" style="position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:1.25rem;">
+      <div onClick="{{ closeQuote }}" style="position:absolute;inset:0;background:rgba(8,20,35,0.6);backdrop-filter:blur(4px);animation:d3fade .25s ease;"></div>
+      <div style="position:relative;width:100%;max-width:520px;background:#fff;border-radius:20px;box-shadow:0 40px 90px -20px rgba(0,0,0,0.5);padding:2rem;max-height:88vh;overflow-y:auto;animation:d3up .3s ease;">
+        <button onClick="{{ closeQuote }}" aria-label="Close" style="position:absolute;top:1rem;right:1rem;width:40px;height:40px;border:0;border-radius:10px;background:#f2eee7;color:#0a233c;font-size:1.3rem;cursor:pointer;" style-hover="background:#0a233c;color:#fff;">✕</button>
+        <sc-if value="{{ quoteDone }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:1.5rem 0;">
+            <div style="width:64px;height:64px;border-radius:50%;background:#e7f6ee;color:#1f9d55;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.2rem;">✓</div>
+            <h3 style="font-size:1.4rem;font-weight:800;color:#0a233c;margin:0 0 0.6rem;">Request received</h3>
+            <p style="color:#5a6b7d;margin:0 0 1.5rem;">We'll call you within 24 hours with your free quote. No deposit required — ever.</p>
+            <button onClick="{{ closeQuote }}" style="background:#F9772B;color:#fff;border:0;font-weight:700;padding:0.8rem 1.6rem;border-radius:10px;cursor:pointer;">Done</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ quoteActive }}" hint-placeholder-val="{{ true }}">
+          <div style="padding-right:2.5rem;margin-bottom:1.4rem;">
+            <div style="font-size:0.74rem;letter-spacing:0.12em;text-transform:uppercase;color:#F9772B;font-weight:700;">Step {{ quoteStep }} of 3 · Free, no deposit</div>
+            <h3 style="font-size:1.35rem;font-weight:800;color:#0a233c;margin:0.4rem 0 0;">{{ stepTitle }}</h3>
+          </div>
+          <div style="display:flex;gap:0.4rem;margin-bottom:1.6rem;">
+            <sc-for list="{{ stepBars }}" as="b" hint-placeholder-count="3"><span style="flex:1;height:5px;border-radius:3px;background:{{ b.bg }};"></span></sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.9rem;min-height:180px;">
+            <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:0.9rem;font-weight:600;color:#41505f;">I'm a…</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+                <sc-for list="{{ roleOptions }}" as="r" hint-placeholder-count="2"><button onClick="{{ r.pick }}" style="padding:0.9rem;border-radius:11px;border:2px solid {{ r.border }};background:{{ r.bg }};color:#0a233c;font-weight:600;cursor:pointer;text-align:left;">{{ r.label }}</button></sc-for>
+              </div>
+              <div style="font-size:0.9rem;font-weight:600;color:#41505f;margin-top:0.4rem;">What do you need? (pick any)</div>
+              <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+                <sc-for list="{{ serviceChips }}" as="c" hint-placeholder-count="9"><button onClick="{{ c.toggle }}" style="padding:0.45rem 0.8rem;border-radius:999px;border:1.5px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};font-size:0.85rem;cursor:pointer;">{{ c.name }}</button></sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+              <label style="display:flex;flex-direction:column;gap:0.35rem;font-size:0.88rem;font-weight:600;color:#41505f;">Property address or neighbourhood<input type="text" placeholder="e.g. Westboro, Ottawa" style="padding:0.75rem;border:2px solid #e6ded2;border-radius:10px;font-size:1rem;font-family:inherit;"></label>
+              <label style="display:flex;flex-direction:column;gap:0.35rem;font-size:0.88rem;font-weight:600;color:#41505f;">Rough timeline<input type="text" placeholder="e.g. listing in 3 weeks" style="padding:0.75rem;border:2px solid #e6ded2;border-radius:10px;font-size:1rem;font-family:inherit;"></label>
+              <label style="display:flex;flex-direction:column;gap:0.35rem;font-size:0.88rem;font-weight:600;color:#41505f;">Anything we should know?<textarea rows="3" placeholder="Optional" style="padding:0.75rem;border:2px solid #e6ded2;border-radius:10px;font-size:1rem;font-family:inherit;resize:vertical;"></textarea></label>
+            </sc-if>
+            <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+              <label style="display:flex;flex-direction:column;gap:0.35rem;font-size:0.88rem;font-weight:600;color:#41505f;">Your name<input type="text" placeholder="Full name" style="padding:0.75rem;border:2px solid #e6ded2;border-radius:10px;font-size:1rem;font-family:inherit;"></label>
+              <label style="display:flex;flex-direction:column;gap:0.35rem;font-size:0.88rem;font-weight:600;color:#41505f;">Phone<input type="tel" placeholder="(613) 000-0000" style="padding:0.75rem;border:2px solid #e6ded2;border-radius:10px;font-size:1rem;font-family:inherit;"></label>
+              <label style="display:flex;flex-direction:column;gap:0.35rem;font-size:0.88rem;font-weight:600;color:#41505f;">Email<input type="email" placeholder="you@email.com" style="padding:0.75rem;border:2px solid #e6ded2;border-radius:10px;font-size:1rem;font-family:inherit;"></label>
+            </sc-if>
+          </div>
+          <div style="display:flex;justify-content:space-between;gap:0.75rem;margin-top:1.4rem;">
+            <button onClick="{{ prevStep }}" style="visibility:{{ backVis }};background:#f2eee7;color:#0a233c;border:0;font-weight:600;padding:0.8rem 1.3rem;border-radius:10px;cursor:pointer;">Back</button>
+            <button onClick="{{ nextStep }}" style="background:#F9772B;color:#fff;border:0;font-weight:700;padding:0.8rem 1.6rem;border-radius:10px;cursor:pointer;" style-hover="background:#e06a20;">{{ nextLabel }}</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1300,&quot;height&quot;:900},&quot;videoOrientation&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;16 / 9&quot;,&quot;9 / 16&quot;],&quot;default&quot;:&quot;16 / 9&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;}}">
+class Component extends DCLogic {
+  state = { lang: 'EN', servicesOpen: false, navOpen: false, quoteOpen: false, quoteStep: 1, quoteDone: false, role: '', chips: {}, ti: 0, trade: 0 };
+
+  componentDidMount() {
+    this._t = setInterval(() => { if (!this.state.quoteOpen) this.setState(s => ({ ti: (s.ti + 1) % this.TESTI.length })); }, 5500);
+    this._k = (e) => { if (e.key === 'Escape') { if (this.state.quoteOpen) this.closeQuote(); else if (this.state.servicesOpen) this.setState({ servicesOpen: false }); else if (this.state.navOpen) this.setState({ navOpen: false }); } };
+    window.addEventListener('keydown', this._k);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this._k); clearInterval(this._t); }
+
+  I18N = {
+    EN: { services:'Services', how:'How We Work', realtors:'For Realtors', projects:'Our Projects', quote:'Free Quote' },
+    FR: { services:'Services', how:'Notre m\u00e9thode', realtors:'Pour courtiers', projects:'Nos projets', quote:'Devis gratuit' },
+    ES: { services:'Servicios', how:'C\u00f3mo trabajamos', realtors:'Para agentes', projects:'Proyectos', quote:'Cotizaci\u00f3n' }
+  };
+
+  ALL = [
+    { name:'Electrical', icon:'\u26A1', desc:'Licensed fixes & upgrades', href:'/services/electrical', isNew:true, bullets:['Panel upgrades and safety fixes','Light fixtures, outlets, switches','Code corrections for inspection','ESA-compliant licensed work'] },
+    { name:'Home Inspection', icon:'\uD83D\uDD0D', desc:'Know before you list', href:'/services/inspection', isNew:true, bullets:['Full pre-listing property report','Flags issues before buyers do','Prioritized fix list with quotes','Faster, cleaner closings'] },
+    { name:'Painting & Coatings', icon:'\uD83C\uDFA8', desc:'Interior & exterior, done fast', href:'/services/painting', bullets:['Interior walls, trim and ceilings','Exterior and front-door refresh','Neutral, buyer-friendly palettes','Fast turnaround for listing day'] },
+    { name:'Curb Appeal', icon:'\uD83C\uDF3F', desc:'First impressions that sell', href:'/services/curb-appeal', bullets:['Lawn, hedges and garden tidy-up','Pressure-washing and walkways','Front-entry and lighting touches','Photo-ready from the street'] },
+    { name:'Home Staging', icon:'\uD83D\uDECB', desc:'Styled for listing photos', href:'/services/staging', bullets:['Furniture layout and styling','Declutter and depersonalize','Rooms sized right for photos','Rental pieces where needed'] },
+    { name:'Flooring', icon:'\uD83E\uDEB5', desc:'Repair, refinish, replace', href:'/services/flooring', bullets:['Hardwood repair and refinish','Vinyl, laminate and tile','Squeak and subfloor fixes','Whole-home consistency'] },
+    { name:'Cleaning', icon:'\u2728', desc:'Deep clean, move-out ready', href:'/services/cleaning', bullets:['Top-to-bottom deep clean','Windows, appliances, fixtures','Move-in / move-out ready','Post-construction cleanup'] },
+    { name:'Handyman', icon:'\uD83D\uDD27', desc:'Drywall, trim, fixtures & more', href:'/services/handyman', bullets:['Drywall patching and mudding','Trim, doors and hardware','Minor carpentry and fixtures','The small stuff, all at once'] },
+    { name:'Decluttering & Removal', icon:'\uD83D\uDCE6', desc:'Haul-away and reset', href:'/services/decluttering', bullets:['Junk and furniture haul-away','Full-property clear-outs','Sorting, donating, disposal','A clean slate to stage'] }
+  ];
+  STEPS = [ {n:'01',t:'You call once',d:'Tell one coordinator what you need. We assess and send a fixed quote within 24 hours.'}, {n:'02',t:'We line up the trades',d:'Painters, electricians, cleaners, inspectors — scheduled and managed by us, not you.'}, {n:'03',t:'You pay when it\u2019s done',d:'Walk the finished work. Only then do you pay. No deposit, even up to $50,000.'} ];
+  TESTI = [
+    { quote:'Reliable, fast, and they coordinate every trade. I stopped juggling five contractors.', name:'Marc L.', role:'Realtor · Orl\u00e9ans' },
+    { quote:'One call and my listing was staged, cleaned and photo-ready in a week. My clients think I\u2019m a magician.', name:'David R.', role:'Realtor · Kanata' },
+    { quote:'They painted the whole main floor and repaired a few drywall dings. Looked brand new for listing day.', name:'Sarah M.', role:'Homeowner · Barrhaven' },
+    { quote:'No deposit meant no stress. We paid after everything was inspected. Sold above asking.', name:'Priya K.', role:'Homeowner · Westboro' }
+  ];
+
+  toggleServices = () => this.setState(s => ({ servicesOpen: !s.servicesOpen, navOpen: false }));
+  toggleNav = () => this.setState(s => ({ navOpen: !s.navOpen }));
+  openQuote = () => this.setState({ quoteOpen: true, quoteStep: 1, quoteDone: false, servicesOpen: false, navOpen: false });
+  closeQuote = () => this.setState({ quoteOpen: false });
+  nextStep = () => { if (this.state.quoteStep >= 3) this.setState({ quoteDone: true }); else this.setState(s => ({ quoteStep: s.quoteStep + 1 })); };
+  prevStep = () => this.setState(s => ({ quoteStep: Math.max(1, s.quoteStep - 1) }));
+
+  renderVals() {
+    const st = this.state, t = this.I18N[st.lang];
+    const langs = ['EN','FR','ES'].map(c => ({ code:c, active: st.lang===c, bg: st.lang===c ? '#F9772B' : 'transparent', fg: st.lang===c ? '#fff' : '#4a5866', set: () => this.setState({ lang:c }) }));
+    const menuOrder = [...this.ALL].sort((a,b) => (a.isNew===b.isNew) ? 0 : (a.isNew ? -1 : 1));
+    return {
+      t, langs, servicesOpen: st.servicesOpen, navOpen: st.navOpen, quoteOpen: st.quoteOpen,
+      menuServices: this.ALL, steps: this.STEPS,
+      videoAspect: this.props.videoOrientation ?? '16 / 9',
+      videoMax: (this.props.videoOrientation ?? '16 / 9').indexOf('9 / 16') >= 0 ? '320px' : '100%',
+      tradeList: this.ALL.map((s,i) => ({ ...s, select: () => this.setState({ trade:i }), border: i===st.trade ? '#F9772B':'#ece5da', bg: i===st.trade ? '#fff7f1':'#fff', iconBg: i===st.trade ? '#ffe6d4':'#f4efe6', arrow: i===st.trade ? '#F9772B':'#cfc6b8' })),
+      activeTrade: this.ALL[st.trade],
+      testimonials: this.TESTI.map((tm,i) => ({ ...tm, display: i===st.ti ? 'block':'none' })),
+      dots: this.TESTI.map((_,i) => ({ go: () => this.setState({ ti:i }), label:'Testimonial '+(i+1), bg: i===st.ti ? '#F9772B' : 'rgba(255,255,255,0.25)' })),
+      audiences: [
+        { tag:'Selling your home', title:'List for more, stress less', body:'One coordinator gets your home photo- and inspection-ready. Pay only when it\u2019s done.', cta:'Get a free quote', bg:'#0a233c', fg:'#fff', brd:'#0a233c', btnBg:'#F9772B', btnFg:'#fff', action: this.openQuote },
+        { tag:'For realtors', title:'One partner for every listing', body:'Send us the address; we return a market-ready home — fast, reliable, invoiced to close.', cta:'Partner with us', bg:'#faf7f1', fg:'#0a233c', brd:'#ece5da', btnBg:'#0a233c', btnFg:'#fff', action: this.openQuote }
+      ],
+      quoteDone: st.quoteDone, quoteActive: !st.quoteDone, quoteStep: st.quoteStep,
+      isStep1: st.quoteStep===1, isStep2: st.quoteStep===2, isStep3: st.quoteStep===3,
+      stepTitle: ['','Tell us about you','Where\u2019s the property?','How can we reach you?'][st.quoteStep],
+      stepBars: [1,2,3].map(n => ({ bg: n <= st.quoteStep ? '#F9772B' : '#e6ded2' })),
+      backVis: st.quoteStep>1 ? 'visible':'hidden',
+      nextLabel: st.quoteStep>=3 ? 'Send request' : 'Continue',
+      roleOptions: [ {label:'Homeowner',key:'homeowner'}, {label:'Realtor / agent',key:'realtor'} ].map(o => ({ label:o.label, pick: () => this.setState({ role:o.key }), border: st.role===o.key ? '#F9772B':'#e6ded2', bg: st.role===o.key ? '#fff5ee':'#fff' })),
+      serviceChips: this.ALL.map(s => ({ name:s.name, toggle: () => this.setState(p => ({ chips: { ...p.chips, [s.name]: !p.chips[s.name] } })), border: st.chips[s.name] ? '#F9772B':'#e6ded2', bg: st.chips[s.name] ? '#F9772B':'#fff', fg: st.chips[s.name] ? '#fff':'#41505f' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

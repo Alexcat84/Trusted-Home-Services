@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trusted Home Services. Eight homepage directions.</title>
+<style>
+  :root{--primary:#0a233c;--primary-dark:#0a1e3c;--accent:#F9772B;--accent-hover:#e06a20;--text:#2d3748;--muted:#718096;--bg:#eef1f4;--line:#dfe4ea;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--ease:cubic-bezier(0.16,1,0.3,1);}
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--sans);color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  h1,h2,h3{font-weight:800;letter-spacing:-0.02em;color:var(--primary);margin:0;line-height:1.05;}
+  a{color:var(--primary);text-decoration:none;}
+  ::selection{background:var(--accent);color:#fff;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 clamp(1.1rem,3vw,2rem);}
+  .mono{font-family:var(--mono);}
+  header.top{background:var(--primary);color:#fff;}
+  header.top .wrap{padding:2.8rem 1.75rem;}
+  .brandrow{display:flex;align-items:center;gap:0.9rem;margin-bottom:1.6rem;}
+  .logo-slot{height:46px;width:166px;border:1px dashed rgba(255,255,255,0.4);border-radius:4px;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(135deg,rgba(255,255,255,0.05) 0 6px,transparent 6px 12px);color:rgba(255,255,255,0.72);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;text-align:center;line-height:1.3;}
+  .kicker{margin-left:auto;font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:#9fb0c2;font-weight:700;}
+  header.top h1{color:#fff;font-size:clamp(1.9rem,4vw,3rem);max-width:22ch;margin-bottom:0.9rem;}
+  header.top p{color:#c3d0dd;font-size:1.08rem;max-width:66ch;margin:0;}
+  main .wrap{padding:2.6rem 1.75rem 4rem;}
+  .grouplabel{display:flex;align-items:baseline;gap:0.8rem;margin:0 0 1.4rem;padding-top:0.6rem;}
+  .grouplabel h2{font-size:1.3rem;}
+  .grouplabel span{font-size:0.9rem;color:var(--muted);}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.3rem;margin-bottom:2.6rem;}
+  .grid.b{grid-template-columns:1fr 1fr;}
+  .card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 2px 16px rgba(10,35,60,0.05);transition:transform 0.25s var(--ease),box-shadow 0.25s var(--ease);}
+  .card:hover{transform:translateY(-4px);box-shadow:0 26px 56px -30px rgba(10,35,60,0.4);}
+  .thumb{aspect-ratio:16/10;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:1.2rem;color:#fff;overflow:hidden;}
+  .thumb::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,0.05) 0 2px,transparent 2px 13px);}
+  .thumb .no{position:absolute;top:1rem;left:1rem;font-family:var(--mono);font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.85);z-index:2;}
+  .thumb .kick{position:relative;z-index:2;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:#ffb888;font-weight:700;margin-bottom:0.3rem;}
+  .thumb .nm{position:relative;z-index:2;font-family:var(--sans);font-weight:800;font-size:1.5rem;letter-spacing:-0.02em;line-height:1;}
+  .cbody{padding:1.3rem 1.4rem 1.5rem;flex:1;display:flex;flex-direction:column;}
+  .cbody .thesis{margin:0 0 1rem;font-size:0.98rem;color:#3c4a58;font-weight:500;}
+  .cbody .ml{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:0.25rem;}
+  .cbody .menu{margin:0 0 1.1rem;font-size:0.9rem;color:var(--muted);}
+  .pc{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;margin-top:auto;}
+  .pc .h{font-size:0.72rem;font-weight:700;margin-bottom:0.3rem;}
+  .pc .for .h{color:#1f9d55;}
+  .pc .against .h{color:#d1603a;}
+  .pc p{margin:0;font-size:0.85rem;color:var(--muted);}
+  .open{margin-top:1.2rem;display:inline-flex;align-items:center;gap:0.45rem;color:var(--accent);font-weight:700;font-size:0.92rem;}
+  .open .a{transition:transform 0.2s var(--ease);}
+  .card:hover .open .a{transform:translateX(5px);}
+  .tablewrap{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1.6rem;overflow-x:auto;margin-bottom:2rem;}
+  .tablewrap h2{font-size:1.3rem;margin-bottom:1.1rem;}
+  table{width:100%;border-collapse:collapse;font-size:0.9rem;min-width:760px;}
+  th{text-align:left;padding:0.6rem 0.8rem;border-bottom:2px solid var(--line);color:var(--primary);font-weight:800;white-space:nowrap;}
+  td{padding:0.7rem 0.8rem;border-bottom:1px solid #eef1f4;color:#41505f;vertical-align:top;}
+  td a{font-weight:700;color:var(--primary);}
+  td a:hover{color:var(--accent);}
+  .rec{background:var(--primary);color:#fff;border-radius:18px;padding:2.2rem;}
+  .rec .ml{font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#ffb888;font-weight:700;margin-bottom:0.8rem;}
+  .rec h2{color:#fff;font-size:clamp(1.5rem,2.6vw,2rem);margin-bottom:1rem;}
+  .rec h2 a{color:var(--accent);}
+  .rec p{color:#c3d0dd;max-width:72ch;margin:0 0 1rem;}
+  .rec strong{color:#fff;}
+  .rec ul{margin:0;padding-left:1.2rem;color:#c3d0dd;max-width:72ch;}
+  .rec li{margin-bottom:0.45rem;}
+  .rec li strong{color:#fff;}
+  .note{margin-top:1.5rem;background:#e4e8ed;border:1px solid #d5dbe2;border-radius:14px;padding:1.2rem 1.4rem;font-size:0.9rem;color:#41505f;}
+  [data-reveal]{opacity:0;transform:translateY(18px);transition:opacity 0.6s var(--ease),transform 0.6s var(--ease);}
+  [data-reveal].in{opacity:1;transform:none;}
+  @media (max-width:900px){.grid,.grid.b{grid-template-columns:1fr;}}
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto !important;}[data-reveal]{opacity:1 !important;transform:none !important;}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brandrow">
+      <span class="logo-slot">LOGO<br>client image, 3.6:1</span>
+      <span class="kicker">Homepage redesign. 8 directions.</span>
+    </div>
+    <h1>Eight homepage directions for Trusted Home Services.</h1>
+    <p>Three of them (Group A) share the hero the client locked down: contact on the left, the renovation video in the center, testimonials on the right. They differ only in treatment and in how the nine-service menu is resolved. Five more (Group B) are free explorations, each built on a different idea of what the visitor should see first. All eight are single self-contained files with no external resources, a neutral logo placeholder, the nine services only in the menu, the zero-deposit promise up front, EN, FR and ES, and a focus-trapped quote modal that opens from every quote button. No em dash appears in any file.</p>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="grouplabel" data-reveal><h2>Group A</h2><span>Fixed hero. Production candidates. They vary by treatment and menu, not by layout.</span></div>
+    <div class="grid" id="gridA"></div>
+    <div class="grouplabel" data-reveal><h2>Group B</h2><span>Free hero. Five explorations, five theses.</span></div>
+    <div class="grid b" id="gridB"></div>
+
+    <div class="tablewrap" data-reveal>
+      <h2>Side by side</h2>
+      <table id="cmp"><thead><tr><th>Direction</th><th>Hero leads with</th><th>Services menu</th><th>Best for</th><th>Biggest risk</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <section class="rec" data-reveal>
+      <div class="ml">My recommendation</div>
+      <h2>Ship from Group A. Lead with <a href="a2-spotlight.html">A2 Spotlight</a> if the video will be strong, <a href="a1-blueprint.html">A1 Blueprint</a> if it needs to stand on its own.</h2>
+      <p>The client fixed the hero, so the production homepage should come from Group A. Between the three, the choice hinges on one thing: the renovation video. If the AI video lands well, A2 Spotlight is the strongest frame for it. The center panel glows, the whole page is built to make that reel the star, and it matches the reserved-video vision exactly. If the video slips or reads as filler, A1 Blueprint is the safer pick. It carries the page on typography, hierarchy and the guarantee, so it looks finished even with a plain poster. A3 Daylight is the fallback when the priority is calm and readability over drama.</p>
+      <p><strong>What I would borrow from the rest:</strong></p>
+      <ul>
+        <li><strong>B1 The Guarantee.</strong> Its $0 headline treatment, folded into the promise strip so the differentiator hits harder without taking over the hero.</li>
+        <li><strong>B5 The Cost of Waiting.</strong> Its list-as-is versus prepared comparison, dropped in mid-page as the persuasion block that turns interest into a quote.</li>
+        <li><strong>B4 On the Map.</strong> Its Ottawa neighbourhood proof, as a trust section once the client supplies real addresses and photos.</li>
+        <li><strong>B3 Agent Desk.</strong> Its turnaround board and realtor framing, moved to the For Realtors page where it belongs.</li>
+        <li><strong>A3 Daylight.</strong> Its white space and type scale, to keep whichever Group A direction ships from feeling dense.</li>
+      </ul>
+      <p style="margin-top:1rem;">Group B stays as exploration. If the client reacts more to a thesis than to a treatment, we can promote one of them and rebuild its hero on the fixed three-column structure.</p>
+    </section>
+
+    <div class="note" data-reveal><strong>How to review.</strong> Open each direction, resize the window to test mobile, click Services to see that direction's menu answer, and click any Free Quote button to run the multi-step form. Escape, the backdrop and the close button all dismiss it and return focus to the button that opened it.</div>
+  </div>
+</main>
+<script>
+(function(){
+  "use strict";
+  var A=[
+    {id:"A1",file:"a1-blueprint.html",nm:"Blueprint",kick:"Precise and architectural",bg:"linear-gradient(135deg,#0a233c,#14324f)",thesis:"The fixed hero drawn like a drafting sheet: hairline rules, tight caps, nothing left to chance.",menu:"A numbered 01 to 09 index panel that drops from the header.",pro:"Reads as careful and exact, which is what trust in trades looks like.",con:"The restraint can feel quiet next to the bolder options."},
+    {id:"A2",file:"a2-spotlight.html",nm:"Spotlight",kick:"Cinematic and dark",bg:"linear-gradient(135deg,#12324f,#06121e)",thesis:"The same hero lit like a film set: dark, high contrast, the center video glowing.",menu:"A full-screen overlay with the nine as one large hover list.",pro:"The most cinematic frame; the video reads as the star.",con:"A dark theme leans on the real video to carry the drama."},
+    {id:"A3",file:"a3-daylight.html",nm:"Daylight",kick:"Open and airy",bg:"linear-gradient(135deg,# effefe,#dce6ee)",thesis:"The hero at its most open: oversized type, generous white space, low density.",menu:"An airy single-column flyout that opens under the nav.",pro:"Feels premium and calm, and it is the easiest to read.",con:"Low density means a little more scrolling to reach the proof."}
+  ];
+  A[2].bg="linear-gradient(135deg,#c7d2de,#8fa1b3)";
+  var B=[
+    {id:"B1",file:"b1-the-guarantee.html",nm:"The Guarantee",kick:"The promise, out loud",bg:"linear-gradient(135deg,#0a233c,#0a1e3c)",thesis:"The zero-deposit promise is the entire headline. $0 down, before anything else.",menu:"A grouped mega-panel, the two new trades promoted.",pro:"Leads with the single most disarming fact in the business.",con:"Puts the offer ahead of the work itself."},
+    {id:"B2",file:"b2-full-bleed.html",nm:"Full Bleed",kick:"Proof first",bg:"linear-gradient(135deg,#06121e,#12324f)",thesis:"The transformation video fills the screen. The copy sits over the footage.",menu:"A horizontal filmstrip of the nine services.",pro:"Immersive and proof-first from the very first second.",con:"Depends most on the real video; the poster has to hold the hero until it exists."},
+    {id:"B3",file:"b3-agent-desk.html",nm:"Agent Desk",kick:"For the realtor",bg:"linear-gradient(135deg,#0a233c,#123350)",thesis:"The site seen from the agent: send an address, get back a listing that shows.",menu:"A persistent left sidebar rail.",pro:"Speaks the agent's language, and the turnaround board sets expectations.",con:"Homeowners become the second audience here, not the first."},
+    {id:"B4",file:"b4-on-the-map.html",nm:"On the Map",kick:"Local proof",bg:"linear-gradient(135deg,#0a233c,#16344f)",thesis:"Trust by proximity: Ottawa neighbourhoods, local crews, a job down the road.",menu:"A type-to-filter services directory.",pro:"Strong local credibility, and the search scales past nine cleanly.",con:"Needs real neighbourhood photos and results to fully land."},
+    {id:"B5",file:"b5-the-cost-of-waiting.html",nm:"The Cost of Waiting",kick:"The editorial case",bg:"linear-gradient(135deg,#0a233c,#1a2f45)",thesis:"An argument: a home listed as-is sells for less and sits longer than one prepared first.",menu:"A large editorial index of the nine.",pro:"Reframes prep as a return rather than a cost, which is persuasive.",con:"It argues before it shows, so a browser in a hurry may skim past."}
+  ];
+  var CMP=[
+    ["A1","a1-blueprint.html","The drafting-sheet hero","Numbered index panel","A careful, premium first impression","Can feel quiet"],
+    ["A2","a2-spotlight.html","The glowing center video","Full-screen overlay","Making the reel the star","Needs the real video"],
+    ["A3","a3-daylight.html","White space and big type","Airy flyout","Calm readability","More scrolling to proof"],
+    ["B1","b1-the-guarantee.html","The $0 promise","Grouped mega-panel","Leading with the differentiator","Offer ahead of the work"],
+    ["B2","b2-full-bleed.html","Full-screen video","Filmstrip","Immersive proof","Most video-dependent"],
+    ["B3","b3-agent-desk.html","A realtor pitch","Left sidebar rail","The agent audience","Homeowners come second"],
+    ["B4","b4-on-the-map.html","Ottawa proximity","Search directory","Local credibility","Needs real local proof"],
+    ["B5","b5-the-cost-of-waiting.html","An editorial argument","Editorial index","Persuading the undecided","Argues before it shows"]
+  ];
+  function card(d){
+    return '<a class="card" href="'+d.file+'"><div class="thumb" style="background:'+d.bg+'"><span class="no">'+d.id+'</span><span class="kick">'+d.kick+'</span><span class="nm">'+d.nm+'</span></div>'+
+      '<div class="cbody"><p class="thesis">'+d.thesis+'</p><div class="ml">Menu</div><p class="menu">'+d.menu+'</p>'+
+      '<div class="pc"><div class="for"><div class="h">FOR</div><p>'+d.pro+'</p></div><div class="against"><div class="h">AGAINST</div><p>'+d.con+'</p></div></div>'+
+      '<span class="open">Open the full page <span class="a">&#8594;</span></span></div></a>';
+  }
+  document.getElementById("gridA").innerHTML=A.map(card).join("");
+  document.getElementById("gridB").innerHTML=B.map(card).join("");
+  document.querySelector("#cmp tbody").innerHTML=CMP.map(function(r){
+    return '<tr><td><a href="'+r[1]+'">'+r[0]+" "+({A1:"Blueprint",A2:"Spotlight",A3:"Daylight",B1:"The Guarantee",B2:"Full Bleed",B3:"Agent Desk",B4:"On the Map",B5:"The Cost of Waiting"})[r[0]]+'</a></td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td>'+r[5]+'</td></tr>';
+  }).join("");
+  if("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:0.12});
+    document.querySelectorAll("[data-reveal]").forEach(function(el){io.observe(el);});
+  } else { document.querySelectorAll("[data-reveal]").forEach(function(el){el.classList.add("in");}); }
+})();
+</script>
+</body>
+</html>

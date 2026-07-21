@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trusted Home Services. Direction B3, Agent Desk.</title>
+<style>
+  :root { --primary:#0a233c; --primary-dark:#0a1e3c; --accent:#F9772B; --accent-hover:#e06a20; --text:#2d3748; --muted:#718096; --bg:#ffffff; --bg-alt:#f7fafc; --line:#e6e9ee; --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace; --ease:cubic-bezier(0.16,1,0.3,1); }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--sans);color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  h1,h2,h3{font-weight:800;letter-spacing:-0.03em;color:var(--primary);margin:0;line-height:1.03;}
+  a{color:var(--primary);text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  ::selection{background:var(--accent);color:#fff;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 clamp(1.1rem,3vw,2rem);}
+  .eyebrow{font-size:0.74rem;letter-spacing:0.22em;text-transform:uppercase;font-weight:700;color:var(--muted);}
+  .skip{position:fixed;left:-9999px;top:0;z-index:3000;background:var(--primary);color:#fff;padding:0.7rem 1.1rem;}
+  .skip:focus{left:0;}
+  header.site{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,35,60,0.98);color:#fff;border-bottom:1px solid rgba(255,255,255,0.08);}
+  .bar{display:flex;align-items:center;gap:1.4rem;padding:0.8rem clamp(1.1rem,3vw,2rem);max-width:1320px;margin:0 auto;}
+  .logo-slot{height:52px;width:187px;flex-shrink:0;border:1px dashed rgba(255,255,255,0.4);border-radius:4px;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(135deg,rgba(255,255,255,0.05) 0 6px,transparent 6px 12px);color:rgba(255,255,255,0.72);font-family:var(--mono);font-size:0.66rem;letter-spacing:0.1em;text-align:center;line-height:1.3;}
+  nav.desk{margin-left:auto;display:flex;align-items:center;gap:0.1rem;}
+  nav.desk a,.svc-toggle{color:#e7edf3;background:none;border:0;font-size:0.9rem;font-weight:500;padding:0.55rem 0.85rem;border-radius:7px;transition:background 0.25s var(--ease),color 0.25s var(--ease);display:inline-flex;align-items:center;gap:0.35rem;}
+  nav.desk a:hover,.svc-toggle:hover{background:rgba(255,255,255,0.1);color:#fff;}
+  .svc-toggle .chev{font-size:0.6rem;transition:transform 0.3s var(--ease);}
+  .svc-toggle[aria-expanded="true"] .chev{transform:rotate(180deg);}
+  .head-tools{display:flex;align-items:center;gap:0.85rem;flex-shrink:0;}
+  .langs{display:flex;border:1px solid rgba(255,255,255,0.22);border-radius:6px;overflow:hidden;}
+  .langs button{background:transparent;color:#c3d0dd;border:0;padding:0.28rem 0.5rem;font-size:0.7rem;font-weight:700;transition:background 0.2s,color 0.2s;}
+  .langs button[aria-pressed="true"]{background:var(--accent);color:#fff;}
+  .tel{color:#fff;font-weight:600;font-size:0.9rem;white-space:nowrap;transition:color 0.2s;}
+  .tel:hover{color:var(--accent);}
+  .btn{border:0;border-radius:8px;font-weight:700;font-size:0.92rem;padding:0.62rem 1.2rem;transition:transform 0.18s var(--ease),background 0.2s var(--ease),box-shadow 0.2s var(--ease);}
+  .btn-accent{background:var(--accent);color:#fff;box-shadow:0 10px 26px -12px rgba(249,119,43,0.6);}
+  .btn-accent:hover{background:var(--accent-hover);transform:translateY(-2px);}
+  .btn-accent:active{transform:translateY(0);}
+  .burger{display:none;margin-left:auto;width:44px;height:44px;border:0;background:rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:1.3rem;}
+  /* Grouped mega panel */
+  .svc-panel{position:absolute;top:100%;left:0;right:0;background:var(--primary-dark);border-top:1px solid rgba(255,255,255,0.08);max-height:0;overflow:hidden;opacity:0;transition:max-height 0.42s var(--ease),opacity 0.3s var(--ease);}
+  .svc-panel.open{max-height:560px;opacity:1;}
+  .svc-panel-inner{padding:2rem clamp(1.1rem,3vw,2rem) 2.3rem;max-width:1320px;margin:0 auto;}
+  .svc-panel h2{color:#fff;font-size:1.05rem;font-weight:800;margin-bottom:0.35rem;}
+  .svc-panel .sub{color:#9fb0c2;font-size:0.86rem;margin:0 0 1.5rem;max-width:60ch;}
+  .svc-index{display:grid;grid-template-columns:repeat(3,1fr);gap:0.2rem 2rem;}
+  .svc-item{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 0.55rem;border-radius:8px;border-bottom:1px solid rgba(255,255,255,0.06);color:#dbe4ec;transition:background 0.2s var(--ease),padding-left 0.2s var(--ease);}
+  .svc-item:hover{background:rgba(255,255,255,0.06);color:#fff;padding-left:0.9rem;}
+  .svc-item .n{font-family:var(--mono);font-size:0.72rem;color:#6f8195;min-width:1.4rem;}
+  .svc-item:hover .n{color:var(--accent);}
+  .svc-item .nm{font-weight:600;font-size:0.96rem;flex:1;}
+  .tag-new{font-size:0.56rem;font-weight:800;letter-spacing:0.08em;background:var(--accent);color:#fff;padding:0.13rem 0.42rem;border-radius:4px;}
+  .drawer{position:fixed;inset:0;z-index:1500;background:var(--primary);color:#fff;padding:1.3rem;transform:translateX(100%);transition:transform 0.4s var(--ease);overflow-y:auto;}
+  .drawer.open{transform:translateX(0);}
+  .drawer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+  .drawer a{display:block;color:#fff;font-size:1.2rem;font-weight:600;padding:0.7rem 0;border-bottom:1px solid rgba(255,255,255,0.1);}
+  .drawer .mini{font-family:var(--mono);font-size:0.7rem;color:#6f8195;padding:0.9rem 0 0.3rem;letter-spacing:0.1em;}
+  .drawer .svc-sub a{font-size:0.98rem;font-weight:500;padding:0.5rem 0;}
+  main{padding-top:69px;}
+  /* Guarantee hero: full navy statement */
+  .hero{background:linear-gradient(160deg,#0a233c 0%,#0a1e3c 60%,#081726 100%);color:#fff;position:relative;overflow:hidden;padding:clamp(3rem,7vw,6rem) 0 clamp(3rem,6vw,5rem);}
+  .hero::before{content:"";position:absolute;top:-25%;right:-8%;width:640px;height:640px;background:radial-gradient(circle,rgba(249,119,43,0.18),transparent 66%);pointer-events:none;}
+  .hero-inner{display:grid;grid-template-columns:1.15fr 0.85fr;gap:clamp(2rem,4vw,3.5rem);align-items:center;position:relative;}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:0.6rem;color:#9fb0c2;font-size:0.76rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;margin-bottom:1.4rem;}
+  .hero-eyebrow .bar-line{width:26px;height:1px;background:var(--accent);}
+  h1.hero-title{color:#fff;font-size:clamp(2.8rem,7vw,5.6rem);line-height:0.98;letter-spacing:-0.04em;max-width:15ch;}
+  h1.hero-title .hl{color:var(--accent);}
+  .hero-sub{font-size:clamp(1.08rem,1.6vw,1.35rem);color:#c3d0dd;margin:1.5rem 0 2rem;max-width:44ch;}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:0.8rem;align-items:center;}
+  .btn-lg{padding:0.95rem 1.7rem;font-size:1.05rem;border-radius:10px;}
+  .btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.4);font-weight:700;display:inline-flex;align-items:center;gap:0.5rem;border-radius:10px;padding:0.95rem 1.5rem;transition:border-color 0.2s var(--ease),transform 0.18s var(--ease);}
+  .btn-ghost:hover{border-color:#fff;transform:translateY(-2px);color:#fff;}
+  .hero-note{margin-top:1.5rem;font-size:0.95rem;color:#c3d0dd;display:inline-flex;align-items:center;gap:0.5rem;}
+  .hero-note b{color:#fff;}
+  /* Video framed */
+  .video-frame{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:1.1rem;}
+  .video-frame .cap-top{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.8rem;color:#9fb0c2;font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;font-weight:700;}
+  .video-slot{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#123350,#0a1622);border:1px solid rgba(255,255,255,0.14);box-shadow:0 24px 60px -26px rgba(0,0,0,0.7);}
+  .video-slot.vertical{aspect-ratio:9/16;max-width:270px;margin:0 auto;}
+  .video-slot::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,0.04) 0 2px,transparent 2px 13px);}
+  .video-meta{position:absolute;top:0.7rem;left:0.7rem;font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.55);z-index:2;}
+  .video-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.9rem;z-index:2;}
+  .play{width:70px;height:70px;border-radius:50%;background:var(--accent);border:0;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 38px rgba(249,119,43,0.5);transition:transform 0.2s var(--ease);}
+  .play:hover{transform:scale(1.08);}
+  .play::before{content:"";width:0;height:0;border-top:12px solid transparent;border-bottom:12px solid transparent;border-left:19px solid #fff;margin-left:5px;}
+  .video-cap{font-family:var(--mono);font-size:0.68rem;color:rgba(255,255,255,0.65);}
+  .video-badges{position:absolute;bottom:0.7rem;left:0.7rem;right:0.7rem;display:flex;justify-content:space-between;z-index:2;}
+  .video-badges span{font-size:0.66rem;font-weight:700;padding:0.24rem 0.55rem;border-radius:4px;}
+  .b-before{background:rgba(255,255,255,0.18);color:#fff;}
+  .b-after{background:var(--accent);color:#fff;}
+  .orient-toggle{margin-top:0.9rem;display:flex;gap:0.4rem;justify-content:center;}
+  .orient-toggle button{background:rgba(255,255,255,0.08);color:#c3d0dd;border:1px solid rgba(255,255,255,0.2);border-radius:6px;font-size:0.68rem;font-weight:700;padding:0.32rem 0.7rem;transition:background 0.2s;}
+  .orient-toggle button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent);}
+  /* Promise strip */
+  .promise{background:var(--accent);}
+  .promise .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:0.7rem 1.3rem;padding-top:1.3rem;padding-bottom:1.3rem;}
+  .promise .big{font-weight:800;font-size:clamp(1.1rem,1.9vw,1.45rem);color:#fff;}
+  .promise .rest{color:rgba(255,255,255,0.92);font-size:clamp(0.95rem,1.4vw,1.1rem);}
+  section.block{padding:clamp(3rem,6vw,5.5rem) 0;}
+  .sec-head{max-width:42rem;margin-bottom:2.6rem;}
+  .sec-head h2{font-size:clamp(1.8rem,3.4vw,2.7rem);}
+  .sec-head p{color:var(--muted);margin:0.7rem 0 0;font-size:1.05rem;}
+  .coord{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(1.6rem,3vw,3.2rem);align-items:center;}
+  .coord p{font-size:1.12rem;color:var(--text);margin:0 0 1.4rem;max-width:42ch;}
+  .link-arrow{display:inline-flex;align-items:center;gap:0.5rem;color:var(--primary);font-weight:800;border:0;background:none;font-size:1.02rem;}
+  .link-arrow .a{color:var(--accent);transition:transform 0.2s var(--ease);}
+  .link-arrow:hover .a{transform:translateX(6px);}
+  .coord-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .stat{background:var(--bg-alt);border:1px solid var(--line);border-radius:16px;padding:1.6rem 1.4rem;}
+  .stat .v{font-size:clamp(2rem,4vw,3rem);font-weight:800;color:var(--primary);line-height:1;letter-spacing:-0.03em;}
+  .stat .v .u{color:var(--accent);}
+  .stat .l{font-size:0.8rem;color:var(--muted);margin-top:0.5rem;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;}
+  .testwrap{background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .testi{position:relative;min-height:180px;max-width:760px;margin:0 auto;text-align:center;}
+  .testi-card{position:absolute;inset:0;opacity:0;transform:translateY(8px);transition:opacity 0.5s var(--ease),transform 0.5s var(--ease);pointer-events:none;}
+  .testi-card.active{position:relative;opacity:1;transform:none;pointer-events:auto;}
+  .stars{color:var(--accent);letter-spacing:0.14em;font-size:1.05rem;margin-bottom:0.9rem;}
+  .testi-quote{font-size:clamp(1.2rem,2.2vw,1.6rem);line-height:1.4;color:var(--primary);font-weight:600;margin:0 0 1.1rem;letter-spacing:-0.01em;}
+  .testi-name{font-weight:800;color:var(--primary);font-size:0.95rem;}
+  .testi-role{color:var(--muted);font-size:0.85rem;}
+  .testi-dots{display:flex;gap:0.5rem;margin-top:1.4rem;justify-content:center;}
+  .testi-dots button{width:9px;height:9px;border-radius:50%;border:0;background:#cfd6de;padding:0;transition:background 0.25s,transform 0.2s;}
+  .testi-dots button[aria-pressed="true"]{background:var(--accent);transform:scale(1.3);}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+  .step{background:#fff;border:1px solid var(--line);border-radius:18px;padding:clamp(1.5rem,2.6vw,2.1rem);transition:transform 0.25s var(--ease),box-shadow 0.25s var(--ease);}
+  .step:hover{transform:translateY(-5px);box-shadow:0 22px 50px -28px rgba(10,35,60,0.4);}
+  .step .n{font-family:var(--mono);font-size:0.82rem;color:var(--accent);font-weight:700;}
+  .step h3{font-size:1.28rem;margin:0.7rem 0 0.5rem;}
+  .step p{margin:0;color:var(--muted);font-size:0.98rem;}
+  .aud{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem;}
+  .aud-card{padding:clamp(1.8rem,3.2vw,2.6rem);border:1px solid var(--line);background:var(--bg-alt);border-radius:22px;transition:transform 0.25s var(--ease),box-shadow 0.25s var(--ease);}
+  .aud-card:hover{transform:translateY(-5px);box-shadow:0 24px 54px -30px rgba(10,35,60,0.4);}
+  .aud-card.dark{background:var(--primary);border-color:var(--primary);}
+  .aud-card.dark h3{color:#fff;}.aud-card.dark .eyebrow{color:#ffb888;}.aud-card.dark p{color:#c3d0dd;}
+  .aud-card h3{font-size:1.6rem;margin:0.6rem 0 0.8rem;}
+  .aud-card p{color:var(--muted);margin:0 0 1.5rem;font-size:1.02rem;}
+  .cta{background:var(--primary);}
+  .cta .wrap{text-align:center;padding:clamp(2.8rem,4vw,4.2rem) 0;}
+  .cta h2{color:#fff;font-size:clamp(1.8rem,3.4vw,2.6rem);}
+  .cta p{color:#c3d0dd;margin:0.7rem 0 1.7rem;font-size:1.08rem;}
+  .cta .btns{display:flex;flex-wrap:wrap;gap:0.9rem;justify-content:center;}
+  .btn-navy{background:var(--accent);color:#fff;}
+  .btn-navy:hover{background:var(--accent-hover);transform:translateY(-2px);}
+  .btn-outline-w{background:rgba(255,255,255,0.14);color:#fff;border:1px solid rgba(255,255,255,0.5);display:inline-flex;align-items:center;gap:0.45rem;}
+  .btn-outline-w:hover{background:rgba(255,255,255,0.24);transform:translateY(-2px);}
+  footer.site{background:var(--primary-dark);color:#c3d0dd;}
+  .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:2rem;padding:3rem 0 1.4rem;}
+  .foot-brand p{max-width:40ch;font-size:0.92rem;margin:1rem 0;}
+  .foot-brand .tel-lg{color:var(--accent);font-weight:700;font-size:1.1rem;}
+  .foot-col h4{color:#fff;font-size:0.92rem;margin:0 0 0.7rem;}
+  .foot-col a{display:block;color:#a9bacb;font-size:0.86rem;padding:0.18rem 0;transition:color 0.2s;}
+  .foot-col a:hover{color:var(--accent);}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,0.1);padding:1.1rem 0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.7rem;font-size:0.8rem;color:#8496a8;}
+  .foot-bottom a{color:#8496a8;}.foot-bottom a:hover{color:var(--accent);}
+  .modal-root{position:fixed;inset:0;z-index:2000;display:none;}
+  .modal-root.open{display:block;}
+  .modal-scrim{position:absolute;inset:0;background:rgba(8,20,35,0.62);opacity:0;transition:opacity 0.3s var(--ease);backdrop-filter:blur(3px);}
+  .modal-root.open .modal-scrim{opacity:1;}
+  .modal{position:absolute;top:50%;left:50%;width:min(520px,calc(100vw - 2rem));max-height:88vh;overflow-y:auto;background:#fff;border-radius:18px;padding:2rem;box-shadow:0 50px 100px -20px rgba(0,0,0,0.45);transform:translate(-50%,-46%);opacity:0;transition:transform 0.35s var(--ease),opacity 0.3s var(--ease);}
+  .modal-root.open .modal{transform:translate(-50%,-50%);opacity:1;}
+  .modal h3{font-size:1.35rem;margin:0.4rem 0 0;}
+  .modal-close{position:absolute;top:1rem;right:1rem;width:40px;height:40px;border:0;border-radius:8px;background:var(--bg-alt);color:var(--primary);font-size:1.3rem;transition:background 0.2s,color 0.2s;}
+  .modal-close:hover{background:var(--primary);color:#fff;}
+  .modal .step-tag{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.08em;color:var(--accent);font-weight:600;}
+  .prog{display:flex;gap:0.4rem;margin:1.3rem 0 1.5rem;}
+  .prog span{flex:1;height:5px;border-radius:3px;background:var(--line);transition:background 0.3s var(--ease);}
+  .prog span.on{background:var(--accent);}
+  .qstep{display:none;flex-direction:column;gap:0.85rem;min-height:176px;}
+  .qstep.on{display:flex;animation:fadein 0.35s var(--ease);}
+  @keyframes fadein{from{opacity:0;transform:translateX(8px);}to{opacity:1;transform:none;}}
+  .field-label{font-size:0.9rem;font-weight:700;color:var(--text);}
+  .role-opts{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;}
+  .role-opts button{padding:0.9rem;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--primary);font-weight:700;text-align:left;transition:border-color 0.2s,background 0.2s;}
+  .role-opts button[aria-pressed="true"]{border-color:var(--accent);background:#fff5ee;}
+  .chips{display:flex;flex-wrap:wrap;gap:0.5rem;}
+  .chips button{padding:0.45rem 0.85rem;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-size:0.85rem;transition:all 0.18s var(--ease);}
+  .chips button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:#fff;}
+  .modal label{display:flex;flex-direction:column;gap:0.35rem;font-size:0.88rem;font-weight:700;color:var(--text);}
+  .modal input,.modal textarea{padding:0.78rem;border:2px solid var(--line);border-radius:10px;font-size:1rem;font-family:inherit;background:#fff;}
+  .modal input:focus,.modal textarea:focus{outline:none;border-color:var(--accent);}
+  .modal-actions{display:flex;justify-content:space-between;gap:0.7rem;margin-top:1.5rem;}
+  .btn-soft{background:var(--bg-alt);color:var(--primary);border:1px solid var(--line);font-weight:700;padding:0.8rem 1.4rem;border-radius:10px;}
+  .modal-done{text-align:center;padding:1.5rem 0;}
+  .modal-done .check{width:64px;height:64px;border-radius:50%;background:#e7f6ee;color:#1f9d55;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.2rem;}
+  .modal-done p{color:var(--muted);}
+  [data-animate]{opacity:0;transform:translateY(20px);}
+  .reveal-ready [data-animate]{transition:opacity 0.65s var(--ease),transform 0.65s var(--ease);}
+  [data-animate].in{opacity:1;transform:none;}
+  @media (max-width:1040px){nav.desk,.head-tools{display:none;}.burger{display:flex;align-items:center;justify-content:center;}}
+  @media (max-width:900px){.hero-inner{grid-template-columns:1fr;}.video-frame{order:-1;}.coord{grid-template-columns:1fr;}.steps{grid-template-columns:1fr;}.aud{grid-template-columns:1fr;}.foot-grid{grid-template-columns:1fr;gap:1.6rem;}.svc-index{grid-template-columns:1fr 1fr;}}
+  @media (max-width:560px){.coord-stats{grid-template-columns:1fr 1fr;}.svc-index{grid-template-columns:1fr;}h1.hero-title{font-size:2.7rem;}}
+  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;scroll-behavior:auto !important;}[data-animate]{opacity:1 !important;transform:none !important;}}
+
+  /* B3 Agent Desk */
+  #svcPanel{position:fixed;top:0;left:0;right:auto;bottom:0;width:min(380px,86vw);height:100vh;max-height:none;border-top:0;border-right:1px solid rgba(255,255,255,0.1);transform:translateX(-100%);opacity:1;transition:transform 0.42s var(--ease);overflow-y:auto;box-shadow:24px 0 60px -30px rgba(0,0,0,0.6);}
+  #svcPanel.open{max-height:none;transform:translateX(0);}
+  #svcPanel .svc-panel-inner{padding:4.6rem 1.6rem 2rem;max-width:none;}
+  #svcPanel .svc-index{grid-template-columns:1fr;}
+  .svc-rail-close{position:absolute;top:1.1rem;right:1.1rem;width:40px;height:40px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;border-radius:8px;font-size:1.1rem;transition:background 0.2s,transform 0.2s var(--ease);}
+  .svc-rail-close:hover{background:var(--accent);transform:rotate(90deg);}
+  .b3hero{background:var(--bg-alt);}
+  .b3hero::before{display:none;}
+  .b3hero h1.hero-title{color:var(--primary);max-width:16ch;}
+  .b3hero .hero-eyebrow{color:var(--muted);}
+  .b3hero .hero-sub{color:var(--text);}
+  .b3hero .btn-ghost{color:var(--primary);border-color:var(--line);}
+  .b3hero .btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
+  .b3hero .hero-note{color:var(--muted);}
+  .b3hero .hero-note b{color:var(--primary);}
+  .b3-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:clamp(1.6rem,3vw,3.2rem);align-items:center;}
+  .b3-board{background:#fff;border:1px solid var(--line);border-radius:20px;padding:1.3rem;box-shadow:0 34px 74px -38px rgba(10,35,60,0.45);}
+  .b3-board .cap-top{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.8rem;color:var(--muted);font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;font-weight:700;}
+  .b3-board .video-slot{aspect-ratio:16/9;border-radius:12px;}
+  .b3-turn{list-style:none;margin:1.1rem 0 0;padding:0;display:flex;flex-direction:column;gap:0.6rem;}
+  .b3-turn li{display:flex;align-items:center;gap:0.9rem;padding:0.75rem 0.9rem;background:var(--bg-alt);border:1px solid var(--line);border-radius:11px;}
+  .b3-turn .k{font-family:var(--mono);font-size:0.9rem;color:var(--accent);font-weight:800;min-width:3.2rem;}
+  .b3-turn .lab{font-weight:600;color:var(--primary);font-size:0.92rem;}
+  @media (max-width:900px){.b3-grid{grid-template-columns:1fr;}}
+
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to main content</a>
+<header class="site">
+  <div class="bar">
+    <a href="#top" aria-label="Trusted Home Services home"><span class="logo-slot">LOGO<br>client image, 3.6:1</span></a>
+    <nav class="desk" aria-label="Primary">
+      <button class="svc-toggle" id="svcToggle" aria-expanded="false" aria-controls="svcPanel" data-i18n="nav.services">Services <span class="chev">&#9662;</span></button>
+      <a href="#how" data-i18n="nav.how">How We Work</a>
+      <a href="#realtors" data-i18n="nav.realtors">For Realtors</a>
+      <a href="#projects" data-i18n="nav.projects">Our Projects</a>
+    </nav>
+    <div class="head-tools">
+      <div class="langs" role="group" aria-label="Language"><button data-lang="EN" aria-pressed="true">EN</button><button data-lang="FR" aria-pressed="false">FR</button><button data-lang="ES" aria-pressed="false">ES</button></div>
+      <a class="tel" href="tel:+16132048000">(613) 204-8000</a>
+      <button class="btn btn-accent js-quote" data-i18n="nav.quote">Free Quote</button>
+    </div>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+  </div>
+  <div class="svc-panel" id="svcPanel">
+    <div class="svc-panel-inner"><button class="js-close-svc svc-rail-close" aria-label="Close menu">✕</button>
+      <h2 data-i18n="svc.title">Nine trades, one coordinator</h2>
+      <p class="sub" data-i18n="svc.sub">Each has its own page. You reach them all from here, never from a cluttered home page.</p>
+      <div class="svc-index" id="svcIndex"></div>
+    </div>
+  </div>
+</header>
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-top"><span class="logo-slot" style="height:44px;width:158px;">LOGO<br>client image</span><button class="burger" id="drawerClose" aria-label="Close menu" style="display:flex;">&#10005;</button></div>
+  <div class="mini">SERVICES</div><div class="svc-sub" id="drawerSvc"></div>
+  <div class="mini">MENU</div>
+  <a href="#how" class="js-drawer-link" data-i18n="nav.how">How We Work</a>
+  <a href="#realtors" class="js-drawer-link" data-i18n="nav.realtors">For Realtors</a>
+  <a href="#projects" class="js-drawer-link" data-i18n="nav.projects">Our Projects</a>
+  <a href="tel:+16132048000" style="color:var(--accent);font-weight:700;">(613) 204-8000</a>
+  <button class="btn btn-accent js-quote" style="width:100%;margin-top:0.8rem;padding:0.9rem;" data-i18n="nav.quote">Free Quote</button>
+</div>
+<main id="main"><span id="top"></span>
+  <section class="hero b3hero">
+    <div class="wrap"><div class="b3-grid">
+      <div>
+        <div class="hero-eyebrow" data-animate><span class="bar-line"></span><span data-i18n="b3.eyebrow">For Ottawa realtors. 500+ homes prepared.</span></div>
+        <h1 class="hero-title" data-animate data-i18n="b3.t">Send the address. Get back a listing that shows.</h1>
+        <p class="hero-sub" data-animate data-i18n="b3.sub">Your prep crew for every listing. One coordinator books painting, cleaning, staging, electrical and inspection, then invoices at closing. No deposit tied up in prep.</p>
+        <div class="hero-actions" data-animate>
+          <button class="btn btn-accent btn-lg js-quote" data-i18n="aud.r.cta">Partner with us</button>
+          <a class="btn-ghost btn-lg" href="tel:+16132048000">&#9742; (613) 204-8000</a>
+        </div>
+        <div class="hero-note" data-animate><span class="dot" aria-hidden="true">&#10003;</span> <span><b data-i18n="hero.quality">Quality guaranteed.</b> <span data-i18n="aud.o.tag">Also for homeowners selling.</span></span></div>
+      </div>
+      <div class="b3-board" data-animate>
+        <div class="cap-top"><span data-i18n="hero.transformation">Transformation</span></div>
+        <div class="video-slot" id="videoSlot">
+          <span class="video-meta">before / after. loop. muted.</span>
+          <div class="video-center"><button class="play js-quote" aria-label="Play the renovation reel"></button><span class="video-cap" data-i18n="hero.reel">a real Ottawa renovation</span></div>
+          <div class="video-badges"><span class="b-before" data-i18n="hero.before">BEFORE</span><span class="b-after" data-i18n="hero.after">AFTER</span></div>
+        </div>
+        <div class="orient-toggle" role="group" aria-label="Video format preview"><button data-orient="16" aria-pressed="true">16:9</button><button data-orient="9" aria-pressed="false">9:16</button></div>
+        <ul class="b3-turn">
+          <li><span class="k">24 h</span><span class="lab" data-i18n="b3.l1">Walk-through and fixed quote</span></li>
+          <li><span class="k">3-8 d</span><span class="lab" data-i18n="b3.l2">Every trade, coordinated</span></li>
+          <li><span class="k">$0</span><span class="lab" data-i18n="b3.l3">Deposit. Invoiced at closing.</span></li>
+        </ul>
+      </div>
+    </div></div>
+  </section>
+  <div class="promise"><div class="wrap"><span class="big" data-i18n="promise.big">No deposit. Ever.</span><span class="rest" data-i18n="promise.rest">You pay only when the work is complete and the home is ready, even on projects up to $50,000.</span></div></div>
+  <section class="block">
+    <div class="wrap">
+      <div class="coord">
+        <div data-animate>
+          <div class="eyebrow" data-i18n="g.coordE">Nine trades, one phone number</div>
+          <h2 style="font-size:clamp(1.7rem,3.2vw,2.5rem);margin-top:0.7rem;" data-i18n="g.coordT">You call once. We coordinate the rest.</h2>
+          <p style="margin-top:1rem;" data-i18n="g.coordB">From painting and flooring to licensed electrical and pre-listing inspection, every trade runs through one coordinator. Two of the nine are new this year: electrical work and home inspection.</p>
+          <button class="link-arrow js-open-services" data-i18n="coord.link">See all services <span class="a">&#8594;</span></button>
+        </div>
+        <div class="coord-stats" data-animate>
+          <div class="stat"><div class="v"><span data-count="500">0</span><span class="u">+</span></div><div class="l" data-i18n="stat.homes">Homes prepared</div></div>
+          <div class="stat"><div class="v"><span data-count="6">0</span></div><div class="l" data-i18n="stat.years">Years in Ottawa</div></div>
+          <div class="stat"><div class="v"><span data-count="24">0</span><span class="u">h</span></div><div class="l" data-i18n="stat.turnaround">Quote turnaround</div></div>
+          <div class="stat"><div class="v"><span class="u">$</span><span data-count="0">0</span></div><div class="l" data-i18n="stat.deposit">Deposit, ever</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="testwrap"><section class="block" id="projects"><div class="wrap">
+    <div class="testi" id="testi"></div><div class="testi-dots" id="testiDots"></div>
+  </div></section></div>
+  <section class="block" id="how"><div class="wrap">
+    <div class="sec-head" data-animate><div class="eyebrow" data-i18n="how.eyebrow">How we work</div><h2 style="margin-top:0.6rem;" data-i18n="how.title">Three steps. No deposit.</h2></div>
+    <div class="steps">
+      <div class="step" data-animate><div class="n">01</div><h3 data-i18n="how.s1t">Free walk-through</h3><p data-i18n="how.s1b">We visit, assess the home and send a fixed quote within 24 hours. No cost, no obligation.</p></div>
+      <div class="step" data-animate><div class="n">02</div><h3 data-i18n="how.s2t">One coordinator, every trade</h3><p data-i18n="how.s2b">Painters, electricians, cleaners and inspectors, all scheduled and managed by us. You deal with one person.</p></div>
+      <div class="step" data-animate><div class="n">03</div><h3 data-i18n="how.s3t">Pay when it is done</h3><p data-i18n="how.s3b">Walk the finished work. Only then do you pay, even on projects up to $50,000.</p></div>
+    </div>
+  </div></section>
+  <section class="block" id="realtors"><div class="wrap"><div class="aud">
+    <div class="aud-card dark" data-animate><div class="eyebrow" data-i18n="aud.o.tag">Selling your home</div><h3 data-i18n="aud.o.title">List for more, with less stress</h3><p data-i18n="aud.o.body">We get your home photo ready and inspection ready so it shows its best from day one. You pay only when it is done.</p><button class="btn btn-accent js-quote" data-i18n="aud.o.cta">Get a free quote</button></div>
+    <div class="aud-card" data-animate><div class="eyebrow" data-i18n="aud.r.tag">For realtors</div><h3 data-i18n="aud.r.title">One partner for every listing</h3><p data-i18n="aud.r.body">Stop juggling contractors. Send us the address and we return a market ready listing, invoiced at closing.</p><button class="btn btn-navy js-quote" style="background:var(--primary);" data-i18n="aud.r.cta">Partner with us</button></div>
+  </div></div></section>
+  <div class="cta"><div class="wrap"><h2 data-animate data-i18n="cta.title">Ready when you are. No deposit to find out.</h2><p data-animate data-i18n="cta.sub">Free quote within 24 hours, across Ottawa and the surrounding region.</p><div class="btns" data-animate><button class="btn btn-navy btn-lg js-quote" data-i18n="cta.primary">Get my free quote</button><a class="btn btn-outline-w btn-lg" href="tel:+16132048000">&#9742; (613) 204-8000</a></div></div></div>
+</main>
+<footer class="site"><div class="wrap">
+  <div class="foot-grid">
+    <div class="foot-brand"><span class="logo-slot" style="height:48px;width:173px;">LOGO<br>client image</span><p data-i18n="foot.blurb">Family run in Ottawa, Ontario. One coordinator, every trade, no deposit. 500+ homes prepared in 6 years.</p><a class="tel-lg" href="tel:+16132048000">(613) 204-8000</a></div>
+    <div class="foot-col"><h4 data-i18n="foot.services">Services</h4><div id="footSvc"></div></div>
+    <div class="foot-col"><h4 data-i18n="foot.company">Company</h4><a href="#how" data-i18n="nav.how">How We Work</a><a href="#realtors" data-i18n="nav.realtors">For Realtors</a><a href="#projects" data-i18n="nav.projects">Our Projects</a><a href="#" data-i18n="foot.partner">Become a Partner</a><a href="#" data-i18n="foot.faq">FAQ</a></div>
+  </div>
+  <div class="foot-bottom"><span>&#169; 2026 Trusted Home Services. All rights reserved.</span><span style="display:flex;gap:1.2rem;"><a href="#" data-i18n="foot.privacy">Privacy Policy</a><a href="#" data-i18n="foot.terms">Terms of Service</a></span></div>
+</div></footer>
+<div class="modal-root" id="modalRoot" role="dialog" aria-modal="true" aria-labelledby="modalHeading">
+  <div class="modal-scrim js-close-modal"></div>
+  <div class="modal" id="modal">
+    <button class="modal-close js-close-modal" aria-label="Close">&#10005;</button>
+    <div id="modalForm">
+      <div class="step-tag"><span data-i18n="modal.stepword">Step</span> <span id="stepNum">1</span> <span data-i18n="modal.of">of 3. Free, no deposit.</span></div>
+      <h3 id="modalHeading" data-i18n="modal.t1">Tell us about you</h3>
+      <div class="prog"><span class="on"></span><span></span><span></span></div>
+      <div class="qstep on" data-step="1">
+        <div class="field-label" data-i18n="modal.iam">I am a</div>
+        <div class="role-opts"><button data-role="homeowner" data-i18n="modal.homeowner">Homeowner</button><button data-role="realtor" data-i18n="modal.realtor">Realtor or agent</button></div>
+        <div class="field-label" style="margin-top:0.4rem;" data-i18n="modal.need">What do you need? Pick any.</div>
+        <div class="chips" id="modalChips"></div>
+      </div>
+      <div class="qstep" data-step="2">
+        <label><span data-i18n="modal.addr">Property address or neighbourhood</span><input type="text" placeholder="e.g. Westboro, Ottawa"></label>
+        <label><span data-i18n="modal.timeline">Rough timeline</span><input type="text" placeholder="e.g. listing in 3 weeks"></label>
+        <label><span data-i18n="modal.notes">Anything we should know?</span><textarea rows="3" placeholder="Optional"></textarea></label>
+      </div>
+      <div class="qstep" data-step="3">
+        <label><span data-i18n="modal.name">Your name</span><input type="text" placeholder="Full name"></label>
+        <label><span data-i18n="modal.phone">Phone</span><input type="tel" placeholder="(613) 000-0000"></label>
+        <label><span data-i18n="modal.email">Email</span><input type="email" placeholder="you@email.com"></label>
+      </div>
+      <div class="modal-actions"><button class="btn-soft" id="modalBack" style="visibility:hidden;" data-i18n="modal.back">Back</button><button class="btn btn-accent" id="modalNext" style="padding:0.8rem 1.6rem;" data-i18n="modal.next">Continue</button></div>
+    </div>
+    <div class="modal-done" id="modalDone" style="display:none;">
+      <div class="check">&#10003;</div>
+      <h3 data-i18n="modal.doneT">Request received</h3>
+      <p style="margin:0.6rem 0 1.4rem;" data-i18n="modal.doneB">We will call you within 24 hours with your free quote. No deposit required, ever.</p>
+      <button class="btn btn-accent js-close-modal" style="padding:0.8rem 1.6rem;" data-i18n="modal.done">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>window.THS_I18N_EXTRA={EN:{"g.coordE":"Nine trades, one phone number","g.coordT":"You call once. We coordinate the rest.","g.coordB":"From painting and flooring to licensed electrical and pre-listing inspection, every trade runs through one coordinator. Two of the nine are new this year: electrical work and home inspection.","b3.eyebrow":"For Ottawa realtors. 500+ homes prepared.","b3.t":"Send the address. Get back a listing that shows.","b3.sub":"Your prep crew for every listing. One coordinator books painting, cleaning, staging, electrical and inspection, then invoices at closing. No deposit tied up in prep.","b3.board":"Typical turnaround","b3.l1":"Walk-through and fixed quote","b3.l2":"Every trade, coordinated","b3.l3":"Deposit. Invoiced at closing."},FR:{"g.coordE":"Neuf metiers, un numero","g.coordT":"Vous appelez une fois. On coordonne le reste.","g.coordB":"De la peinture au plancher jusqu\u2019a l\u2019electricite et l\u2019inspection, tout passe par un seul coordinateur. Deux des neuf sont nouveaux cette annee.","b3.eyebrow":"Pour les courtiers d\u2019Ottawa. 500+ maisons.","b3.t":"Envoyez l\u2019adresse. Recevez une inscription prete.","b3.sub":"Votre equipe de preparation pour chaque inscription. Un coordinateur gere peinture, nettoyage, mise en valeur, electricite et inspection, facture a la cloture. Aucun acompte.","b3.board":"Delai habituel","b3.l1":"Visite et devis fixe","b3.l2":"Chaque metier, coordonne","b3.l3":"Acompte. Facture a la cloture."},ES:{"g.coordE":"Nueve oficios, un telefono","g.coordT":"Llamas una vez. Coordinamos el resto.","g.coordB":"De la pintura y los pisos a la electricidad con licencia y la inspeccion, todo pasa por un solo coordinador. Dos de los nueve son nuevos este ano.","b3.eyebrow":"Para agentes de Ottawa. 500+ casas.","b3.t":"Envia la direccion. Recibe un listado que luce.","b3.sub":"Tu equipo de preparacion para cada listado. Un coordinador gestiona pintura, limpieza, staging, electricidad e inspeccion, y factura al cierre. Sin deposito.","b3.board":"Tiempo habitual","b3.l1":"Visita y cotizacion fija","b3.l2":"Cada oficio, coordinado","b3.l3":"Deposito. Facturado al cierre."}};</script>
+<script>
+(function () {
+  "use strict";
+  var SERVICES = [
+    { n: "01", name: "Painting & Coatings", href: "/services/painting" },
+    { n: "02", name: "Curb Appeal", href: "/services/curb-appeal" },
+    { n: "03", name: "Decluttering & Removal", href: "/services/decluttering" },
+    { n: "04", name: "Home Staging", href: "/services/staging" },
+    { n: "05", name: "Flooring", href: "/services/flooring" },
+    { n: "06", name: "Cleaning", href: "/services/cleaning" },
+    { n: "07", name: "Handyman", href: "/services/handyman" },
+    { n: "08", name: "Electrical", href: "/services/electrical", isNew: true },
+    { n: "09", name: "Home Inspection", href: "/services/inspection", isNew: true }
+  ];
+
+  var I18N = {
+    EN: {
+      "nav.services": "Services", "nav.how": "How We Work", "nav.realtors": "For Realtors", "nav.projects": "Our Projects", "nav.quote": "Free Quote",
+      "svc.title": "Nine trades, one coordinator", "svc.sub": "Each has its own page. You reach them all from here, never from a cluttered home page.",
+      "hero.eyebrow": "Ottawa. 500+ homes prepared in 6 years.", "hero.title": "Ready to sell. Ready to move. Handled by one team.", "hero.sub": "One coordinator manages every trade so your Ottawa home is market ready. You pay nothing until the work is done.",
+      "hero.contact": "Contact", "hero.transformation": "Transformation", "hero.reviews": "Reviews",
+      "hero.getQuote": "Get a free quote", "hero.quality": "Quality guaranteed", "hero.qualityText": "We have never asked for a deposit. You pay when the work is done and the home is ready.",
+      "hero.zero": "Zero deposit.", "hero.zeroText": "Even on projects up to $50,000.", "hero.reel": "a real Ottawa renovation", "hero.before": "BEFORE", "hero.after": "AFTER",
+      "promise.big": "No deposit. Ever.", "promise.rest": "You pay only when the work is complete and the home is ready, even on projects up to $50,000.",
+      "coord.eyebrow": "Nine trades, one phone number", "coord.title": "You call once. We coordinate the rest.", "coord.body": "From painting and flooring to licensed electrical and pre-listing inspection, every trade runs through one coordinator. Two of the nine are new this year: electrical work and home inspection.", "coord.link": "See all services",
+      "stat.homes": "Homes prepared", "stat.years": "Years in Ottawa", "stat.turnaround": "Quote turnaround", "stat.deposit": "Deposit, ever",
+      "how.eyebrow": "How we work", "how.title": "Three steps. No deposit.", "how.s1t": "Free walk-through", "how.s1b": "We visit, assess the home and send a fixed quote within 24 hours. No cost, no obligation.", "how.s2t": "One coordinator, every trade", "how.s2b": "Painters, electricians, cleaners and inspectors, all scheduled and managed by us. You deal with one person.", "how.s3t": "Pay when it is done", "how.s3b": "Walk the finished work. Only then do you pay, even on projects up to $50,000.",
+      "aud.o.tag": "Selling your home", "aud.o.title": "List for more, with less stress", "aud.o.body": "We get your home photo ready and inspection ready so it shows its best from day one. You pay only when it is done.", "aud.o.cta": "Get a free quote",
+      "aud.r.tag": "For realtors", "aud.r.title": "One partner for every listing", "aud.r.body": "Stop juggling contractors. Send us the address and we return a market ready listing, invoiced at closing.", "aud.r.cta": "Partner with us",
+      "cta.title": "Ready when you are. No deposit to find out.", "cta.sub": "Free quote within 24 hours, across Ottawa and the surrounding region.", "cta.primary": "Get my free quote",
+      "foot.blurb": "Family run in Ottawa, Ontario. One coordinator, every trade, no deposit. 500+ homes prepared in 6 years.", "foot.services": "Services", "foot.company": "Company", "foot.partner": "Become a Partner", "foot.faq": "FAQ", "foot.privacy": "Privacy Policy", "foot.terms": "Terms of Service",
+      "modal.stepword": "Step", "modal.of": "of 3. Free, no deposit.", "modal.t1": "Tell us about you", "modal.t2": "Where is the property?", "modal.t3": "How can we reach you?", "modal.iam": "I am a", "modal.homeowner": "Homeowner", "modal.realtor": "Realtor or agent", "modal.need": "What do you need? Pick any.", "modal.addr": "Property address or neighbourhood", "modal.timeline": "Rough timeline", "modal.notes": "Anything we should know?", "modal.name": "Your name", "modal.phone": "Phone", "modal.email": "Email", "modal.back": "Back", "modal.next": "Continue", "modal.send": "Send request", "modal.doneT": "Request received", "modal.doneB": "We will call you within 24 hours with your free quote. No deposit required, ever.", "modal.done": "Done"
+    },
+    FR: {
+      "nav.services": "Services", "nav.how": "Notre m\u00e9thode", "nav.realtors": "Pour courtiers", "nav.projects": "Nos projets", "nav.quote": "Devis gratuit",
+      "svc.title": "Neuf corps de m\u00e9tier, un coordinateur", "svc.sub": "Chacun a sa page. Vous y acc\u00e9dez tous d'ici, jamais depuis une page d'accueil encombr\u00e9e.",
+      "hero.eyebrow": "Ottawa. Plus de 500 maisons en 6 ans.", "hero.title": "Pr\u00eate \u00e0 vendre. Pr\u00eate \u00e0 habiter. Une seule \u00e9quipe.", "hero.sub": "Un coordinateur g\u00e8re tous les corps de m\u00e9tier pour pr\u00e9parer votre maison. Vous ne payez rien avant la fin.",
+      "hero.contact": "Contact", "hero.transformation": "Transformation", "hero.reviews": "Avis",
+      "hero.getQuote": "Obtenir un devis", "hero.quality": "Qualit\u00e9 garantie", "hero.qualityText": "Nous n'avons jamais demand\u00e9 d'acompte. Vous payez une fois le travail termin\u00e9.",
+      "hero.zero": "Aucun acompte.", "hero.zeroText": "M\u00eame pour des projets jusqu'\u00e0 50 000 $.", "hero.reel": "une vraie r\u00e9novation \u00e0 Ottawa", "hero.before": "AVANT", "hero.after": "APR\u00c8S",
+      "promise.big": "Aucun acompte. Jamais.", "promise.rest": "Vous payez seulement quand le travail est termin\u00e9, m\u00eame pour des projets jusqu'\u00e0 50 000 $.",
+      "coord.eyebrow": "Neuf m\u00e9tiers, un num\u00e9ro", "coord.title": "Vous appelez une fois. On coordonne le reste.", "coord.body": "De la peinture au plancher jusqu'\u00e0 l'\u00e9lectricit\u00e9 et l'inspection pr\u00e9-vente, tout passe par un seul coordinateur. Deux des neuf sont nouveaux cette ann\u00e9e : l'\u00e9lectricit\u00e9 et l'inspection.", "coord.link": "Voir tous les services",
+      "stat.homes": "Maisons pr\u00e9par\u00e9es", "stat.years": "Ans \u00e0 Ottawa", "stat.turnaround": "D\u00e9lai de devis", "stat.deposit": "Acompte, jamais",
+      "how.eyebrow": "Notre m\u00e9thode", "how.title": "Trois \u00e9tapes. Aucun acompte.", "how.s1t": "Visite gratuite", "how.s1b": "Nous \u00e9valuons la maison et envoyons un devis fixe sous 24 heures. Sans frais.", "how.s2t": "Un coordinateur, tous les m\u00e9tiers", "how.s2b": "Peintres, \u00e9lectriciens, nettoyeurs et inspecteurs, tout est planifi\u00e9 par nous.", "how.s3t": "Payez \u00e0 la fin", "how.s3b": "Inspectez le travail termin\u00e9. C'est seulement l\u00e0 que vous payez.",
+      "aud.o.tag": "Vous vendez", "aud.o.title": "Vendez plus, sans stress", "aud.o.body": "Nous pr\u00e9parons votre maison pour les photos et l'inspection. Vous payez seulement \u00e0 la fin.", "aud.o.cta": "Obtenir un devis",
+      "aud.r.tag": "Pour courtiers", "aud.r.title": "Un partenaire pour chaque inscription", "aud.r.body": "Envoyez l'adresse, nous livrons une maison pr\u00eate \u00e0 vendre, factur\u00e9e \u00e0 la cl\u00f4ture.", "aud.r.cta": "Devenir partenaire",
+      "cta.title": "Pr\u00eats quand vous l'\u00eates. Sans acompte.", "cta.sub": "Devis gratuit sous 24 heures, partout \u00e0 Ottawa et sa r\u00e9gion.", "cta.primary": "Obtenir mon devis",
+      "foot.blurb": "Entreprise familiale d'Ottawa. Un coordinateur, tous les m\u00e9tiers, aucun acompte. Plus de 500 maisons en 6 ans.", "foot.services": "Services", "foot.company": "Entreprise", "foot.partner": "Devenir partenaire", "foot.faq": "FAQ", "foot.privacy": "Confidentialit\u00e9", "foot.terms": "Conditions",
+      "modal.stepword": "\u00c9tape", "modal.of": "sur 3. Gratuit, sans acompte.", "modal.t1": "Parlez-nous de vous", "modal.t2": "O\u00f9 est la propri\u00e9t\u00e9?", "modal.t3": "Comment vous joindre?", "modal.iam": "Je suis", "modal.homeowner": "Propri\u00e9taire", "modal.realtor": "Courtier", "modal.need": "Que vous faut-il? Cochez.", "modal.addr": "Adresse ou quartier", "modal.timeline": "\u00c9ch\u00e9ance approximative", "modal.notes": "\u00c0 savoir?", "modal.name": "Votre nom", "modal.phone": "T\u00e9l\u00e9phone", "modal.email": "Courriel", "modal.back": "Retour", "modal.next": "Continuer", "modal.send": "Envoyer", "modal.doneT": "Demande re\u00e7ue", "modal.doneB": "Nous vous appelons sous 24 heures avec votre devis. Aucun acompte.", "modal.done": "Termin\u00e9"
+    },
+    ES: {
+      "nav.services": "Servicios", "nav.how": "C\u00f3mo trabajamos", "nav.realtors": "Para agentes", "nav.projects": "Proyectos", "nav.quote": "Cotizaci\u00f3n",
+      "svc.title": "Nueve oficios, un coordinador", "svc.sub": "Cada uno tiene su p\u00e1gina. Llegas a todos desde aqu\u00ed, nunca desde una portada saturada.",
+      "hero.eyebrow": "Ottawa. Más de 500 casas en 6 a\u00f1os.", "hero.title": "Lista para vender. Lista para mudarse. Un solo equipo.", "hero.sub": "Un coordinador maneja todos los oficios para dejar tu casa lista. No pagas nada hasta terminar.",
+      "hero.contact": "Contacto", "hero.transformation": "Transformaci\u00f3n", "hero.reviews": "Rese\u00f1as",
+      "hero.getQuote": "Pide tu cotizaci\u00f3n", "hero.quality": "Calidad garantizada", "hero.qualityText": "Nunca pedimos dep\u00f3sito. Pagas cuando el trabajo est\u00e1 hecho y la casa lista.",
+      "hero.zero": "Cero dep\u00f3sito.", "hero.zeroText": "Incluso en proyectos de hasta $50,000.", "hero.reel": "una renovaci\u00f3n real en Ottawa", "hero.before": "ANTES", "hero.after": "DESPU\u00c9S",
+      "promise.big": "Sin dep\u00f3sito. Nunca.", "promise.rest": "Pagas solo cuando el trabajo est\u00e1 completo y la casa lista, incluso en proyectos de hasta $50,000.",
+      "coord.eyebrow": "Nueve oficios, un tel\u00e9fono", "coord.title": "Llamas una vez. Coordinamos el resto.", "coord.body": "De la pintura y los pisos a la electricidad con licencia y la inspecci\u00f3n previa, todo pasa por un solo coordinador. Dos de los nueve son nuevos este a\u00f1o: electricidad e inspecci\u00f3n.", "coord.link": "Ver todos los servicios",
+      "stat.homes": "Casas preparadas", "stat.years": "A\u00f1os en Ottawa", "stat.turnaround": "Tiempo de cotizaci\u00f3n", "stat.deposit": "Dep\u00f3sito, nunca",
+      "how.eyebrow": "C\u00f3mo trabajamos", "how.title": "Tres pasos. Sin dep\u00f3sito.", "how.s1t": "Visita gratis", "how.s1b": "Visitamos, evaluamos la casa y enviamos una cotizaci\u00f3n fija en 24 horas. Sin costo.", "how.s2t": "Un coordinador, todos los oficios", "how.s2b": "Pintores, electricistas, limpieza e inspectores, todo lo agendamos nosotros.", "how.s3t": "Pagas al terminar", "how.s3b": "Revisa el trabajo terminado. Solo entonces pagas.",
+      "aud.o.tag": "Vendes tu casa", "aud.o.title": "Vende por m\u00e1s, con menos estr\u00e9s", "aud.o.body": "Dejamos la casa lista para fotos e inspecci\u00f3n. Pagas solo cuando est\u00e1 hecho.", "aud.o.cta": "Pide tu cotizaci\u00f3n",
+      "aud.r.tag": "Para agentes", "aud.r.title": "Un socio para cada listado", "aud.r.body": "Env\u00eda la direcci\u00f3n y devolvemos una casa lista para vender, facturada al cierre.", "aud.r.cta": "S\u00e9 socio",
+      "cta.title": "Listos cuando t\u00fa quieras. Sin dep\u00f3sito.", "cta.sub": "Cotizaci\u00f3n gratis en 24 horas, en Ottawa y su regi\u00f3n.", "cta.primary": "Pide mi cotizaci\u00f3n",
+      "foot.blurb": "Empresa familiar de Ottawa. Un coordinador, todos los oficios, sin dep\u00f3sito. Más de 500 casas en 6 a\u00f1os.", "foot.services": "Servicios", "foot.company": "Empresa", "foot.partner": "S\u00e9 socio", "foot.faq": "Preguntas", "foot.privacy": "Privacidad", "foot.terms": "T\u00e9rminos",
+      "modal.stepword": "Paso", "modal.of": "de 3. Gratis, sin dep\u00f3sito.", "modal.t1": "Cu\u00e9ntanos de ti", "modal.t2": "\u00bfD\u00f3nde est\u00e1 la propiedad?", "modal.t3": "\u00bfC\u00f3mo te contactamos?", "modal.iam": "Soy", "modal.homeowner": "Propietario", "modal.realtor": "Agente", "modal.need": "\u00bfQu\u00e9 necesitas? Elige.", "modal.addr": "Direcci\u00f3n o barrio", "modal.timeline": "Plazo aproximado", "modal.notes": "\u00bfAlgo que debamos saber?", "modal.name": "Tu nombre", "modal.phone": "Tel\u00e9fono", "modal.email": "Correo", "modal.back": "Atr\u00e1s", "modal.next": "Continuar", "modal.send": "Enviar", "modal.doneT": "Solicitud recibida", "modal.doneB": "Te llamamos en 24 horas con tu cotizaci\u00f3n. Sin dep\u00f3sito, nunca.", "modal.done": "Listo"
+    }
+  };
+
+  (function () {
+    var ex = window.THS_I18N_EXTRA;
+    if (ex) { ["EN", "FR", "ES"].forEach(function (l) { if (ex[l]) { for (var k in ex[l]) { I18N[l][k] = ex[l][k]; } } }); }
+  })();
+
+  var lang = "EN";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function t(key) { return (I18N[lang] && I18N[lang][key]) || I18N.EN[key] || key; }
+
+  function applyLang() {
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      el.textContent = t(el.getAttribute("data-i18n"));
+    });
+    document.documentElement.lang = lang.toLowerCase();
+    renderServices();
+  }
+
+  // Build service menus (never a body card grid)
+  function renderServices() {
+    var idx = document.getElementById("svcIndex");
+    var drawerSvc = document.getElementById("drawerSvc");
+    var footSvc = document.getElementById("footSvc");
+    idx.innerHTML = ""; drawerSvc.innerHTML = ""; footSvc.innerHTML = "";
+    SERVICES.forEach(function (s) {
+      var a = document.createElement("a");
+      a.className = "svc-item"; a.href = s.href; a.setAttribute("data-name", s.name);
+      a.innerHTML = '<span class="n">' + s.n + '</span><span class="nm">' + s.name + '</span>' + (s.isNew ? '<span class="tag-new">NEW</span>' : '');
+      idx.appendChild(a);
+
+      var d = document.createElement("a");
+      d.href = s.href; d.textContent = s.name;
+      if (s.isNew) { var b = document.createElement("span"); b.className = "tag-new"; b.textContent = "NEW"; b.style.marginLeft = "0.5rem"; d.appendChild(b); }
+      drawerSvc.appendChild(d);
+
+      var f = document.createElement("a");
+      f.href = s.href; f.textContent = s.name;
+      footSvc.appendChild(f);
+    });
+  }
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      lang = b.getAttribute("data-lang");
+      document.querySelectorAll(".langs button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      applyLang();
+    });
+  });
+
+  // Services panel
+  var svcToggle = document.getElementById("svcToggle");
+  var svcPanel = document.getElementById("svcPanel");
+  function toggleSvc(force) {
+    var open = force !== undefined ? force : !svcPanel.classList.contains("open");
+    svcPanel.classList.toggle("open", open);
+    svcToggle.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  svcToggle.addEventListener("click", function () { toggleSvc(); });
+  var svcSearch = document.getElementById("svcSearch");
+  if (svcSearch) svcSearch.addEventListener("input", function () {
+    var q = svcSearch.value.trim().toLowerCase();
+    var any = false;
+    document.querySelectorAll("#svcIndex .svc-item").forEach(function (it) {
+      var nm = (it.getAttribute("data-name") || it.textContent).toLowerCase();
+      var hit = !q || nm.indexOf(q) >= 0;
+      it.style.display = hit ? "" : "none";
+      if (hit) any = true;
+    });
+    var empty = document.getElementById("svcEmpty");
+    if (empty) empty.style.display = any ? "none" : "block";
+  });
+  document.querySelectorAll(".js-open-services").forEach(function (b) {
+    b.addEventListener("click", function () { toggleSvc(true); svcPanel.scrollIntoView({ block: "start" }); });
+  });
+  document.addEventListener("click", function (e) {
+    if (e.target.closest && (e.target.closest(".svc-item") || e.target.closest(".js-close-svc"))) { toggleSvc(false); return; }
+    if (svcPanel.classList.contains("open") && !svcPanel.contains(e.target) && e.target !== svcToggle && !svcToggle.contains(e.target)) toggleSvc(false);
+  });
+
+  // Mobile drawer
+  var drawer = document.getElementById("drawer");
+  function setDrawer(open) {
+    drawer.classList.toggle("open", open);
+    drawer.setAttribute("aria-hidden", open ? "false" : "true");
+    document.getElementById("burger").setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  document.getElementById("burger").addEventListener("click", function () { setDrawer(true); });
+  document.getElementById("drawerClose").addEventListener("click", function () { setDrawer(false); });
+  document.querySelectorAll(".js-drawer-link").forEach(function (a) { a.addEventListener("click", function () { setDrawer(false); }); });
+
+  // Orientation preview toggle
+  document.querySelectorAll(".orient-toggle button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var vert = b.getAttribute("data-orient") === "9";
+      document.getElementById("videoSlot").classList.toggle("vertical", vert);
+      document.querySelectorAll(".orient-toggle button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    });
+  });
+
+  // Testimonials
+  var TESTI = [
+    { q: "They painted the whole main floor and repaired a few drywall dings. The house looked brand new for listing day.", n: "Sarah M.", r: "Homeowner, Barrhaven" },
+    { q: "One call and my listing was staged, cleaned and photo ready in a week. My clients think I am a magician.", n: "David R.", r: "Realtor, Kanata" },
+    { q: "No deposit meant no stress. We paid after everything was done and inspected. Sold above asking.", n: "Priya K.", r: "Homeowner, Westboro" },
+    { q: "Reliable, fast, and they coordinate every trade. I stopped juggling five contractors.", n: "Marc L.", r: "Realtor, Orl\u00e9ans" }
+  ];
+  var testiWrap = document.getElementById("testi");
+  var testiDots = document.getElementById("testiDots");
+  var ti = 0, timer = null;
+  TESTI.forEach(function (item, i) {
+    var c = document.createElement("div");
+    c.className = "testi-card" + (i === 0 ? " active" : "");
+    c.innerHTML = '<div class="stars">\u2605\u2605\u2605\u2605\u2605</div><p class="testi-quote">' + item.q + '</p><div class="testi-name">' + item.n + '</div><div class="testi-role">' + item.r + '</div>';
+    testiWrap.appendChild(c);
+    var d = document.createElement("button");
+    d.setAttribute("aria-label", "Testimonial " + (i + 1));
+    d.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    d.addEventListener("click", function () { show(i); reset(); });
+    testiDots.appendChild(d);
+  });
+  function show(i) {
+    ti = i;
+    testiWrap.querySelectorAll(".testi-card").forEach(function (c, j) { c.classList.toggle("active", j === i); });
+    testiDots.querySelectorAll("button").forEach(function (b, j) { b.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+  }
+  function reset() { if (timer) clearInterval(timer); if (!reduce) timer = setInterval(function () { show((ti + 1) % TESTI.length); }, 5500); }
+  reset();
+
+  // Quote modal with focus trap
+  var modalRoot = document.getElementById("modalRoot");
+  var modal = document.getElementById("modal");
+  var step = 1, trigger = null;
+  var CHIPS = ["Painting", "Curb Appeal", "Decluttering", "Staging", "Flooring", "Cleaning", "Handyman", "Electrical", "Home Inspection"];
+  var chosenChips = {};
+  var chipWrap = document.getElementById("modalChips");
+  CHIPS.forEach(function (name) {
+    var b = document.createElement("button");
+    b.textContent = name; b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function () { chosenChips[name] = !chosenChips[name]; b.setAttribute("aria-pressed", chosenChips[name] ? "true" : "false"); });
+    chipWrap.appendChild(b);
+  });
+  document.querySelectorAll(".role-opts button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll(".role-opts button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    });
+  });
+
+  function focusables() {
+    return Array.prototype.slice.call(modal.querySelectorAll('a[href],button:not([disabled]),input,textarea,select')).filter(function (el) { return el.offsetParent !== null; });
+  }
+  function trap(e) {
+    if (e.key !== "Tab") return;
+    var f = focusables(); if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (!modal.contains(document.activeElement)) { e.preventDefault(); first.focus(); return; }
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+  function setStep(n) {
+    step = n;
+    document.querySelectorAll(".qstep").forEach(function (s) { s.classList.toggle("on", +s.getAttribute("data-step") === n); });
+    document.getElementById("stepNum").textContent = n;
+    document.getElementById("modalHeading").textContent = t("modal.t" + n);
+    var bars = document.querySelectorAll(".prog span");
+    bars.forEach(function (b, i) { b.classList.toggle("on", i < n); });
+    document.getElementById("modalBack").style.visibility = n > 1 ? "visible" : "hidden";
+    document.getElementById("modalNext").textContent = n >= 3 ? t("modal.send") : t("modal.next");
+  }
+  function openModal(preChip) {
+    trigger = document.activeElement;
+    document.getElementById("modalForm").style.display = "";
+    document.getElementById("modalDone").style.display = "none";
+    setStep(1);
+    if (preChip) {
+      chosenChips[preChip] = true;
+      chipWrap.querySelectorAll("button").forEach(function (b) { if (b.textContent === preChip) b.setAttribute("aria-pressed", "true"); });
+    }
+    modalRoot.classList.add("open");
+    document.body.style.overflow = "hidden";
+    document.querySelector("main").setAttribute("aria-hidden", "true");
+    document.querySelector("header.site").setAttribute("aria-hidden", "true");
+    document.querySelector("footer.site").setAttribute("aria-hidden", "true");
+    document.addEventListener("keydown", trap, true);
+    setTimeout(function () { var f = focusables(); if (f.length) f[0].focus(); }, 60);
+  }
+  function closeModal() {
+    modalRoot.classList.remove("open");
+    document.body.style.overflow = "";
+    document.querySelector("main").removeAttribute("aria-hidden");
+    document.querySelector("header.site").removeAttribute("aria-hidden");
+    document.querySelector("footer.site").removeAttribute("aria-hidden");
+    document.removeEventListener("keydown", trap, true);
+    if (trigger && trigger.focus) trigger.focus();
+  }
+  document.addEventListener("click", function (e) {
+    var q = e.target.closest ? e.target.closest(".js-quote") : null;
+    if (q) { e.preventDefault(); openModal(); return; }
+    if (e.target.closest && e.target.closest(".js-close-modal")) { closeModal(); }
+  });
+  document.getElementById("modalNext").addEventListener("click", function () {
+    if (step >= 3) {
+      document.getElementById("modalForm").style.display = "none";
+      document.getElementById("modalDone").style.display = "block";
+      setTimeout(function () { var f = focusables(); if (f.length) f[0].focus(); }, 40);
+    } else setStep(step + 1);
+  });
+  document.getElementById("modalBack").addEventListener("click", function () { if (step > 1) setStep(step - 1); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      if (modalRoot.classList.contains("open")) closeModal();
+      else if (svcPanel.classList.contains("open")) toggleSvc(false);
+      else if (drawer.classList.contains("open")) setDrawer(false);
+    }
+  });
+
+  // Reveal animations, once each, with sibling stagger
+  var animEls = Array.prototype.slice.call(document.querySelectorAll("[data-animate]"));
+  function revealNow(el) {
+    var sibs = Array.prototype.slice.call(el.parentElement.children).filter(function (c) { return c.hasAttribute("data-animate"); });
+    var i = sibs.indexOf(el);
+    el.style.transitionDelay = (Math.max(0, i) * 70) + "ms";
+    el.classList.add("in");
+  }
+  if (reduce || !("IntersectionObserver" in window)) {
+    animEls.forEach(function (el) { el.classList.add("in"); });
+  } else {
+    document.body.classList.add("reveal-ready");
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { revealNow(entry.target); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    animEls.forEach(function (el) { io.observe(el); });
+    setTimeout(function () { animEls.forEach(function (el) { if (!el.classList.contains("in")) el.classList.add("in"); }); }, 1500);
+  }
+
+  // Animated counters
+  function runCount(el) {
+    var target = +el.getAttribute("data-count");
+    if (reduce || target === 0) { el.textContent = target; return; }
+    var start = null, dur = 1300;
+    function tick(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased);
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  if ("IntersectionObserver" in window) {
+    var co = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) { if (entry.isIntersecting) { runCount(entry.target); co.unobserve(entry.target); } });
+    }, { threshold: 0.6 });
+    document.querySelectorAll("[data-count]").forEach(function (el) { co.observe(el); });
+  } else {
+    document.querySelectorAll("[data-count]").forEach(function (el) { el.textContent = el.getAttribute("data-count"); });
+  }
+
+  applyLang();
+  document.body.classList.add("loaded");
+})();
+</script>
+</body>
+</html>
