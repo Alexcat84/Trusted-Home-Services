@@ -1650,7 +1650,7 @@ function AdminPage() {
     if (!isAuthenticated) return;
     const POLL_MS = 30_000;
     // Both are async; any setState happens after their internal `await fetch(...)`,
-    // not synchronously in this effect body — standard React fetch-on-mount pattern.
+    // not synchronously in this effect body, standard React fetch-on-mount pattern.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchNotificationSettings();
     fetchList();
@@ -1817,7 +1817,7 @@ function AdminPage() {
       </header>
       <main id="main" className="privacy-main">
         <div className="container privacy-content" style={{ paddingTop: '2rem' }}>
-          <h1 className="privacy-hero-title" style={{ marginBottom: '1rem' }}>Admin – Leads &amp; Quotes</h1>
+          <h1 className="privacy-hero-title" style={{ marginBottom: '1rem' }}>Admin: Leads &amp; Quotes</h1>
 
           {!authChecked ? (
             <p className="admin-empty">Checking session…</p>

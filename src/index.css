@@ -1,5 +1,5 @@
 /* ============================================
-   Trusted Home Services — Paleta (cintas = fondo del logo v4)
+   Trusted Home Services. Paleta (cintas = fondo del logo v4)
    Primary/primary-dark extraídos del fondo de Logo v4.0 Inverted.jpg.
    Acento: #F9772B | Texto sobre oscuro: #FFFFFF
    ============================================ */
@@ -383,7 +383,7 @@ a:hover {
   padding: 0;
   text-align: left;
 }
-/* TEMP: hero layout debug — remove when distribution is approved */
+/* TEMP: hero layout debug. Remove when distribution is approved */
 .hero-col--left {
   outline: 3px solid #ff3860;
   outline-offset: -3px;
@@ -429,7 +429,7 @@ a:hover {
 .hero-col--center .hero-subtitle {
   margin-bottom: 0;
 }
-/* TEMP: hero layout debug — central copy box */
+/* TEMP: hero layout debug. Central copy box */
 .hero-center-copy {
   outline: 3px solid #ff44cc;
   outline-offset: -3px;
@@ -792,7 +792,7 @@ a:hover {
 }
 
 /* ---- Secciones ---- */
-/* Por encima del hero fijo (z-index 0–1) para que al hacer scroll tapen la imagen/video */
+/* Por encima del hero fijo (z-index 0-1) para que al hacer scroll tapen la imagen/video */
 .section {
   position: relative;
   z-index: 2;
@@ -1500,7 +1500,7 @@ a:hover {
   overflow: visible;
   isolation: isolate;
 }
-/* Contorno continuo iluminado (blanco–naranja), grueso y pronunciado en hover */
+/* Contorno continuo iluminado (blanco-naranja), grueso y pronunciado en hover */
 .step-card::before {
   content: '';
   position: absolute;
@@ -2359,7 +2359,7 @@ a:hover {
 .realtor-solutions .privacy-section-title { margin-top: 1.5rem; }
 .realtor-solutions .privacy-section-title:first-child { margin-top: 0; }
 
-/* Alternating text / image blocks — franja libre central para alinear bien izquierda y derecha */
+/* Alternating text / image blocks. Franja libre central para alinear bien izquierda y derecha */
 .realtor-alternate-blocks {
   display: grid;
   grid-template-columns: 1fr 2.5rem 1fr;
@@ -2424,7 +2424,7 @@ a:hover {
   .realtor-alternate-img { aspect-ratio: 16/10; }
 }
 
-/* How it works — numbered steps */
+/* How it works. Numbered steps */
 .realtor-how-steps {
   list-style: none;
   margin: 0;
@@ -2528,7 +2528,7 @@ a:hover {
 .realtor-extra-links a { color: var(--color-accent); }
 .realtor-extra-links a:hover { text-decoration: underline; }
 
-/* Realtors page: proof stats — 4 en una fila, compactos */
+/* Realtors page: proof stats. 4 en una fila, compactos */
 .realtor-proof-stats {
   padding: 1rem 0;
 }
