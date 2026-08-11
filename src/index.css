@@ -234,6 +234,16 @@ a:hover {
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   display: inline-block;
 }
+/* Some nav entries are buttons because they open a dialog rather than go somewhere.
+   Strip the browser's own button skin so they read exactly like the links beside them. */
+button.nav-link {
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
 /* Hover: estilo suave (fondo claro + borde) cuando el cursor pasa por encima */
 .nav-list a:hover,
 .nav-link:hover {
@@ -471,6 +481,10 @@ a:hover {
   object-fit: cover;
   display: block;
   background: var(--color-primary);
+  /* Framed in the brand navy. The border is drawn inside the box, so the outer
+     edges stay flush with the measured column while the picture sits in a frame. */
+  border: clamp(6px, 0.7vw, 11px) solid var(--color-primary);
+  border-radius: clamp(14px, 1.6vw, 26px);
 }
 .hero-copy {
   display: flex;
