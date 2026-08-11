@@ -481,10 +481,13 @@ button.nav-link {
   object-fit: cover;
   display: block;
   background: var(--color-primary);
-  /* Framed in the brand navy. The border is drawn inside the box, so the outer
-     edges stay flush with the measured column while the picture sits in a frame. */
-  border: clamp(6px, 0.7vw, 11px) solid var(--color-primary);
+  /* A hairline of navy at low opacity, which separates the warm footage from the
+     white hero without the weight of a solid bezel. The soft shadow does the rest
+     of the lifting, matching the card treatment used by the columns either side.
+     Border-box keeps the line inside, so the outer edges stay on the measured column. */
+  border: clamp(2px, 0.18vw, 3px) solid rgba(10, 35, 60, 0.16);
   border-radius: clamp(14px, 1.6vw, 26px);
+  box-shadow: var(--shadow-lg);
 }
 .hero-copy {
   display: flex;
