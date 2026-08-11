@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLang } from '../context/useLang';
-import { getSectionHash } from '../translations';
+import { useQuote } from '../context/useQuote';
 import { getServiceContent, getServiceList, SERVICE_IMAGES } from '../content/services';
 import { navigateTo, servicePath } from '../lib/routing';
 import Header from './Header';
@@ -35,6 +35,7 @@ function useServiceMeta(content) {
 
 export default function ServicePage({ serviceKey }) {
   const { t, lang } = useLang();
+  const { openQuote } = useQuote();
   const content = getServiceContent(lang, serviceKey);
   useServiceMeta(content);
 
@@ -44,13 +45,7 @@ export default function ServicePage({ serviceKey }) {
 
   if (!content) return null;
 
-  const quoteHash = getSectionHash(lang, 'quote');
   const others = getServiceList(lang).filter((s) => s.key !== serviceKey);
-
-  const goToQuote = (e) => {
-    e.preventDefault();
-    navigateTo('/', quoteHash);
-  };
 
   return (
     <>
@@ -65,9 +60,9 @@ export default function ServicePage({ serviceKey }) {
               <p className="service-tagline">{content.tagline}</p>
               <p className="service-intro">{content.intro}</p>
               <div className="service-hero-actions">
-                <a href={`/#${quoteHash}`} className="btn btn-primary" onClick={goToQuote}>
+                <button type="button" className="btn btn-primary" onClick={openQuote}>
                   {t('hero.cta1')}
-                </a>
+                </button>
                 <a href="tel:+16132048000" className="btn btn-secondary">{t('hero.cta2')}</a>
               </div>
             </div>
@@ -129,9 +124,9 @@ export default function ServicePage({ serviceKey }) {
               <h2 className="section-title">{t('services.ctaTitle')}</h2>
               <p>{t('homeStats.qualityDesc')}</p>
             </div>
-            <a href={`/#${quoteHash}`} className="btn btn-primary" onClick={goToQuote}>
+            <button type="button" className="btn btn-primary" onClick={openQuote}>
               {t('hero.cta1')}
-            </a>
+            </button>
           </div>
         </section>
 

@@ -1,8 +1,10 @@
 import { useLang } from '../context/useLang';
+import { useQuote } from '../context/useQuote';
 import { getSectionHash } from '../translations';
 
 export default function Footer() {
   const { t, lang } = useLang();
+  const { openQuote } = useQuote();
   const hash = (key) => getSectionHash(lang, key);
   return (
     <footer className="footer">
@@ -24,7 +26,7 @@ export default function Footer() {
             <a href={`#${hash('how')}`}>{t('footer.how')}</a>
             <a href={`#${hash('projects')}`}>{t('footer.projects')}</a>
             <a href={`#${hash('realtors')}`}>{t('footer.realtors')}</a>
-            <a href={`#${hash('quote')}`}>{t('footer.quote')}</a>
+            <button type="button" className="footer-link-button" onClick={openQuote}>{t('footer.quote')}</button>
             <a href={`#${hash('partners')}`}>{t('footer.partners')}</a>
           </nav>
         </div>

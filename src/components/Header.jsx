@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLang } from '../context/useLang';
 import { getSectionHash } from '../translations';
+import { useQuote } from '../context/useQuote';
 import { getServiceList } from '../content/services';
 import { navigateTo, servicePath } from '../lib/routing';
 
@@ -8,6 +9,7 @@ const NAV_KEYS = ['home', 'services', 'how', 'projects', 'realtors', 'partners',
 
 export default function Header() {
   const { lang, setLang, t } = useLang();
+  const { openQuote } = useQuote();
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [currentHash, setCurrentHash] = useState('');
@@ -157,11 +159,29 @@ export default function Header() {
                 );
               }
 
+              // The quote entry raises the dialog rather than scrolling anywhere.
+              if (isCta) {
+                return (
+                  <li key={key}>
+                    <button
+                      type="button"
+                      className="nav-link nav-cta"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        openQuote();
+                      }}
+                    >
+                      {t(`nav.${key}`)}
+                    </button>
+                  </li>
+                );
+              }
+
               return (
                 <li key={key}>
                   <a
                     href={`#${sectionHash}`}
-                    className={`nav-link ${isCta ? 'nav-cta' : ''} ${isActive ? 'nav-link--active' : ''}`}
+                    className={`nav-link ${isActive ? 'nav-link--active' : ''}`}
                     onClick={(e) => {
                       setMenuOpen(false);
                       // From a service page the hash alone would not leave the page, so route home first.

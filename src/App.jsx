@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react
 import { motion, useInView } from 'framer-motion';
 import { animate, stagger } from 'animejs';
 import { useLang } from './context/useLang';
+import { useQuote } from './context/useQuote';
+import Modal from './components/Modal';
 import { getSectionHash } from './translations';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -110,6 +112,7 @@ const PROJECTS_PAGE_HASHES = ['our-projects', 'nos-projets', 'nuestros-proyectos
 
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
+  const { openQuote } = useQuote();
   const heroVideo = getHeroVideo();
   // Autoplay is motion; readers who ask for less of it get the poster and controls instead.
   const [reduceMotion] = useState(() => {
@@ -120,7 +123,6 @@ function Hero({ skipAnimation = false }) {
     }
   });
 
-  const quoteHash = getSectionHash(lang, 'quote');
   return (
     <section id={getSectionHash(lang, 'home')} className="hero">
       <motion.div
@@ -132,7 +134,7 @@ function Hero({ skipAnimation = false }) {
         <div className="hero-col hero-col--left">
           <div className="hero-copy">
           <motion.div className="hero-actions" variants={item}>
-            <a href={`#${quoteHash}`} className="btn btn-primary">{t('hero.cta1')}</a>
+            <button type="button" className="btn btn-primary" onClick={openQuote}>{t('hero.cta1')}</button>
             <span className="btn btn-primary" aria-hidden="true">{t('hero.cta2')}</span>
           </motion.div>
           <motion.div className="home-stats-seal hero-stats-seal hero-quality" variants={item}>
@@ -306,7 +308,8 @@ function Testimonials({ variant = 'section' }) {
 }
 
 function RealtorFormModal({ open, onClose }) {
-  const { t, lang } = useLang();
+  const { t } = useLang();
+  const { openQuote } = useQuote();
   const [submitted, setSubmitted] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -353,12 +356,8 @@ function RealtorFormModal({ open, onClose }) {
 
   const goToDetailedQuote = () => {
     handleClose();
-    const hash = getSectionHash(lang, 'quote');
-    window.location.hash = hash;
-    setTimeout(() => {
-      const el = document.getElementById(hash);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+    // Hand straight over to the quote dialog instead of scrolling to a section that no longer exists.
+    setTimeout(openQuote, 50);
   };
 
   if (!open) return null;
@@ -661,8 +660,8 @@ function FranchiseFormModal({ open, onClose }) {
   );
 }
 
-function QuoteForm() {
-  const { t, lang } = useLang();
+function QuoteForm({ onDone = () => {} }) {
+  const { t } = useLang();
   const formRef = useRef(null);
   const [step, setStep] = useState(1);
   const [wholeHouse, setWholeHouse] = useState(true);
@@ -751,9 +750,9 @@ function QuoteForm() {
   };
 
   return (
-    <AnimatedSection id={getSectionHash(lang, 'quote')} className="section section-quote">
-      <div className="container">
-        <h2 className="section-title"><AnimatedSectionTitle text={t('quote.title')} /></h2>
+    <div className="quote-panel">
+      <div className="quote-panel-inner">
+        <h2 className="section-title" id="quote-modal-title">{t('quote.title')}</h2>
         <p className="section-intro">{t('quote.intro')}</p>
 
         <div className="quote-wizard">
@@ -923,11 +922,14 @@ function QuoteForm() {
               <p className="quote-success-title">{t('quote.success.title')}</p>
               <p>{t('quote.success.text')}</p>
               <p className="quote-success-closing">{t('quote.success.closing')}</p>
+              <button type="button" className="btn btn-primary quote-success-close" onClick={onDone}>
+                {t('realtors.form.close')}
+              </button>
             </motion.div>
           )}
         </div>
       </div>
-    </AnimatedSection>
+    </div>
   );
 }
 
@@ -2046,6 +2048,7 @@ function getCurrentHash() {
 }
 
 export default function App() {
+  const { quoteOpen, closeQuote } = useQuote();
   const [legalPage, setLegalPage] = useState(() => getLegalPageFromHash(getCurrentHash()));
   const [subPage, setSubPage] = useState(() => getSubPageFromHash(getCurrentHash()));
   // Service pages live on real paths so search engines index them individually.
@@ -2093,25 +2096,42 @@ export default function App() {
     prevSubPageRef.current = subPage;
     prevLegalPageRef.current = legalPage;
   });
-  if (servicePage) return <ServicePage serviceKey={servicePage} />;
-  if (legalPage === 'privacy') return <PrivacyPolicyPage />;
-  if (legalPage === 'terms') return <TermsOfServicePage />;
-  if (legalPage === 'faq') return <FAQPage />;
-  if (legalPage === 'admin') return <AdminPage />;
-  if (subPage === 'realtors') return <RealtorsPage />;
-  if (subPage === 'partners') return <BecomePartnerPage />;
-  if (subPage === 'projects') return <ProjectsPage />;
+  const page = (() => {
+    if (servicePage) return <ServicePage serviceKey={servicePage} />;
+    if (legalPage === 'privacy') return <PrivacyPolicyPage />;
+    if (legalPage === 'terms') return <TermsOfServicePage />;
+    if (legalPage === 'faq') return <FAQPage />;
+    if (legalPage === 'admin') return <AdminPage />;
+    if (subPage === 'realtors') return <RealtorsPage />;
+    if (subPage === 'partners') return <BecomePartnerPage />;
+    if (subPage === 'projects') return <ProjectsPage />;
+    return (
+      <>
+        <a href="#main" className="skip-link">Skip to main content</a>
+        <Header />
+        <main id="main">
+          <Hero skipAnimation={skipHeroAnimation} />
+          <Services />
+          <HowWeWork />
+        </main>
+        <Footer />
+      </>
+    );
+  })();
+
+  // The quote form is no longer a section anyone has to scroll to. It lives here,
+  // above the page switch, so every page raises the same dialog.
   return (
     <>
-      <a href="#main" className="skip-link">Skip to main content</a>
-      <Header />
-      <main id="main">
-        <Hero skipAnimation={skipHeroAnimation} />
-        <Services />
-        <HowWeWork />
-        <QuoteForm />
-      </main>
-      <Footer />
+      {page}
+      <Modal
+        open={quoteOpen}
+        onClose={closeQuote}
+        labelledBy="quote-modal-title"
+        className="quote-modal"
+      >
+        <QuoteForm onDone={closeQuote} />
+      </Modal>
     </>
   );
 }

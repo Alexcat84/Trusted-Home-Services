@@ -3355,3 +3355,91 @@ a:hover {
     align-items: flex-start;
   }
 }
+
+/* ============================================
+   Floating dialog, used by the quote form
+   ============================================ */
+.app-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(1rem, 5vh, 3rem) 1rem;
+  background: rgba(10, 35, 60, 0.6);
+  backdrop-filter: blur(3px);
+  overflow-y: auto;
+  animation: modal-fade 0.2s ease;
+}
+@keyframes modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.app-modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  animation: modal-rise 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modal-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.app-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.app-modal-close:hover {
+  background: var(--color-accent);
+  color: var(--color-text-on-dark);
+}
+/* The quote form used to be a full width section; inside the dialog it needs no container. */
+.quote-panel-inner {
+  width: 100%;
+}
+.quote-panel .section-title {
+  margin-top: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+.quote-panel .section-intro {
+  margin-bottom: 1.5rem;
+}
+.quote-success-close {
+  margin-top: 1.25rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-modal,
+  .app-modal-panel {
+    animation: none;
+  }
+}
+
+/* Footer quote entry is a button now, so it has to look like the links beside it. */
+.footer-link-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.footer-link-button:hover {
+  color: var(--color-accent);
+}
