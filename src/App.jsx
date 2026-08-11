@@ -1,10 +1,13 @@
-import React, { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { animate, stagger } from 'animejs';
 import { useLang } from './context/useLang';
 import { getSectionHash } from './translations';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ServicePage from './components/ServicePage';
+import { getServiceList } from './content/services';
+import { getServiceFromPath, navigateTo, servicePath } from './lib/routing';
 
 /** Base URL for API (same origin if not set). No trailing slash. */
 function getApiBase() {
@@ -170,63 +173,39 @@ function Hero({ skipAnimation = false }) {
   );
 }
 
+/**
+ * Each service now has its own indexable page, reached from the navigation menu.
+ * The home page points at them instead of carrying the whole catalogue itself.
+ */
 function Services() {
   const { t, lang } = useLang();
-  const ref = React.useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
-  const [flippedKey, setFlippedKey] = useState(null);
-
-  const services = [
-    { key: 'declutter', img: '/images/decluttering-removal.jpg' },
-    { key: 'repair', img: '/images/Plaster.png' },
-    { key: 'handyman', img: '/images/handyman.jpg' },
-    { key: 'paint', img: '/images/roller painting.jpeg' },
-    { key: 'flooring', img: '/images/flooring.jpg' },
-    { key: 'curb', img: '/images/curb-appeal.avif' },
-    { key: 'staging', img: '/images/staging-organizing.jpg' },
-    { key: 'clean', img: '/images/cleaning services 1.png' },
-  ];
+  const services = getServiceList(lang);
 
   return (
     <AnimatedSection id={getSectionHash(lang, 'services')} className="section section-services">
       <div className="container container--wide">
         <h2 className="section-title"><AnimatedSectionTitle text={t('services.title')} /></h2>
         <p className="section-intro">{t('services.intro')}</p>
-        <motion.div
-          ref={ref}
-          className="services-grid services-grid--multi"
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-          variants={container}
-        >
+        <ul className="services-index">
           {services.map((s) => (
-            <motion.article
-              key={s.key}
-              className={`service-card-flip ${flippedKey === s.key ? 'flipped' : ''}`}
-              variants={item}
-              onClick={() => setFlippedKey(flippedKey === s.key ? null : s.key)}
-            >
-              <div className="service-card-inner">
-                <div className="service-card-front">
-                  <div className="service-img-wrap">
-                    <img src={s.img} alt="" className="service-img" />
-                    <span className="service-card-front-hint" aria-hidden="true">{t('services.learnMore')}</span>
-                  </div>
-                  <div className="service-card-front-text">
-                    <h3>{t(`services.${s.key}.title`)}</h3>
-                    <p>{t(`services.${s.key}.short`)}</p>
-                  </div>
-                </div>
-                <div className="service-card-back">
-                  <h3>{t(`services.${s.key}.title`)}</h3>
-                  <div className="service-card-back-body">{t(`services.${s.key}.text`)}</div>
-                  <a href={`#${getSectionHash(lang, 'quote')}`} className="btn btn-primary service-card-back-cta" onClick={(e) => e.stopPropagation()}>{t('nav.quote')}</a>
-                  <button type="button" className="service-card-back-close" onClick={(e) => { e.stopPropagation(); setFlippedKey(null); }} aria-label={t('quote.back')}>←</button>
-                </div>
-              </div>
-            </motion.article>
+            <li key={s.key}>
+              <a
+                href={servicePath(s.key)}
+                className="services-index-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateTo(servicePath(s.key));
+                }}
+              >
+                <span className="services-index-name">
+                  {s.name}
+                  {s.isNew && <span className="service-badge">{t('services.newBadge')}</span>}
+                </span>
+                <span className="services-index-tagline">{s.tagline}</span>
+              </a>
+            </li>
           ))}
-        </motion.div>
+        </ul>
       </div>
     </AnimatedSection>
   );
@@ -2069,6 +2048,8 @@ function getCurrentHash() {
 export default function App() {
   const [legalPage, setLegalPage] = useState(() => getLegalPageFromHash(getCurrentHash()));
   const [subPage, setSubPage] = useState(() => getSubPageFromHash(getCurrentHash()));
+  // Service pages live on real paths so search engines index them individually.
+  const [servicePage, setServicePage] = useState(() => getServiceFromPath());
   const prevSubPageRef = useRef(null);
   const prevLegalPageRef = useRef(null);
   const isFirstRenderRef = useRef(true);
@@ -2083,6 +2064,17 @@ export default function App() {
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+  useEffect(() => {
+    // Covers both the back button and our own pushState navigations.
+    const onPopState = () => {
+      setServicePage(getServiceFromPath());
+      const hash = getCurrentHash();
+      setLegalPage(getLegalPageFromHash(hash));
+      setSubPage(getSubPageFromHash(hash));
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
   }, []);
   useEffect(() => {
     isFirstRenderRef.current = false;
@@ -2101,6 +2093,7 @@ export default function App() {
     prevSubPageRef.current = subPage;
     prevLegalPageRef.current = legalPage;
   });
+  if (servicePage) return <ServicePage serviceKey={servicePage} />;
   if (legalPage === 'privacy') return <PrivacyPolicyPage />;
   if (legalPage === 'terms') return <TermsOfServicePage />;
   if (legalPage === 'faq') return <FAQPage />;

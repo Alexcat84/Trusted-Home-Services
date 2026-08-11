@@ -1,18 +1,40 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLang } from '../context/useLang';
 import { getSectionHash } from '../translations';
+import { getServiceList } from '../content/services';
+import { navigateTo, servicePath } from '../lib/routing';
 
 const NAV_KEYS = ['home', 'services', 'how', 'projects', 'realtors', 'partners', 'quote'];
 
 export default function Header() {
   const { lang, setLang, t } = useLang();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const [currentHash, setCurrentHash] = useState('');
+  const serviceLinks = getServiceList(lang);
+  const servicesRef = useRef(null);
   const rafPendingRef = useRef(false);
   const rafIdRef = useRef(null);
   const sectionElsRef = useRef([]);
   const lastActiveIdRef = useRef('');
   const hash = (key) => getSectionHash(lang, key);
+
+  // An open panel should close the way people expect: click elsewhere, or press Escape.
+  useEffect(() => {
+    if (!servicesOpen) return undefined;
+    const onPointerDown = (e) => {
+      if (servicesRef.current && !servicesRef.current.contains(e.target)) setServicesOpen(false);
+    };
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setServicesOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [servicesOpen]);
 
   useEffect(() => {
     const updateHash = () => {
@@ -72,7 +94,17 @@ export default function Header() {
   return (
     <header className="header" id="header">
       <div className="header-inner">
-        <a href={`#${hash('home')}`} className="logo-wrap" aria-label="Trusted Home Services - Home">
+        <a
+          href={`/#${hash('home')}`}
+          className="logo-wrap"
+          aria-label="Trusted Home Services - Home"
+          onClick={(e) => {
+            if (window.location.pathname !== '/') {
+              e.preventDefault();
+              navigateTo('/', hash('home'));
+            }
+          }}
+        >
           <img src="/images/Logo v4.0 Inverted.jpg" alt="Trusted Home Services" className="logo-img" />
         </a>
         <nav className={`nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
@@ -81,12 +113,66 @@ export default function Header() {
               const sectionHash = hash(key);
               const isActive = currentHash === sectionHash.toLowerCase() || (key === 'home' && !currentHash);
               const isCta = key === 'quote';
+
+              // Services is the one entry that opens a panel: nine pages is too many for a flat bar.
+              if (key === 'services') {
+                return (
+                  <li
+                    key={key}
+                    ref={servicesRef}
+                    className={`nav-item-has-menu ${servicesOpen ? 'is-open' : ''}`}
+                  >
+                    <button
+                      type="button"
+                      className={`nav-link nav-link--toggle ${isActive ? 'nav-link--active' : ''}`}
+                      aria-expanded={servicesOpen}
+                      aria-controls="services-menu"
+                      onClick={() => setServicesOpen((open) => !open)}
+                    >
+                      {t('nav.services')}
+                      <span className="nav-caret" aria-hidden="true" />
+                    </button>
+                    <div className="services-menu" id="services-menu" hidden={!servicesOpen}>
+                      <ul className="services-menu-list">
+                        {serviceLinks.map((s) => (
+                          <li key={s.key}>
+                            <a
+                              href={servicePath(s.key)}
+                              className="services-menu-link"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setServicesOpen(false);
+                                setMenuOpen(false);
+                                navigateTo(servicePath(s.key));
+                              }}
+                            >
+                              <span className="services-menu-name">
+                                {s.name}
+                                {s.isNew && <span className="service-badge">{t('services.newBadge')}</span>}
+                              </span>
+                              <span className="services-menu-tagline">{s.tagline}</span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </li>
+                );
+              }
+
               return (
                 <li key={key}>
                   <a
                     href={`#${sectionHash}`}
                     className={`nav-link ${isCta ? 'nav-cta' : ''} ${isActive ? 'nav-link--active' : ''}`}
-                    onClick={() => setMenuOpen(false)}
+                    onClick={(e) => {
+                      setMenuOpen(false);
+                      // From a service page the hash alone would not leave the page, so route home first.
+                      if (window.location.pathname !== '/') {
+                        e.preventDefault();
+                        navigateTo('/', sectionHash);
+                      }
+                    }}
                   >
                     {t(`nav.${key}`)}
                   </a>
