@@ -37,6 +37,8 @@ Thumbs.db
 .vercel
 .env*.local
 
-# Source video masters. Only the web-encoded copies in public/videos are tracked.
+# Source video masters live here, out of the repo. Only the web-encoded copies
+# in public/videos are tracked, because these originals run tens of megabytes.
+/media-source/
 /*.mp4
 /*.mov

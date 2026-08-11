@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ServicePage from './components/ServicePage';
 import { getServiceList } from './content/services';
+import { getHeroVideo } from './content/heroVideo';
 import { getServiceFromPath, navigateTo, servicePath } from './lib/routing';
 
 /** Base URL for API (same origin if not set). No trailing slash. */
@@ -109,6 +110,7 @@ const PROJECTS_PAGE_HASHES = ['our-projects', 'nos-projets', 'nuestros-proyectos
 
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
+  const heroVideo = getHeroVideo();
   // Autoplay is motion; readers who ask for less of it get the poster and controls instead.
   const [reduceMotion] = useState(() => {
     try {
@@ -151,8 +153,9 @@ function Hero({ skipAnimation = false }) {
           </div>
           <motion.div className="hero-video-wrap" variants={item}>
             <video
+              key={heroVideo.src}
               className="hero-video"
-              poster="/videos/hero-renovation-poster.jpg"
+              poster={heroVideo.poster}
               autoPlay={!reduceMotion}
               controls={reduceMotion}
               muted
@@ -161,7 +164,7 @@ function Hero({ skipAnimation = false }) {
               preload="metadata"
               aria-label={t('hero.videoLabel')}
             >
-              <source src="/videos/hero-renovation.mp4" type="video/mp4" />
+              <source src={heroVideo.src} type="video/mp4" />
             </video>
           </motion.div>
         </div>
