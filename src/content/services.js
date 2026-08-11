@@ -33,9 +33,6 @@ export const SERVICE_SLUGS = {
   inspection: 'home-inspection',
 };
 
-/** Services added this year. The menu flags them so they do not get lost in the list. */
-export const NEW_SERVICES = ['electrical', 'inspection'];
-
 export const SERVICE_IMAGES = {
   painting: '/images/roller painting.jpeg',
   curb: '/images/curb-appeal.avif',
@@ -235,12 +232,12 @@ const EN = {
   },
   electrical: {
     name: 'Electrical',
-    tagline: 'Licensed electrical work, from fixtures to a pre-listing safety check.',
+    tagline: 'Electrical work, from fixtures to a pre-listing safety check.',
     metaTitle: 'Electrical Services in Ottawa | Trusted Home Services',
     metaDescription:
-      'Licensed electrical work in Ottawa: fixtures, outlets, GFCI protection, panel labelling and pre-listing safety checks. Permits handled where required.',
+      'Electrical work in Ottawa: fixtures, outlets, GFCI protection, panel labelling and pre-listing safety checks. Permits arranged where the job requires them.',
     intro:
-      'Electrical is the part of a house nobody thinks about until an inspector writes it down. Our licensed electricians handle the work properly, with permits where the job calls for one, so it holds up under scrutiny.',
+      'Electrical is the part of a house nobody thinks about until an inspector writes it down. We handle the work properly, with permits where the job calls for one, so it holds up under scrutiny.',
     includes: [
       'Light fixtures, ceiling fans and pot lights supplied and installed',
       'Switches, outlets and dimmers replaced, including USB outlets',
@@ -253,11 +250,11 @@ const EN = {
     ],
     benefits: [
       { title: 'It clears the inspection early', text: 'Electrical findings frighten buyers more than almost anything else on a report. Handling them beforehand keeps them out of the negotiation.' },
-      { title: 'Licensed work, documented', text: 'The work is done by licensed electricians and permitted where required, so you have something to show rather than something to explain.' },
+      { title: 'Work you can document', text: 'The job is permitted and inspected where that is required, so you have paperwork to hand over rather than something to explain.' },
       { title: 'Lighting changes how rooms feel', text: 'Dim or dated fixtures make good rooms photograph badly. New lighting is one of the cheapest improvements per dollar in the whole house.' },
     ],
     faq: [
-      { q: 'Are your electricians licensed?', a: 'Yes. Electrical work is done by licensed electricians and we arrange permits and inspection through the proper authority whenever the job requires it.' },
+      { q: 'Do you take care of permits?', a: 'Yes. Where the work calls for a permit and an inspection, we arrange both through the proper authority so the job ends up on record.' },
       { q: 'We have knob and tube wiring. Now what?', a: 'We assess it and give you a straight answer about what insurers and buyers will expect. Sometimes it is a contained fix, sometimes it is a larger project, and you should know which before you list.' },
     ],
   },
@@ -478,12 +475,12 @@ const FR = {
   },
   electrical: {
     name: 'Électricité',
-    tagline: 'Travaux électriques par des maîtres électriciens, du luminaire à la vérification avant vente.',
+    tagline: 'Travaux électriques, du luminaire à la vérification avant vente.',
     metaTitle: 'Services électriques à Ottawa | Trusted Home Services',
     metaDescription:
-      'Travaux électriques licenciés à Ottawa : luminaires, prises, protection DDFT, étiquetage du panneau et vérification avant inscription. Permis gérés au besoin.',
+      'Travaux électriques à Ottawa : luminaires, prises, protection DDFT, étiquetage du panneau et vérification avant inscription. Permis obtenus au besoin.',
     intro:
-      'L’électricité est la partie de la maison à laquelle personne ne pense jusqu’à ce qu’un inspecteur l’écrive. Nos électriciens licenciés font le travail correctement, avec permis lorsque requis.',
+      'L’électricité est la partie de la maison à laquelle personne ne pense jusqu’à ce qu’un inspecteur l’écrive. Nous faisons le travail correctement, avec permis lorsque requis.',
     includes: [
       'Luminaires, ventilateurs de plafond et encastrés fournis et installés',
       'Interrupteurs, prises et gradateurs remplacés, y compris les prises USB',
@@ -496,11 +493,11 @@ const FR = {
     ],
     benefits: [
       { title: 'L’inspection est réglée d’avance', text: 'Les constatations électriques inquiètent les acheteurs plus que presque tout le reste. Les traiter avant les sort de la négociation.' },
-      { title: 'Travaux licenciés et documentés', text: 'Le travail est fait par des électriciens licenciés et permis lorsque requis : vous avez quelque chose à montrer plutôt qu’à expliquer.' },
+      { title: 'Des travaux documentés', text: 'Le travail est permis et inspecté lorsque cela est requis : vous avez des documents à remettre plutôt qu’une explication à donner.' },
       { title: 'L’éclairage change la perception', text: 'Des luminaires sombres ou démodés font mal photographier de belles pièces. Un nouvel éclairage est l’une des améliorations les plus rentables.' },
     ],
     faq: [
-      { q: 'Vos électriciens sont ils licenciés ?', a: 'Oui. Les travaux électriques sont réalisés par des électriciens licenciés et nous obtenons permis et inspection auprès de l’autorité compétente lorsque le travail l’exige.' },
+      { q: 'Vous occupez vous des permis ?', a: 'Oui. Lorsque les travaux exigent un permis et une inspection, nous obtenons les deux auprès de l’autorité compétente pour que le tout soit consigné.' },
       { q: 'Nous avons du câblage à bouton et tube. Et maintenant ?', a: 'Nous l’évaluons et vous donnons une réponse claire sur ce qu’assureurs et acheteurs attendront. Parfois c’est un correctif ciblé, parfois un projet plus large, et il vaut mieux le savoir avant d’inscrire.' },
     ],
   },
@@ -721,12 +718,12 @@ const ES = {
   },
   electrical: {
     name: 'Electricidad',
-    tagline: 'Trabajo eléctrico con electricistas certificados, de la lámpara a la revisión previa a la venta.',
+    tagline: 'Trabajo eléctrico, de la lámpara a la revisión previa a la venta.',
     metaTitle: 'Servicios eléctricos en Ottawa | Trusted Home Services',
     metaDescription:
-      'Trabajo eléctrico certificado en Ottawa: luminarias, contactos, protección GFCI, rotulado de tablero y revisión antes de publicar. Permisos gestionados.',
+      'Trabajo eléctrico en Ottawa: luminarias, contactos, protección GFCI, rotulado de tablero y revisión antes de publicar. Permisos gestionados cuando aplican.',
     intro:
-      'La instalación eléctrica es la parte de la casa en la que nadie piensa hasta que un inspector la escribe. Nuestros electricistas certificados hacen el trabajo correctamente, con permiso cuando corresponde.',
+      'La instalación eléctrica es la parte de la casa en la que nadie piensa hasta que un inspector la escribe. Hacemos el trabajo correctamente, con permiso cuando corresponde.',
     includes: [
       'Luminarias, ventiladores de techo y empotrados suministrados e instalados',
       'Apagadores, contactos y atenuadores cambiados, incluidos contactos con USB',
@@ -739,11 +736,11 @@ const ES = {
     ],
     benefits: [
       { title: 'Despeja la inspección desde antes', text: 'Los hallazgos eléctricos asustan al comprador más que casi cualquier otro punto del reporte. Resolverlos antes los saca de la negociación.' },
-      { title: 'Trabajo certificado y documentado', text: 'Lo hacen electricistas certificados y con permiso cuando se requiere, así usted tiene algo que mostrar y no algo que explicar.' },
+      { title: 'Trabajo documentado', text: 'La obra se tramita con permiso e inspección cuando se requiere, así usted tiene papeles que entregar y no algo que explicar.' },
       { title: 'La luz cambia cómo se sienten los cuartos', text: 'Luminarias tenues o anticuadas hacen que buenos cuartos salgan mal en foto. Renovar la iluminación es de las mejoras más rentables por peso invertido.' },
     ],
     faq: [
-      { q: '¿Sus electricistas están certificados?', a: 'Sí. El trabajo eléctrico lo realizan electricistas certificados y gestionamos permiso e inspección ante la autoridad correspondiente cuando la obra lo exige.' },
+      { q: '¿Se encargan de los permisos?', a: 'Sí. Cuando la obra requiere permiso e inspección, gestionamos ambos ante la autoridad correspondiente para que quede registrada.' },
       { q: 'Tenemos cableado antiguo. ¿Y ahora?', a: 'Lo evaluamos y le damos una respuesta clara sobre lo que van a esperar aseguradoras y compradores. A veces es un arreglo puntual y a veces un proyecto mayor, y conviene saberlo antes de publicar.' },
     ],
   },
@@ -795,7 +792,6 @@ export function getServiceList(lang) {
       name: c.name,
       tagline: c.tagline,
       img: SERVICE_IMAGES[key],
-      isNew: NEW_SERVICES.includes(key),
     };
   });
 }

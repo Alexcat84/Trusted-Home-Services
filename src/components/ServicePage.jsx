@@ -149,10 +149,7 @@ export default function ServicePage({ serviceKey }) {
                       navigateTo(servicePath(s.key));
                     }}
                   >
-                    <span className="service-others-name">
-                      {s.name}
-                      {s.isNew && <span className="service-badge">{t('services.newBadge')}</span>}
-                    </span>
+                    <span className="service-others-name">{s.name}</span>
                     <span className="service-others-tagline">{s.tagline}</span>
                   </a>
                 </li>

@@ -200,10 +200,7 @@ function Services() {
                   navigateTo(servicePath(s.key));
                 }}
               >
-                <span className="services-index-name">
-                  {s.name}
-                  {s.isNew && <span className="service-badge">{t('services.newBadge')}</span>}
-                </span>
+                <span className="services-index-name">{s.name}</span>
                 <span className="services-index-tagline">{s.tagline}</span>
               </a>
             </li>

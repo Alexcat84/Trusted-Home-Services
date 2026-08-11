@@ -146,10 +146,7 @@ export default function Header() {
                                 navigateTo(servicePath(s.key));
                               }}
                             >
-                              <span className="services-menu-name">
-                                {s.name}
-                                {s.isNew && <span className="service-badge">{t('services.newBadge')}</span>}
-                              </span>
+                              <span className="services-menu-name">{s.name}</span>
                               <span className="services-menu-tagline">{s.tagline}</span>
                             </a>
                           </li>

@@ -383,10 +383,30 @@ a:hover {
   padding: 0;
   text-align: left;
 }
-/* TEMP: hero layout debug. Remove when distribution is approved */
-.hero-col--left {
+/* Hero layout guides.
+   The coloured outlines below mark the measured zones of the three column hero and
+   are kept on purpose as a reference for where content belongs. They are off by
+   default. To see them again, add the class layout-debug to the body element:
+     document.body.classList.add('layout-debug')
+   Only the outlines are behind the switch. The layout properties stay live. */
+.layout-debug .hero-col--left {
   outline: 3px solid #ff3860;
   outline-offset: -3px;
+}
+.layout-debug .hero-col--center {
+  outline: 3px solid #48c774;
+  outline-offset: -3px;
+}
+.layout-debug .hero-col--right {
+  outline: 3px solid #3298dc;
+  outline-offset: -3px;
+}
+.layout-debug .hero-center-copy {
+  outline: 3px solid #ff44cc;
+  outline-offset: -3px;
+}
+
+.hero-col--left {
   align-items: center;
 }
 .hero-col--left .hero-copy {
@@ -400,14 +420,10 @@ a:hover {
   text-align: center;
 }
 .hero-col--center {
-  outline: 3px solid #48c774;
-  outline-offset: -3px;
   align-items: center;
   text-align: center;
 }
 .hero-col--right {
-  outline: 3px solid #3298dc;
-  outline-offset: -3px;
   align-items: flex-end;
 }
 .hero-col {
@@ -431,10 +447,8 @@ a:hover {
 .hero-col--center .hero-subtitle {
   margin-bottom: 0;
 }
-/* TEMP: hero layout debug. Central copy box */
+/* Central copy box. Its guide outline is defined with the others above. */
 .hero-center-copy {
-  outline: 3px solid #ff44cc;
-  outline-offset: -3px;
   width: 100%;
   max-width: 100%;
   padding: 0 clamp(1rem, 2vw, 2rem);
@@ -3157,16 +3171,6 @@ a:hover {
   font-size: 0.85rem;
   color: var(--color-text-muted);
   line-height: 1.4;
-}
-.service-badge {
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  background: var(--color-accent);
-  color: var(--color-text-on-dark);
-  border-radius: 999px;
-  padding: 0.1rem 0.45rem;
 }
 
 /* Home page index that replaced the old card grid */
