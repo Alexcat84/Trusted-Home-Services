@@ -425,6 +425,8 @@ a:hover {
   padding-top: calc(5.5rem + 0.75rem);
   padding-left: 0;
   padding-right: 0;
+  /* The reel below runs to the edge of the measured column, so no bottom gutter here. */
+  padding-bottom: 0;
 }
 .hero-col--center .hero-subtitle {
   margin-bottom: 0;
@@ -439,24 +441,21 @@ a:hover {
   text-align: center;
   box-sizing: border-box;
 }
-/* Renovation reel: fills whatever height the center column has left under the copy. */
+/* Renovation reel: flush to the measured column, filling every pixel left under the copy. */
 .hero-video-wrap {
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  padding: clamp(0.75rem, 1.5vw, 1.25rem) clamp(1rem, 2vw, 2rem) 0;
+  padding: 0;
+  margin: 0;
   box-sizing: border-box;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .hero-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
   background: var(--color-primary);
 }
 .hero-copy {
@@ -535,9 +534,11 @@ a:hover {
   .hero-col--center {
     order: 1;
   }
-  /* No column height to fill once the grid stacks, so the reel keeps its own shape. */
+  /* No column height to fill once the grid stacks, so the reel keeps its own shape,
+     centred like the copy and testimonials above and below it. */
   .hero-video-wrap {
     flex: 0 0 auto;
+    justify-content: center;
     padding-bottom: 0.5rem;
   }
   .hero-video {
