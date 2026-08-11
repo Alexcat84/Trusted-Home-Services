@@ -6,7 +6,8 @@ export const TRANSLATIONS = {
       subtitle: 'Smart fixes, clean execution, a smoother sale. For homeowners and real estate professionals',
       cta1: 'Get a free quote',
       cta2: 'Call (613) 204-8000',
-      scroll: 'Scroll'
+      scroll: 'Scroll',
+      videoLabel: 'A home we prepared in Ottawa, from bare walls to move-in ready'
     },
     homeStats: {
       qualityTitle: 'Quality guaranteed',
@@ -373,7 +374,8 @@ export const TRANSLATIONS = {
       subtitle: 'Réparations intelligentes, exécution soignée, vente plus fluide. Pour propriétaires et professionnels de l\'immobilier',
       cta1: 'Obtenir un devis gratuit',
       cta2: 'Appeler (613) 204-8000',
-      scroll: 'Défiler'
+      scroll: 'Défiler',
+      videoLabel: 'Une maison que nous avons préparée à Ottawa, des murs bruts jusqu\'à la remise des clés'
     },
     homeStats: {
       qualityTitle: 'Qualité garantie',
@@ -740,7 +742,8 @@ export const TRANSLATIONS = {
       subtitle: 'Arreglos inteligentes, ejecución impecable, venta más fluida. Para propietarios y profesionales inmobiliarios',
       cta1: 'Pedir cotización gratuita',
       cta2: 'Llamar (613) 204-8000',
-      scroll: 'Desplazar'
+      scroll: 'Desplazar',
+      videoLabel: 'Una casa que preparamos en Ottawa, de paredes en obra a lista para habitar'
     },
     homeStats: {
       qualityTitle: 'Calidad garantizada',

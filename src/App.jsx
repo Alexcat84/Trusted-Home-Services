@@ -106,6 +106,14 @@ const PROJECTS_PAGE_HASHES = ['our-projects', 'nos-projets', 'nuestros-proyectos
 
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
+  // Autoplay is motion; readers who ask for less of it get the poster and controls instead.
+  const [reduceMotion] = useState(() => {
+    try {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch {
+      return false;
+    }
+  });
 
   const quoteHash = getSectionHash(lang, 'quote');
   return (
@@ -138,6 +146,21 @@ function Hero({ skipAnimation = false }) {
             <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
             <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
           </div>
+          <motion.div className="hero-video-wrap" variants={item}>
+            <video
+              className="hero-video"
+              poster="/videos/hero-renovation-poster.jpg"
+              autoPlay={!reduceMotion}
+              controls={reduceMotion}
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label={t('hero.videoLabel')}
+            >
+              <source src="/videos/hero-renovation.mp4" type="video/mp4" />
+            </video>
+          </motion.div>
         </div>
         <motion.div className="hero-col hero-col--right" variants={item}>
           <Testimonials variant="hero" />

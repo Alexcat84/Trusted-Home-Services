@@ -36,3 +36,7 @@ Thumbs.db
 *.sublime-*
 .vercel
 .env*.local
+
+# Source video masters. Only the web-encoded copies in public/videos are tracked.
+/*.mp4
+/*.mov
