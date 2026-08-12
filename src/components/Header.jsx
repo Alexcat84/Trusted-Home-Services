@@ -4,6 +4,7 @@ import { getSectionHash } from '../translations';
 import { useQuote } from '../context/useQuote';
 import { getServiceList } from '../content/services';
 import { navigateTo, servicePath } from '../lib/routing';
+import ServiceIcon from './ServiceIcon';
 
 const NAV_KEYS = ['home', 'services', 'how', 'projects', 'team', 'quote'];
 /** The two audiences that sit under the "work with us" panel. */
@@ -18,7 +19,7 @@ export default function Header() {
   const [openMenu, setOpenMenu] = useState(null);
   const [currentHash, setCurrentHash] = useState('');
   const serviceLinks = getServiceList(lang);
-  const menuRefs = useRef({});
+  const headerRef = useRef(null);
   const rafPendingRef = useRef(false);
   const rafIdRef = useRef(null);
   const sectionElsRef = useRef([]);
@@ -29,8 +30,10 @@ export default function Header() {
   useEffect(() => {
     if (!openMenu) return undefined;
     const onPointerDown = (e) => {
-      const panel = menuRefs.current[openMenu];
-      if (panel && !panel.contains(e.target)) setOpenMenu(null);
+      // The toggle sits in the bar and the services panel is its sibling, so the
+      // test has to cover the whole header. Checking only the panel would treat a
+      // click on its own toggle as outside, closing and reopening it in one go.
+      if (headerRef.current && !headerRef.current.contains(e.target)) setOpenMenu(null);
     };
     const onKeyDown = (e) => {
       if (e.key === 'Escape') setOpenMenu(null);
@@ -99,7 +102,7 @@ export default function Header() {
   }, [lang]);
 
   return (
-    <header className="header" id="header">
+    <header className="header" id="header" ref={headerRef}>
       <div className="header-inner">
         <a
           href={`/#${hash('home')}`}
@@ -121,61 +124,61 @@ export default function Header() {
               const isActive = currentHash === sectionHash.toLowerCase() || (key === 'home' && !currentHash);
               const isCta = key === 'quote';
 
-              // Two entries open a panel: nine service pages, and the two audiences
-              // who come here to work with the business rather than to hire it.
-              if (key === 'services' || key === 'team') {
+              // Services opens a full width panel below the bar, because nine entries
+              // with a line of description each do not fit a small dropdown.
+              if (key === 'services') {
                 const isOpen = openMenu === key;
-                const items =
-                  key === 'services'
-                    ? serviceLinks.map((s) => ({
-                        id: s.key,
-                        name: s.name,
-                        tagline: s.tagline,
-                        onSelect: () => navigateTo(servicePath(s.key)),
-                      }))
-                    : TEAM_KEYS.map((k) => ({
-                        id: k,
-                        name: t(`nav.${k}`),
-                        tagline: t(`nav.${k}Tagline`),
-                        onSelect: () => navigateTo('/', hash(k)),
-                      }));
+                return (
+                  <li key={key} className={`nav-item-has-menu ${isOpen ? 'is-open' : ''}`}>
+                    <button
+                      type="button"
+                      className={`nav-link nav-link--toggle ${isActive ? 'nav-link--active' : ''}`}
+                      aria-expanded={isOpen}
+                      aria-controls="services-panel"
+                      onClick={() => setOpenMenu((current) => (current === key ? null : key))}
+                    >
+                      {t('nav.services')}
+                      <span className="nav-caret" aria-hidden="true" />
+                    </button>
+                  </li>
+                );
+              }
 
+              // Work with us keeps the compact dropdown: two entries would look lost
+              // spread across a full width bar.
+              if (key === 'team') {
+                const isOpen = openMenu === key;
                 return (
                   <li
                     key={key}
-                    ref={(el) => { menuRefs.current[key] = el; }}
                     className={`nav-item-has-menu ${isOpen ? 'is-open' : ''}`}
                   >
                     <button
                       type="button"
                       className={`nav-link nav-link--toggle ${isActive ? 'nav-link--active' : ''}`}
                       aria-expanded={isOpen}
-                      aria-controls={`${key}-menu`}
+                      aria-controls="team-menu"
                       onClick={() => setOpenMenu((current) => (current === key ? null : key))}
                     >
-                      {t(`nav.${key}`)}
+                      {t('nav.team')}
                       <span className="nav-caret" aria-hidden="true" />
                     </button>
-                    <div
-                      className={`services-menu ${key === 'team' ? 'services-menu--narrow' : ''}`}
-                      id={`${key}-menu`}
-                      hidden={!isOpen}
-                    >
+                    <div className="services-menu services-menu--narrow" id="team-menu" hidden={!isOpen}>
                       <ul className="services-menu-list">
-                        {items.map((entry) => (
-                          <li key={entry.id}>
+                        {TEAM_KEYS.map((k) => (
+                          <li key={k}>
                             <a
-                              href="#"
+                              href={`/#${hash(k)}`}
                               className="services-menu-link"
                               onClick={(e) => {
                                 e.preventDefault();
                                 setOpenMenu(null);
                                 setMenuOpen(false);
-                                entry.onSelect();
+                                navigateTo('/', hash(k));
                               }}
                             >
-                              <span className="services-menu-name">{entry.name}</span>
-                              <span className="services-menu-tagline">{entry.tagline}</span>
+                              <span className="services-menu-name">{t(`nav.${k}`)}</span>
+                              <span className="services-menu-tagline">{t(`nav.${k}Tagline`)}</span>
                             </a>
                           </li>
                         ))}
@@ -210,6 +213,7 @@ export default function Header() {
                     className={`nav-link ${isActive ? 'nav-link--active' : ''}`}
                     onClick={(e) => {
                       setMenuOpen(false);
+                      setOpenMenu(null);
                       // From a service page the hash alone would not leave the page, so route home first.
                       if (window.location.pathname !== '/') {
                         e.preventDefault();
@@ -248,6 +252,40 @@ export default function Header() {
           <span></span>
           <span></span>
         </button>
+      </div>
+      {/* Full width panel, a sibling of the bar rather than a child of the nav item,
+          so it can span the whole header instead of hanging off one entry. */}
+      <div
+        className="services-panel"
+        id="services-panel"
+        hidden={openMenu !== 'services'}
+      >
+        <div className="container container--wide">
+          <ul className="services-panel-grid">
+            {serviceLinks.map((s) => (
+              <li key={s.key}>
+                <a
+                  href={servicePath(s.key)}
+                  className="services-panel-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setOpenMenu(null);
+                    setMenuOpen(false);
+                    navigateTo(servicePath(s.key));
+                  }}
+                >
+                  <span className="services-panel-icon" aria-hidden="true">
+                    <ServiceIcon name={s.key} />
+                  </span>
+                  <span>
+                    <span className="services-panel-name">{s.name}</span>
+                    <span className="services-panel-desc">{s.tagline}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </header>
   );

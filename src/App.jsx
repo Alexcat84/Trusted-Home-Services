@@ -8,6 +8,7 @@ import { getSectionHash } from './translations';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ServicePage from './components/ServicePage';
+import ServiceIcon from './components/ServiceIcon';
 import { getServiceList } from './content/services';
 import { getHeroVideo } from './content/heroVideo';
 import { getServiceFromPath, navigateTo, servicePath } from './lib/routing';
@@ -191,23 +192,27 @@ function Services() {
       <div className="container container--wide">
         <h2 className="section-title"><AnimatedSectionTitle text={t('services.title')} /></h2>
         <p className="section-intro">{t('services.intro')}</p>
-        <ul className="services-index">
+        <div className="services-grid">
           {services.map((s) => (
-            <li key={s.key}>
-              <a
-                href={servicePath(s.key)}
-                className="services-index-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigateTo(servicePath(s.key));
-                }}
-              >
-                <span className="services-index-name">{s.name}</span>
-                <span className="services-index-tagline">{s.tagline}</span>
-              </a>
-            </li>
+            <a
+              key={s.key}
+              href={servicePath(s.key)}
+              className="services-card"
+              onClick={(e) => {
+                e.preventDefault();
+                navigateTo(servicePath(s.key));
+              }}
+            >
+              <span className="services-card-head">
+                <span className="services-card-icon" aria-hidden="true">
+                  <ServiceIcon name={s.key} />
+                </span>
+                <span className="services-card-name">{s.name}</span>
+              </span>
+              <span className="services-card-desc">{s.tagline}</span>
+            </a>
           ))}
-        </ul>
+        </div>
       </div>
     </AnimatedSection>
   );

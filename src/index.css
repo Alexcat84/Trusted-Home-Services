@@ -3190,15 +3190,6 @@ button.nav-link {
   line-height: 1.4;
 }
 
-/* Home page index that replaced the old card grid */
-.services-index {
-  list-style: none;
-  margin: 2rem 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 0.4rem;
-}
 
 /* Service page */
 .service-page {
@@ -3467,4 +3458,145 @@ button.nav-link {
 }
 .services-menu--narrow .services-menu-list {
   grid-template-columns: 1fr;
+}
+
+/* ============================================
+   Services: full width nav panel and the card grid on the home page
+   Layout follows the approved design reference. Colours are mapped onto this
+   project's tokens, and the emoji icons are replaced by inline SVG.
+   ============================================ */
+.services-panel {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-primary-dark);
+  animation: services-panel-in 0.2s ease;
+}
+.services-panel[hidden] {
+  display: none;
+}
+@keyframes services-panel-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.services-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  padding: 1.75rem 0 2rem;
+  list-style: none;
+  margin: 0;
+}
+.services-panel-item {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  padding: 0.7rem;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.85);
+  transition: background var(--transition), color var(--transition);
+}
+.services-panel-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--color-text-on-dark);
+}
+.services-panel-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: rgba(249, 119, 43, 0.16);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.services-panel-name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.services-panel-desc {
+  display: block;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+/* Card grid on the home page. Scoped to the section because an older rule,
+   .services-grid:not(.services-grid--four), carries two classes of specificity
+   and would otherwise keep forcing an auto-fit track count. */
+.section-services .services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
+  margin-top: 2rem;
+}
+.section-services .services-card,
+.services-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 1.3rem;
+  color: var(--color-text);
+  transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+}
+.services-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+.services-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.services-card-icon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: var(--color-bg-alt);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.services-card-name {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 1.05rem;
+}
+.services-card-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 1000px) {
+  .services-panel-grid,
+  .section-services .services-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 768px) {
+  /* In the mobile drawer the panel is part of the stack, not a bar under it. */
+  .services-panel {
+    border-top: 0;
+    background: transparent;
+  }
+  .services-panel-grid,
+  .section-services .services-grid {
+    grid-template-columns: 1fr;
+    padding-top: 0.5rem;
+  }
+  .services-card {
+    padding: 1.1rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .services-panel { animation: none; }
+  .services-card:hover { transform: none; }
 }
