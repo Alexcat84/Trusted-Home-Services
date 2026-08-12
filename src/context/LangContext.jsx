@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { t, getSectionHash, getSectionKeyFromHash } from '../translations';
 import { LangContext } from './langContextInstance';
+import { normalizeLocale } from '../lib/locales';
 
 const STORAGE_KEY = 'trusted_lang';
 
 export function LangProvider({ children }) {
   const [lang, setLangState] = useState(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved === 'fr' || saved === 'es' ? saved : 'en';
+      // normalizeLocale also covers a visitor whose saved choice is now switched off.
+      return normalizeLocale(localStorage.getItem(STORAGE_KEY));
     } catch {
       return 'en';
     }
@@ -18,7 +19,7 @@ export function LangProvider({ children }) {
     try {
       localStorage.setItem(STORAGE_KEY, lang);
     } catch { /* storage unavailable (e.g. private mode); ignore */ }
-    document.documentElement.lang = lang === 'es' ? 'es' : lang === 'fr' ? 'fr' : 'en';
+    document.documentElement.lang = lang;
     const hash = window.location.hash.slice(1);
     const sectionKey = getSectionKeyFromHash(hash);
     if (sectionKey) {
@@ -27,7 +28,7 @@ export function LangProvider({ children }) {
     }
   }, [lang]);
 
-  const setLang = (l) => setLangState(l === 'en' || l === 'fr' || l === 'es' ? l : 'en');
+  const setLang = (l) => setLangState(normalizeLocale(l));
   const translate = (key) => t(lang, key);
 
   return (

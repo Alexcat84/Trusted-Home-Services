@@ -5,6 +5,7 @@ import { useQuote } from '../context/useQuote';
 import { getServiceList } from '../content/services';
 import { navigateTo, servicePath } from '../lib/routing';
 import ServiceIcon from './ServiceIcon';
+import { ACTIVE_LOCALES } from '../lib/locales';
 
 const NAV_KEYS = ['home', 'services', 'how', 'projects', 'team', 'quote'];
 /** The two audiences that sit under the "work with us" panel. */
@@ -229,7 +230,7 @@ export default function Header() {
           </ul>
         </nav>
         <div className="lang-switcher" role="group" aria-label="Language">
-          {['en', 'fr', 'es'].map((l) => (
+          {ACTIVE_LOCALES.map((l) => (
             <button
               key={l}
               type="button"
