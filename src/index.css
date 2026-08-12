@@ -3460,3 +3460,11 @@ button.nav-link {
 .footer-link-button:hover {
   color: var(--color-accent);
 }
+
+/* The work-with-us panel holds two entries, so it does not need the width of the service grid. */
+.services-menu--narrow {
+  min-width: 300px;
+}
+.services-menu--narrow .services-menu-list {
+  grid-template-columns: 1fr;
+}

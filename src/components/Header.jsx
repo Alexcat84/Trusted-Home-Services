@@ -5,16 +5,20 @@ import { useQuote } from '../context/useQuote';
 import { getServiceList } from '../content/services';
 import { navigateTo, servicePath } from '../lib/routing';
 
-const NAV_KEYS = ['home', 'services', 'how', 'projects', 'realtors', 'partners', 'quote'];
+const NAV_KEYS = ['home', 'services', 'how', 'projects', 'team', 'quote'];
+/** The two audiences that sit under the "work with us" panel. */
+const TEAM_KEYS = ['realtors', 'partners'];
+/** Entries that scroll to a section. "team" is a panel, so it has no section of its own. */
+const SECTION_KEYS = ['home', 'services', 'how', 'projects', 'realtors', 'partners', 'quote'];
 
 export default function Header() {
   const { lang, setLang, t } = useLang();
   const { openQuote } = useQuote();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null);
   const [currentHash, setCurrentHash] = useState('');
   const serviceLinks = getServiceList(lang);
-  const servicesRef = useRef(null);
+  const menuRefs = useRef({});
   const rafPendingRef = useRef(false);
   const rafIdRef = useRef(null);
   const sectionElsRef = useRef([]);
@@ -23,12 +27,13 @@ export default function Header() {
 
   // An open panel should close the way people expect: click elsewhere, or press Escape.
   useEffect(() => {
-    if (!servicesOpen) return undefined;
+    if (!openMenu) return undefined;
     const onPointerDown = (e) => {
-      if (servicesRef.current && !servicesRef.current.contains(e.target)) setServicesOpen(false);
+      const panel = menuRefs.current[openMenu];
+      if (panel && !panel.contains(e.target)) setOpenMenu(null);
     };
     const onKeyDown = (e) => {
-      if (e.key === 'Escape') setServicesOpen(false);
+      if (e.key === 'Escape') setOpenMenu(null);
     };
     document.addEventListener('pointerdown', onPointerDown);
     document.addEventListener('keydown', onKeyDown);
@@ -36,7 +41,7 @@ export default function Header() {
       document.removeEventListener('pointerdown', onPointerDown);
       document.removeEventListener('keydown', onKeyDown);
     };
-  }, [servicesOpen]);
+  }, [openMenu]);
 
   useEffect(() => {
     const updateHash = () => {
@@ -50,7 +55,7 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    const sectionIds = NAV_KEYS.map((key) => getSectionHash(lang, key));
+    const sectionIds = SECTION_KEYS.map((key) => getSectionHash(lang, key));
     sectionElsRef.current = sectionIds.map((id) => document.getElementById(id));
     lastActiveIdRef.current = '';
 
@@ -116,40 +121,61 @@ export default function Header() {
               const isActive = currentHash === sectionHash.toLowerCase() || (key === 'home' && !currentHash);
               const isCta = key === 'quote';
 
-              // Services is the one entry that opens a panel: nine pages is too many for a flat bar.
-              if (key === 'services') {
+              // Two entries open a panel: nine service pages, and the two audiences
+              // who come here to work with the business rather than to hire it.
+              if (key === 'services' || key === 'team') {
+                const isOpen = openMenu === key;
+                const items =
+                  key === 'services'
+                    ? serviceLinks.map((s) => ({
+                        id: s.key,
+                        name: s.name,
+                        tagline: s.tagline,
+                        onSelect: () => navigateTo(servicePath(s.key)),
+                      }))
+                    : TEAM_KEYS.map((k) => ({
+                        id: k,
+                        name: t(`nav.${k}`),
+                        tagline: t(`nav.${k}Tagline`),
+                        onSelect: () => navigateTo('/', hash(k)),
+                      }));
+
                 return (
                   <li
                     key={key}
-                    ref={servicesRef}
-                    className={`nav-item-has-menu ${servicesOpen ? 'is-open' : ''}`}
+                    ref={(el) => { menuRefs.current[key] = el; }}
+                    className={`nav-item-has-menu ${isOpen ? 'is-open' : ''}`}
                   >
                     <button
                       type="button"
                       className={`nav-link nav-link--toggle ${isActive ? 'nav-link--active' : ''}`}
-                      aria-expanded={servicesOpen}
-                      aria-controls="services-menu"
-                      onClick={() => setServicesOpen((open) => !open)}
+                      aria-expanded={isOpen}
+                      aria-controls={`${key}-menu`}
+                      onClick={() => setOpenMenu((current) => (current === key ? null : key))}
                     >
-                      {t('nav.services')}
+                      {t(`nav.${key}`)}
                       <span className="nav-caret" aria-hidden="true" />
                     </button>
-                    <div className="services-menu" id="services-menu" hidden={!servicesOpen}>
+                    <div
+                      className={`services-menu ${key === 'team' ? 'services-menu--narrow' : ''}`}
+                      id={`${key}-menu`}
+                      hidden={!isOpen}
+                    >
                       <ul className="services-menu-list">
-                        {serviceLinks.map((s) => (
-                          <li key={s.key}>
+                        {items.map((entry) => (
+                          <li key={entry.id}>
                             <a
-                              href={servicePath(s.key)}
+                              href="#"
                               className="services-menu-link"
                               onClick={(e) => {
                                 e.preventDefault();
-                                setServicesOpen(false);
+                                setOpenMenu(null);
                                 setMenuOpen(false);
-                                navigateTo(servicePath(s.key));
+                                entry.onSelect();
                               }}
                             >
-                              <span className="services-menu-name">{s.name}</span>
-                              <span className="services-menu-tagline">{s.tagline}</span>
+                              <span className="services-menu-name">{entry.name}</span>
+                              <span className="services-menu-tagline">{entry.tagline}</span>
                             </a>
                           </li>
                         ))}

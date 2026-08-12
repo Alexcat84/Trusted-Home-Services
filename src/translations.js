@@ -1,6 +1,6 @@
 export const TRANSLATIONS = {
   en: {
-    nav: { home: 'Home', services: 'Our Services', how: 'How We Work', projects: 'Our Projects', realtors: 'For Realtors', partners: 'Become a Partner', quote: 'Free Quote' },
+    nav: { home: 'Home', services: 'Our Services', how: 'How We Work', projects: 'Our Projects', team: 'Work With Us', realtors: 'For Realtors', realtorsTagline: 'Get your listings market ready, fast.', partners: 'Become a Partner', partnersTagline: 'Join the crew we call on for work.', quote: 'Free Quote' },
     hero: {
       title: 'Your listing, market-ready',
       subtitle: 'Smart fixes, clean execution, a smoother sale. For homeowners and real estate professionals',
@@ -374,7 +374,7 @@ export const TRANSLATIONS = {
     cookieConsent: { message: 'We use cookies to improve your experience and analyse site traffic. By clicking Accept you agree to our use of cookies. See our', privacyLink: 'Privacy Policy', accept: 'Accept', decline: 'Decline' }
   },
   fr: {
-    nav: { home: 'Accueil', services: 'Nos services', how: 'Notre processus', projects: 'Nos projets', realtors: 'Pour les courtiers', partners: 'Devenir partenaire', quote: 'Devis gratuit' },
+    nav: { home: 'Accueil', services: 'Nos services', how: 'Notre processus', projects: 'Nos projets', team: 'Travaillez avec nous', realtors: 'Pour les courtiers', realtorsTagline: 'Vos inscriptions prêtes pour le marché, rapidement.', partners: 'Devenir partenaire', partnersTagline: 'Joignez l’équipe que nous appelons pour les travaux.', quote: 'Devis gratuit' },
     hero: {
       title: 'Votre annonce, prête pour le marché',
       subtitle: 'Réparations intelligentes, exécution soignée, vente plus fluide. Pour propriétaires et professionnels de l\'immobilier',
@@ -748,7 +748,7 @@ export const TRANSLATIONS = {
     cookieConsent: { message: 'Nous utilisons des cookies pour améliorer votre expérience et analyser le trafic. En cliquant sur Accepter, vous acceptez notre utilisation des cookies. Voir notre', privacyLink: 'Politique de confidentialité', accept: 'Accepter', decline: 'Refuser' }
   },
   es: {
-    nav: { home: 'Inicio', services: 'Nuestros servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', realtors: 'Para agentes', partners: 'Ser socio', quote: 'Cotización gratuita' },
+    nav: { home: 'Inicio', services: 'Nuestros servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', team: 'Trabaje con nosotros', realtors: 'Para agentes', realtorsTagline: 'Sus listados listos para el mercado, rápido.', partners: 'Ser socio', partnersTagline: 'Súmese al equipo al que llamamos para trabajar.', quote: 'Cotización gratuita' },
     hero: {
       title: 'Su listado, listo para el mercado',
       subtitle: 'Arreglos inteligentes, ejecución impecable, venta más fluida. Para propietarios y profesionales inmobiliarios',
