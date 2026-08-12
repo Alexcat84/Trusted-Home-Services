@@ -5,8 +5,9 @@ abierta en la carpeta del proyecto. Adjunta también, o deja en la carpeta para
 que los lea, estos archivos que van en este mismo paquete:
 
 - `ESTADO-ACTUAL.md`, qué existe hoy y sobre qué se construye
-- `captura-home-inicio.png` y `captura-home-completa.png`, el aspecto actual
-- `captura-pagina-servicio.png`, una de las nueve páginas de servicio
+- `estado-home.html`, la portada actual renderizada, en un archivo autónomo
+- `estado-pagina-servicio.html`, una página de servicio, igual de autónoma
+- Las capturas `captura-*.png`, incluido el panel de servicios abierto
 
 ---
 
@@ -34,6 +35,12 @@ Antes de escribir nada, lee el código y confirma lo que encuentres:
 
 No des por buenos los valores que aparezcan en ningún resumen sin verificarlos
 en el código.
+
+Si prefieres ver el resultado antes de leer el código, o si no consigues
+levantar el servidor de desarrollo, abre `estado-home.html` y
+`estado-pagina-servicio.html`. Son instantáneas del sitio funcionando, con el
+marcado y los estilos ya calculados, y se abren sin depender de nada. Eso sí:
+son el resultado, no la fuente. Lo que se edita vive en `src/`.
 
 ## Qué es una versión
 
