@@ -41,8 +41,8 @@ export const SERVICE_IMAGES = {
   flooring: '/images/flooring.jpg',
   cleaning: '/images/cleaning services 1.png',
   handyman: '/images/handyman.jpg',
-  electrical: '/images/Multiple tools.png',
-  inspection: '/images/Humidity problem.png',
+  electrical: '/images/electrical-work.webp',
+  inspection: '/images/home-inspection.webp',
 };
 
 const EN = {
