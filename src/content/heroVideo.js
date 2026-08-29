@@ -1,14 +1,18 @@
 /**
  * The reel that plays in the centre of the hero.
  *
- * Two cuts are encoded and shipped. To swap which one the site shows, change
- * ACTIVE below and nothing else. Both are muted loops, so neither carries audio.
+ * Every cut we have encoded stays shipped, so switching between them is a change
+ * of one word here and nothing else. All are muted loops, so none carries audio.
  *
  * Masters live in media-source/ and stay out of the repo. The copies here are
- * re-encoded for the web: 1280 wide, no audio track, faststart enabled.
+ * re-encoded for the web: 1280 wide, audio track stripped, faststart enabled.
  */
 
 export const HERO_VIDEOS = {
+  proposal: {
+    src: '/videos/hero-proposal.mp4',
+    poster: '/videos/hero-proposal-poster.jpg',
+  },
   primary: {
     src: '/videos/hero-primary.mp4',
     poster: '/videos/hero-primary-poster.jpg',
@@ -19,9 +23,9 @@ export const HERO_VIDEOS = {
   },
 };
 
-/** Which cut is live. Set to 'alternate' to fall back to the earlier reel. */
-export const ACTIVE = 'primary';
+/** Which cut is live. Set to any key above to swap what the hero plays. */
+export const ACTIVE = 'proposal';
 
 export function getHeroVideo() {
-  return HERO_VIDEOS[ACTIVE] || HERO_VIDEOS.primary;
+  return HERO_VIDEOS[ACTIVE] || HERO_VIDEOS.proposal;
 }
