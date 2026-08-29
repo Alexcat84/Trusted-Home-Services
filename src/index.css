@@ -449,11 +449,11 @@ button.nav-link {
   /* Holgura del reel dentro de su columna. Un solo sitio para ajustar el encuadre. */
   --hero-video-inset-x: clamp(1.25rem, 3vw, 3.5rem);
   --hero-video-inset-b: clamp(1.5rem, 3.5vw, 4rem);
-  /* How far the side columns drop to meet the reel. Zero by default: on short
-     screens the testimonials panel is already taller than the hero, so any extra
-     offset only pushes more of it out of view. The tall screen rule below turns
-     it on where there is room to spare. */
-  --hero-side-nudge: 0px;
+  /* How far the side columns drop to meet the reel. Now that the testimonials
+     panel fits, this is the full headline height, which lines the side content
+     up on the centre of the reel. Short screens opt out below: there the hero is
+     not tall enough for the panel at any offset, so adding one only hides more. */
+  --hero-side-nudge: 999px;
 }
 .hero-col.hero-col--center {
   justify-content: flex-start;
@@ -479,19 +479,16 @@ button.nav-link {
    below the headline block and stops short of the bottom, so both offsets are
    mirrored here. --hero-copy-h is published by the Hero component because the
    headline wraps differently by width and by language. */
-@media (min-height: 950px) {
+@media (max-height: 949px) {
   :root {
-    --hero-side-nudge: 4vh;
+    --hero-side-nudge: 0px;
   }
 }
 .hero-col--left,
 .hero-col--right {
   justify-content: center;
-  /* The nudge is capped: the testimonials panel is taller than the reel, so
-     matching the centres exactly would push it past the bottom of the hero,
-     which clips. This closes most of the gap and still fits at short viewports. */
-  padding-top: calc(5.5rem + 1rem + min(var(--hero-copy-h, 150px), var(--hero-side-nudge)));
-  padding-bottom: clamp(1rem, 2vw, 2rem);
+  padding-top: calc(5.5rem + 0.75rem + min(var(--hero-copy-h, 150px), var(--hero-side-nudge)));
+  padding-bottom: var(--hero-video-inset-b);
 }
 
 /* Renovation reel: inset from the sides and lifted off the bottom of its column,
@@ -557,19 +554,78 @@ button.nav-link {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
+/* This panel lives in a column of about 260px, so the shared testimonial sizes,
+   which were set for a full width section, run tall here. Trimmed so the panel
+   fits beside the reel instead of running past the bottom of the hero. */
+.hero-testimonials .testimonial-avatar {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.5rem;
+}
+.hero-testimonials .testimonial-quote {
+  margin-bottom: 0.5rem;
+}
+.hero-testimonials .testimonial-stars {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
 .hero-testimonials-title {
   margin: 0 0 1.25rem;
   color: var(--color-primary);
-  font-size: clamp(1.65rem, 3vw, 2.3rem);
-  line-height: 1.15;
+  font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+  line-height: 1.25;
   text-align: center;
 }
 .hero-testimonials .testimonials-strip {
   min-height: 250px;
 }
 .hero-testimonials .testimonial-quote {
-  font-size: clamp(1rem, 1.45vw, 1.15rem);
+  font-size: clamp(0.86rem, 1.05vw, 0.95rem);
+  line-height: 1.5;
 }
+/* Laptop screens around 800px tall leave the hero shorter than the panel wants,
+   so the panel gives up a little more here rather than running off the bottom. */
+@media (max-height: 849px) {
+  .hero-testimonials-panel {
+    padding: 1.25rem;
+  }
+  .hero-testimonials-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .hero-testimonials .testimonial-avatar {
+    width: 52px;
+    height: 52px;
+  }
+  .hero-testimonials .testimonial-quote {
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+  /* The header is taller than the base offset assumes at these widths, and the
+     guarantee card is the other block that will not fit, so both give ground. */
+  .hero-col--left,
+  .hero-col--right {
+    padding-top: 7.25rem;
+  }
+  .hero-quality {
+    margin-top: 1.25rem;
+  }
+  .hero-quality .home-stats-seal-img {
+    max-width: 64px;
+  }
+  .hero-quality .home-stats-seal-title {
+    font-size: 1rem;
+  }
+  .hero-quality .home-stats-seal-desc {
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+  .hero-col--left .hero-actions .btn {
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+  }
+}
+
 @media (max-width: 980px) {
   .hero {
     min-height: 100dvh;
