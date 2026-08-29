@@ -115,6 +115,21 @@ function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
   const { openQuote } = useQuote();
   const heroVideo = getHeroVideo();
+  const copyRef = useRef(null);
+
+  // The side columns centre on the reel, which starts below this block. Its height
+  // changes with the viewport and with the language, so it is measured rather than
+  // guessed and handed to the stylesheet as a variable.
+  useEffect(() => {
+    const el = copyRef.current;
+    const hero = el?.closest('.hero');
+    if (!el || !hero || typeof ResizeObserver === 'undefined') return undefined;
+    const publish = () => hero.style.setProperty('--hero-copy-h', `${Math.round(el.offsetHeight)}px`);
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [lang]);
   // Autoplay is motion; readers who ask for less of it get the poster and controls instead.
   const [reduceMotion] = useState(() => {
     try {
@@ -150,7 +165,7 @@ function Hero({ skipAnimation = false }) {
           </div>
         </div>
         <div className="hero-col hero-col--center">
-          <div className="hero-center-copy">
+          <div className="hero-center-copy" ref={copyRef}>
             <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
             <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
           </div>

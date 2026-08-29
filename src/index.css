@@ -445,6 +445,16 @@ button.nav-link {
   box-sizing: border-box;
   padding: calc(5.5rem + 1rem) clamp(1rem, 2vw, 2rem) clamp(1rem, 2vw, 2rem);
 }
+:root {
+  /* Holgura del reel dentro de su columna. Un solo sitio para ajustar el encuadre. */
+  --hero-video-inset-x: clamp(1.25rem, 3vw, 3.5rem);
+  --hero-video-inset-b: clamp(1.5rem, 3.5vw, 4rem);
+  /* How far the side columns drop to meet the reel. Zero by default: on short
+     screens the testimonials panel is already taller than the hero, so any extra
+     offset only pushes more of it out of view. The tall screen rule below turns
+     it on where there is room to spare. */
+  --hero-side-nudge: 0px;
+}
 .hero-col.hero-col--center {
   justify-content: flex-start;
   align-items: center;
@@ -465,12 +475,32 @@ button.nav-link {
   text-align: center;
   box-sizing: border-box;
 }
-/* Renovation reel: flush to the measured column, filling every pixel left under the copy. */
+/* The side columns centre on the reel, not on the whole column. The reel starts
+   below the headline block and stops short of the bottom, so both offsets are
+   mirrored here. --hero-copy-h is published by the Hero component because the
+   headline wraps differently by width and by language. */
+@media (min-height: 950px) {
+  :root {
+    --hero-side-nudge: 4vh;
+  }
+}
+.hero-col--left,
+.hero-col--right {
+  justify-content: center;
+  /* The nudge is capped: the testimonials panel is taller than the reel, so
+     matching the centres exactly would push it past the bottom of the hero,
+     which clips. This closes most of the gap and still fits at short viewports. */
+  padding-top: calc(5.5rem + 1rem + min(var(--hero-copy-h, 150px), var(--hero-side-nudge)));
+  padding-bottom: clamp(1rem, 2vw, 2rem);
+}
+
+/* Renovation reel: inset from the sides and lifted off the bottom of its column,
+   so it reads as framed rather than wedged into the corner. */
 .hero-video-wrap {
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  padding: 0;
+  padding: 0 var(--hero-video-inset-x) var(--hero-video-inset-b);
   margin: 0;
   box-sizing: border-box;
   display: flex;
@@ -561,6 +591,16 @@ button.nav-link {
     min-height: auto;
     height: auto;
     padding: 1.25rem;
+  }
+  /* Stacked, so there is no shared band to centre on and no bottom corner to clear. */
+  .hero-col--left,
+  .hero-col--right {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+  .hero-video-wrap {
+    padding-left: 0;
+    padding-right: 0;
   }
   .hero-col--center {
     order: 1;
