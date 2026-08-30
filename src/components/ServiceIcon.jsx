@@ -27,6 +27,10 @@ const PATHS = {
   electrical: <><path d="M13 3 5 13.5h6L10 21l8-10.5h-6L13 3Z" {...P} /></>,
   // Magnifier over a wall
   inspection: <><circle cx="11" cy="11" r="6" {...P} /><path d="m15.5 15.5 4.5 4.5" {...P} /><path d="M8.5 11h5M11 8.5v5" {...P} /></>,
+  // Yard sign, for the realtor entry in the menu
+  realtors: <><path d="M6 21V5" {...P} /><rect x="6" y="4" width="13" height="7" rx="1" {...P} /><path d="M9.5 7.5h6" {...P} /></>,
+  // Two figures, for the partner entry
+  partners: <><circle cx="9" cy="8" r="3" {...P} /><path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1" {...P} /><circle cx="17.5" cy="9.5" r="2.5" {...P} /><path d="M15.5 14.3A4.6 4.6 0 0 1 21 18.8V20" {...P} /></>,
 };
 
 export default function ServiceIcon({ name }) {

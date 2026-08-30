@@ -187,27 +187,6 @@ export default function Header() {
                       {t('nav.team')}
                       <span className="nav-caret" aria-hidden="true" />
                     </button>
-                    <div className="services-menu services-menu--narrow" id="team-menu" hidden={!isOpen}>
-                      <ul className="services-menu-list">
-                        {TEAM_KEYS.map((k) => (
-                          <li key={k}>
-                            <a
-                              href={`/#${hash(k)}`}
-                              className="services-menu-link"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setOpenMenu(null);
-                                setMenuOpen(false);
-                                navigateTo('/', hash(k));
-                              }}
-                            >
-                              <span className="services-menu-name">{t(`nav.${k}`)}</span>
-                              <span className="services-menu-tagline">{t(`nav.${k}Tagline`)}</span>
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
                   </li>
                 );
               }
@@ -290,6 +269,36 @@ export default function Header() {
                   <span>
                     <span className="services-panel-name">{s.name}</span>
                     <span className="services-panel-desc">{s.tagline}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      {/* Work with us gets the same full width treatment as the services panel.
+          Two dropdowns side by side in different shapes read as an accident. */}
+      <div className="services-panel" id="team-menu" hidden={openMenu !== 'team'}>
+        <div className="container container--wide">
+          <ul className="services-panel-grid">
+            {TEAM_KEYS.map((k) => (
+              <li key={k}>
+                <a
+                  href={`/#${hash(k)}`}
+                  className="services-panel-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setOpenMenu(null);
+                    setMenuOpen(false);
+                    navigateTo('/', hash(k));
+                  }}
+                >
+                  <span className="services-panel-icon" aria-hidden="true">
+                    <ServiceIcon name={k} />
+                  </span>
+                  <span>
+                    <span className="services-panel-name">{t(`nav.${k}`)}</span>
+                    <span className="services-panel-desc">{t(`nav.${k}Tagline`)}</span>
                   </span>
                 </a>
               </li>

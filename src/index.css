@@ -3289,64 +3289,6 @@ button.nav-link {
 .nav-item-has-menu.is-open .nav-caret {
   transform: rotate(180deg);
 }
-.services-menu {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 460px;
-  background: var(--color-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  padding: 0.6rem;
-  z-index: 1200;
-}
-.services-menu[hidden] {
-  display: none;
-}
-.services-menu-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.15rem;
-}
-.services-menu-link,
-.services-index-link,
-.service-others-link {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.6rem 0.7rem;
-  border-radius: var(--radius);
-  color: var(--color-text);
-  transition: background var(--transition), color var(--transition);
-}
-.services-menu-link:hover,
-.services-index-link:hover,
-.service-others-link:hover {
-  background: var(--color-bg-alt);
-  color: var(--color-text);
-}
-.services-menu-name,
-.services-index-name,
-.service-others-name {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-weight: 600;
-  color: var(--color-primary);
-}
-.services-menu-tagline,
-.services-index-tagline,
-.service-others-tagline {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  line-height: 1.4;
-}
-
-
 /* Service page */
 .service-page {
   padding-top: 5.5rem;
@@ -3473,32 +3415,6 @@ button.nav-link {
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 768px) {
-  .services-menu {
-    position: static;
-    transform: none;
-    min-width: 0;
-    box-shadow: none;
-    background: transparent;
-    padding: 0 0 0 0.5rem;
-  }
-  .services-menu-list {
-    grid-template-columns: 1fr;
-  }
-  .services-menu-name {
-    color: var(--color-text-on-dark);
-  }
-  .services-menu-tagline {
-    display: none;
-  }
-  .services-menu-link:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-  .service-cta-inner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
 
 /* ============================================
    Floating dialog, used by the quote form
@@ -3588,13 +3504,6 @@ button.nav-link {
   color: var(--color-accent);
 }
 
-/* The work-with-us panel holds two entries, so it does not need the width of the service grid. */
-.services-menu--narrow {
-  min-width: 300px;
-}
-.services-menu--narrow .services-menu-list {
-  grid-template-columns: 1fr;
-}
 
 /* ============================================
    Services: full width nav panel and the card grid on the home page
