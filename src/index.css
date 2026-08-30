@@ -3707,7 +3707,17 @@ button.nav-link {
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 10px 30px -8px rgba(10, 35, 60, 0.45);
-  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  transition: background var(--transition), transform var(--transition),
+    box-shadow var(--transition), opacity 0.25s ease, visibility 0.25s;
+}
+
+/* Fades out over the footer. Hiding it with visibility also drops it out of the
+   tab order, so nobody can reach a button they cannot see. */
+.quote-fab--hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.75rem);
+  pointer-events: none;
 }
 .quote-fab:hover {
   background: var(--color-accent-hover);
