@@ -27,6 +27,15 @@ const SOURCE = join(root, 'design', 'brush-frame.svg');
 const TARGET = join(root, 'public', 'images', 'brush-mask.png');
 const W = 2000;
 const H = 1000;
+/**
+ * How much of each bite along the bottom edge to keep, 1 being the drawing as
+ * it is and 0 a straight line. The strokes at the foot of the artwork reach a
+ * long way up, and over a video they swallow the part of the room nearest the
+ * camera. Shallower bites keep the hand painted edge without eating the shot.
+ */
+const BOTTOM_BITE = 0.45;
+/** A run this long counts as the body of the stroke rather than a stray bristle. */
+const BODY_RUN = 30;
 
 const svg = readFileSync(SOURCE, 'utf8');
 const dataUri = 'data:image/svg+xml;base64,' + Buffer.from(svg, 'utf8').toString('base64');
@@ -34,7 +43,7 @@ const dataUri = 'data:image/svg+xml;base64,' + Buffer.from(svg, 'utf8').toString
 const browser = await chromium.launch();
 const page = await browser.newPage();
 
-const out = await page.evaluate(async ({ uri, W, H }) => {
+const out = await page.evaluate(async ({ uri, W, H, BOTTOM_BITE, BODY_RUN }) => {
   const img = new Image();
   img.src = uri;
   await img.decode();
@@ -79,14 +88,48 @@ const out = await page.evaluate(async ({ uri, W, H }) => {
   }
 
   let enclosed = 0;
-  const res = ctx.createImageData(W, H);
+  const solid = new Uint8Array(n);
   for (let i = 0; i < n; i++) {
     if (!ink[i] && !outside[i]) enclosed++;
-    res.data[i * 4 + 3] = ink[i] || !outside[i] ? 255 : 0;
+    solid[i] = ink[i] || !outside[i] ? 1 : 0;
   }
+
+  // Ease the bites along the bottom edge. For each column, find where the body
+  // of the stroke ends, ignoring the bristles that hang below it, then pull that
+  // edge back down towards the deepest columns by the factor above.
+  const bottom = new Int32Array(W).fill(-1);
+  for (let x = 0; x < W; x++) {
+    let run = 0;
+    for (let y = H - 1; y >= 0; y--) {
+      if (solid[y * W + x]) {
+        run++;
+        if (run >= BODY_RUN) {
+          bottom[x] = y + run;
+          break;
+        }
+      } else {
+        run = 0;
+      }
+    }
+  }
+  const filled = [...bottom].filter((v) => v >= 0).sort((a, b) => a - b);
+  if (filled.length) {
+    // A high percentile rather than the deepest column, so one long bristle
+    // cannot drag the whole edge down with it.
+    const reference = filled[Math.floor(filled.length * 0.9)];
+    for (let x = 0; x < W; x++) {
+      const edge = bottom[x];
+      if (edge < 0 || edge >= reference) continue;
+      const moved = Math.round(reference - (reference - edge) * BOTTOM_BITE);
+      for (let y = edge; y < moved && y < H; y++) solid[y * W + x] = 1;
+    }
+  }
+
+  const res = ctx.createImageData(W, H);
+  for (let i = 0; i < n; i++) res.data[i * 4 + 3] = solid[i] ? 255 : 0;
   ctx.putImageData(res, 0, 0);
   return { url: canvas.toDataURL('image/png'), enclosed, total: n };
-}, { uri: dataUri, W, H });
+}, { uri: dataUri, W, H, BOTTOM_BITE, BODY_RUN });
 
 const buffer = Buffer.from(out.url.split(',')[1], 'base64');
 writeFileSync(TARGET, buffer);
