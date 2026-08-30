@@ -456,6 +456,8 @@ button.nav-link {
   /* Holgura del reel dentro de su columna. Un solo sitio para ajustar el encuadre. */
   --hero-video-inset-x: clamp(1.25rem, 3vw, 3.5rem);
   --hero-video-inset-b: clamp(1.5rem, 3.5vw, 4rem);
+  /* Width of the painted frame around the reel. */
+  --hero-frame-w: clamp(8px, 1.1vw, 16px);
   /* How far the side columns drop to meet the reel. Now that the testimonials
      panel fits, this is the full headline height, which lines the side content
      up on the centre of the reel. Short screens opt out below: there the hero is
@@ -514,15 +516,26 @@ button.nav-link {
   height: 100%;
   object-fit: cover;
   display: block;
-  background: var(--color-primary);
-  /* A hairline of navy at low opacity, which separates the warm footage from the
-     white hero without the weight of a solid bezel. The soft shadow does the rest
-     of the lifting, matching the card treatment used by the columns either side.
-     Border-box keeps the line inside, so the outer edges stay on the measured column. */
-  border: clamp(2px, 0.18vw, 3px) solid rgba(10, 35, 60, 0.16);
-  border-radius: clamp(14px, 1.6vw, 26px);
+  background: transparent;
+  /* Painted frame instead of a drawn line.
+   *
+   * border-image, not a mask: the strokes are painted into the border area and a
+   * little past it, so the footage inside is never cut. Putting it on the video
+   * itself rather than on a wrapper means the frame tracks the picture at every
+   * width, including the phone layout where the reel runs edge to edge.
+   *
+   * A hard rectangle around a ragged edge reads as a mistake, so the hairline is
+   * gone and the radius is only there to soften the corners underneath. */
+  border-radius: clamp(10px, 1.2vw, 18px);
+  border: var(--hero-frame-w) solid transparent;
+  border-image-source: url('/images/brush-frame.svg');
+  border-image-slice: 30%;
+  border-image-repeat: round;
+  border-image-width: var(--hero-frame-w);
+  border-image-outset: calc(var(--hero-frame-w) * 0.25);
   box-shadow: var(--shadow-lg);
 }
+
 .hero-copy {
   display: flex;
   flex-direction: column;
