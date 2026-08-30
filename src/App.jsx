@@ -3,7 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import { animate, stagger } from 'animejs';
 import { useLang } from './context/useLang';
 import { useQuote } from './context/useQuote';
-import { useCornerCta } from './context/useCornerCta';
+import { useCornerCta, useNoCornerCta } from './context/useCornerCta';
 import Modal from './components/Modal';
 import QuoteFab from './components/QuoteFab';
 import { getSectionHash } from './translations';
@@ -1270,7 +1270,7 @@ function RealtorsPage() {
   const { t, lang } = useLang();
   const [realtorModalOpen, setRealtorModalOpen] = useState(false);
   const openRealtorModal = useCallback(() => setRealtorModalOpen(true), []);
-  useCornerCta(t('realtorPage.ctaSecondary'), openRealtorModal, realtorModalOpen);
+  useCornerCta(t('realtorPage.ctaPrimary'), openRealtorModal, realtorModalOpen);
   const [thirdImgActive, setThirdImgActive] = useState('money');
   const homeHash = getSectionHash(lang, 'home');
   useEffect(() => {
@@ -1315,9 +1315,6 @@ function RealtorsPage() {
             <h1 className="realtor-hero-title">{t('realtorPage.headline')}</h1>
             <p className="realtor-hero-sub">{t('realtorPage.subhead')}</p>
             <p className="realtor-hero-tagline">{t('realtorPage.heroTagline')}</p>
-            <div className="realtor-hero-actions">
-              <button type="button" className="btn btn-primary btn-lg" onClick={() => setRealtorModalOpen(true)}>{t('realtorPage.ctaPrimary')}</button>
-            </div>
           </div>
         </div>
         <div className="container privacy-content realtor-content">
@@ -1383,7 +1380,6 @@ function RealtorsPage() {
             ))}
           </section>
           <section className="privacy-section realtor-cta-section">
-            <button type="button" className="btn btn-primary btn-lg" onClick={() => setRealtorModalOpen(true)}>{t('realtorPage.ctaPrimary')}</button>
             <button type="button" className="btn btn-secondary" onClick={() => setRealtorModalOpen(true)}>{t('realtorPage.ctaSecondary')}</button>
           </section>
         </div>
@@ -1399,8 +1395,7 @@ function BecomePartnerPage() {
   const homeHash = getSectionHash(lang, 'home');
   const [partnerModalOpen, setPartnerModalOpen] = useState(false);
   const [franchiseModalOpen, setFranchiseModalOpen] = useState(false);
-  const openPartnerModal = useCallback(() => setPartnerModalOpen(true), []);
-  useCornerCta(t('nav.partners'), openPartnerModal, partnerModalOpen || franchiseModalOpen);
+  useNoCornerCta();
   const goHome = (e) => {
     e.preventDefault();
     window.location.hash = homeHash;

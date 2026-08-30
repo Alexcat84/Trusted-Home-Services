@@ -20,3 +20,19 @@ export function useCornerCta(label, onClick, hidden = false) {
     return () => setCornerCta(null);
   }, [label, onClick, hidden, setCornerCta]);
 }
+
+/**
+ * Keeps the corner clear on a page that already carries its own choices.
+ *
+ * The partner page offers two different things, becoming a supplier and
+ * buying a franchise, and it is short enough to read in one go. A third
+ * button floating over it would only ask the visitor to choose again.
+ */
+export function useNoCornerCta() {
+  const { setCornerCta } = useQuote();
+
+  useEffect(() => {
+    setCornerCta({ hidden: true });
+    return () => setCornerCta(null);
+  }, [setCornerCta]);
+}

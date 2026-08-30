@@ -17,6 +17,9 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
   const [currentHash, setCurrentHash] = useState('');
+  // Hover opens the panels, but only where hovering means something. On a touch
+  // screen there is no pointer to leave with, so those visitors keep the tap.
+  const [canHover, setCanHover] = useState(false);
   const serviceLinks = getServiceList(lang);
   const headerRef = useRef(null);
   const rafPendingRef = useRef(false);
@@ -24,6 +27,19 @@ export default function Header() {
   const sectionElsRef = useRef([]);
   const lastActiveIdRef = useRef('');
   const hash = (key) => getSectionHash(lang, key);
+
+  useEffect(() => {
+    const query = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const apply = () => setCanHover(query.matches);
+    apply();
+    query.addEventListener('change', apply);
+    return () => query.removeEventListener('change', apply);
+  }, []);
+
+  /** Opens on hover, and on tap for anyone without a pointer. */
+  const openOnHover = (key) => (canHover ? () => setOpenMenu(key) : undefined);
+  const toggleMenu = (key) =>
+    setOpenMenu((current) => (canHover ? key : current === key ? null : key));
 
   // An open panel should close the way people expect: click elsewhere, or press Escape.
   useEffect(() => {
@@ -101,7 +117,12 @@ export default function Header() {
   }, [lang]);
 
   return (
-    <header className="header" id="header" ref={headerRef}>
+    <header
+      className="header"
+      id="header"
+      ref={headerRef}
+      onMouseLeave={canHover ? () => setOpenMenu(null) : undefined}
+    >
       <div className="header-inner">
         <a
           href={`/#${hash('home')}`}
@@ -127,13 +148,17 @@ export default function Header() {
               if (key === 'services') {
                 const isOpen = openMenu === key;
                 return (
-                  <li key={key} className={`nav-item-has-menu ${isOpen ? 'is-open' : ''}`}>
+                  <li
+                    key={key}
+                    className={`nav-item-has-menu ${isOpen ? 'is-open' : ''}`}
+                    onMouseEnter={openOnHover(key)}
+                  >
                     <button
                       type="button"
                       className={`nav-link nav-link--toggle ${isActive ? 'nav-link--active' : ''}`}
                       aria-expanded={isOpen}
                       aria-controls="services-panel"
-                      onClick={() => setOpenMenu((current) => (current === key ? null : key))}
+                      onClick={() => toggleMenu(key)}
                     >
                       {t('nav.services')}
                       <span className="nav-caret" aria-hidden="true" />
@@ -150,13 +175,14 @@ export default function Header() {
                   <li
                     key={key}
                     className={`nav-item-has-menu ${isOpen ? 'is-open' : ''}`}
+                    onMouseEnter={openOnHover(key)}
                   >
                     <button
                       type="button"
                       className={`nav-link nav-link--toggle ${isActive ? 'nav-link--active' : ''}`}
                       aria-expanded={isOpen}
                       aria-controls="team-menu"
-                      onClick={() => setOpenMenu((current) => (current === key ? null : key))}
+                      onClick={() => toggleMenu(key)}
                     >
                       {t('nav.team')}
                       <span className="nav-caret" aria-hidden="true" />
@@ -187,7 +213,7 @@ export default function Header() {
               }
 
               return (
-                <li key={key}>
+                <li key={key} onMouseEnter={canHover ? () => setOpenMenu(null) : undefined}>
                   <a
                     href={`#${sectionHash}`}
                     className={`nav-link ${isActive ? 'nav-link--active' : ''}`}
