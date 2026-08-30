@@ -208,18 +208,22 @@ export default function Header() {
             })}
           </ul>
         </nav>
-        <div className="lang-switcher" role="group" aria-label="Language">
-          {ACTIVE_LOCALES.map((l) => (
-            <button
-              key={l}
-              type="button"
-              className={`lang-btn ${lang === l ? 'active' : ''}`}
-              onClick={() => setLang(l)}
-              aria-pressed={lang === l}
-            >
-              {l.toUpperCase()}
-            </button>
-          ))}
+        <div className="lang-switcher">
+          {/* The outer slot grows so the nav stays centred. The pill inside stays
+              the size of its labels instead of stretching with the slot. */}
+          <div className="lang-group" role="group" aria-label="Language">
+            {ACTIVE_LOCALES.map((l) => (
+              <button
+                key={l}
+                type="button"
+                className={`lang-btn ${lang === l ? 'active' : ''}`}
+                onClick={() => setLang(l)}
+                aria-pressed={lang === l}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
         <button
           type="button"

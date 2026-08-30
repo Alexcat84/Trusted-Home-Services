@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLang } from '../context/useLang';
-import { getServiceContent, getServiceList, SERVICE_IMAGES } from '../content/services';
-import { navigateTo, servicePath } from '../lib/routing';
+import { getServiceContent, SERVICE_IMAGES } from '../content/services';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -43,8 +42,6 @@ export default function ServicePage({ serviceKey }) {
 
   if (!content) return null;
 
-  const others = getServiceList(lang).filter((s) => s.key !== serviceKey);
-
   return (
     <>
       <a href="#main" className="skip-link">Skip to main content</a>
@@ -57,9 +54,6 @@ export default function ServicePage({ serviceKey }) {
               <h1 className="service-title">{content.name}</h1>
               <p className="service-tagline">{content.tagline}</p>
               <p className="service-intro">{content.intro}</p>
-              <div className="service-hero-actions">
-                <a href="tel:+16132048000" className="btn btn-secondary">{t('hero.cta2')}</a>
-              </div>
             </div>
             <div className="service-hero-media">
               <img src={SERVICE_IMAGES[serviceKey]} alt="" loading="eager" />
@@ -113,28 +107,6 @@ export default function ServicePage({ serviceKey }) {
           </div>
         </section>
 
-        <section className="section service-others">
-          <div className="container">
-            <h2 className="section-title">{t('services.othersTitle')}</h2>
-            <ul className="service-others-grid">
-              {others.map((s) => (
-                <li key={s.key}>
-                  <a
-                    href={servicePath(s.key)}
-                    className="service-others-link"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigateTo(servicePath(s.key));
-                    }}
-                  >
-                    <span className="service-others-name">{s.name}</span>
-                    <span className="service-others-tagline">{s.tagline}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
       </main>
       <Footer />
     </>
