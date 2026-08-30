@@ -500,7 +500,13 @@ button.nav-link {
 
 /* Renovation reel: inset from the sides and lifted off the bottom of its column,
    so it reads as framed rather than wedged into the corner. */
+/* Positioned so the roller below has a fixed anchor. Without this it falls
+   back to whichever ancestor happens to carry a transform, and the entrance
+   animation puts one on a different element depending on how the page was
+   reached, which threw the roller out of place on the way back from a service
+   page. */
 .hero-video-wrap {
+  position: relative;
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
