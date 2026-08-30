@@ -186,6 +186,11 @@ function Hero({ skipAnimation = false }) {
             >
               <source src={heroVideo.src} type="video/mp4" />
             </video>
+            {/* Decoration only. It sits on the painted edge so the stroke reads as
+                something that was rolled on, rather than a shape the reel happens
+                to have. Nothing here carries meaning, so it stays out of the
+                accessibility tree and never takes a click. */}
+            <img src="/images/paint-roller.webp" alt="" aria-hidden="true" className="hero-roller" />
           </motion.div>
         </div>
         <motion.div className="hero-col hero-col--right" variants={item}>

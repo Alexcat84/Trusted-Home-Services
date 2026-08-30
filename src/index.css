@@ -532,6 +532,35 @@ button.nav-link {
   mask-repeat: no-repeat;
 }
 
+/* The roller that laid the paint.
+ *
+ * There are only about forty pixels of gutter either side of the reel, so it
+ * cannot stand clear of the picture. It straddles the bottom left corner
+ * instead, where the footage is floor and loses the least, with the handle
+ * running out into the margin below.
+ *
+ * The rotation lays the head flat along the bottom edge. The head sits at just
+ * under 41 degrees in the drawing, measured off the artwork itself, so it turns
+ * back by that much and the handle ends up running out to the left. */
+.hero-roller {
+  position: absolute;
+  left: calc(var(--hero-video-inset-x) * -0.32);
+  bottom: calc(var(--hero-video-inset-b) + 6px);
+  width: clamp(96px, 9.2vw, 140px);
+  height: auto;
+  transform: rotate(-41deg);
+  transform-origin: 50% 50%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  /* At phone size the reel is small enough that the roller covers a third of it. */
+  .hero-roller {
+    display: none;
+  }
+}
+
 .hero-copy {
   display: flex;
   flex-direction: column;
