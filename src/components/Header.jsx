@@ -280,7 +280,7 @@ export default function Header() {
           Two dropdowns side by side in different shapes read as an accident. */}
       <div className="services-panel" id="team-menu" hidden={openMenu !== 'team'}>
         <div className="container container--wide">
-          <ul className="services-panel-grid">
+          <ul className="services-panel-grid services-panel-grid--end">
             {TEAM_KEYS.map((k) => (
               <li key={k}>
                 <a

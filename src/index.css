@@ -3530,6 +3530,16 @@ button.nav-link {
   list-style: none;
   margin: 0;
 }
+/* Work with us has two entries where services has nine, so left aligning them
+   left the pair marooned at the far side of the bar. Starting a column in keeps
+   them under the menu label they came from, at the same size as the others.
+   Below this width the grid drops to two columns and they fill it as they are. */
+@media (min-width: 1001px) {
+  .services-panel-grid--end > li:first-child {
+    grid-column: 2;
+  }
+}
+
 .services-panel-item {
   display: flex;
   gap: 0.7rem;
