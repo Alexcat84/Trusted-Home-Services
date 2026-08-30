@@ -3,6 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import { animate, stagger } from 'animejs';
 import { useLang } from './context/useLang';
 import { useQuote } from './context/useQuote';
+import { useCornerCta } from './context/useCornerCta';
 import Modal from './components/Modal';
 import QuoteFab from './components/QuoteFab';
 import { getSectionHash } from './translations';
@@ -1263,6 +1264,8 @@ function ProjectsPage() {
 function RealtorsPage() {
   const { t, lang } = useLang();
   const [realtorModalOpen, setRealtorModalOpen] = useState(false);
+  const openRealtorModal = useCallback(() => setRealtorModalOpen(true), []);
+  useCornerCta(t('realtorPage.ctaSecondary'), openRealtorModal, realtorModalOpen);
   const [thirdImgActive, setThirdImgActive] = useState('money');
   const homeHash = getSectionHash(lang, 'home');
   useEffect(() => {
@@ -1391,6 +1394,8 @@ function BecomePartnerPage() {
   const homeHash = getSectionHash(lang, 'home');
   const [partnerModalOpen, setPartnerModalOpen] = useState(false);
   const [franchiseModalOpen, setFranchiseModalOpen] = useState(false);
+  const openPartnerModal = useCallback(() => setPartnerModalOpen(true), []);
+  useCornerCta(t('nav.partners'), openPartnerModal, partnerModalOpen || franchiseModalOpen);
   const goHome = (e) => {
     e.preventDefault();
     window.location.hash = homeHash;

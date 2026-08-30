@@ -11,7 +11,7 @@ import { useQuote } from '../context/useQuote';
  */
 export default function QuoteFab() {
   const { t } = useLang();
-  const { quoteOpen, openQuote } = useQuote();
+  const { quoteOpen, openQuote, cornerCta } = useQuote();
   const [overFooter, setOverFooter] = useState(false);
 
   // Once the footer is on screen the visitor has reached the end of the page,
@@ -44,13 +44,17 @@ export default function QuoteFab() {
 
   // While the dialog is up the button has nothing left to do, and it would only
   // sit behind the scrim.
-  if (quoteOpen) return null;
+  // A page that registered its own offer also says when its form is up.
+  if (quoteOpen || cornerCta?.hidden) return null;
+
+  const label = cornerCta ? cornerCta.label : t('nav.quote');
+  const onClick = cornerCta ? cornerCta.onClick : openQuote;
 
   return (
     <button
       type="button"
       className={`quote-fab ${overFooter ? 'quote-fab--hidden' : ''}`}
-      onClick={openQuote}
+      onClick={onClick}
     >
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
         <path
@@ -69,7 +73,7 @@ export default function QuoteFab() {
           strokeLinejoin="round"
         />
       </svg>
-      <span className="quote-fab-label">{t('nav.quote')}</span>
+      <span className="quote-fab-label">{label}</span>
     </button>
   );
 }
