@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLang } from '../context/useLang';
-import { useQuote } from '../context/useQuote';
 import { getServiceContent, getServiceList, SERVICE_IMAGES } from '../content/services';
 import { navigateTo, servicePath } from '../lib/routing';
 import Header from './Header';
@@ -35,7 +34,6 @@ function useServiceMeta(content) {
 
 export default function ServicePage({ serviceKey }) {
   const { t, lang } = useLang();
-  const { openQuote } = useQuote();
   const content = getServiceContent(lang, serviceKey);
   useServiceMeta(content);
 
@@ -60,9 +58,6 @@ export default function ServicePage({ serviceKey }) {
               <p className="service-tagline">{content.tagline}</p>
               <p className="service-intro">{content.intro}</p>
               <div className="service-hero-actions">
-                <button type="button" className="btn btn-primary" onClick={openQuote}>
-                  {t('hero.cta1')}
-                </button>
                 <a href="tel:+16132048000" className="btn btn-secondary">{t('hero.cta2')}</a>
               </div>
             </div>
@@ -115,18 +110,6 @@ export default function ServicePage({ serviceKey }) {
                 </div>
               ))}
             </dl>
-          </div>
-        </section>
-
-        <section className="section section-alt service-cta">
-          <div className="container service-cta-inner">
-            <div>
-              <h2 className="section-title">{t('services.ctaTitle')}</h2>
-              <p>{t('homeStats.qualityDesc')}</p>
-            </div>
-            <button type="button" className="btn btn-primary" onClick={openQuote}>
-              {t('hero.cta1')}
-            </button>
           </div>
         </section>
 

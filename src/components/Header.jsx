@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLang } from '../context/useLang';
 import { getSectionHash } from '../translations';
-import { useQuote } from '../context/useQuote';
 import { getServiceList } from '../content/services';
 import { navigateTo, servicePath } from '../lib/routing';
 import ServiceIcon from './ServiceIcon';
 import { ACTIVE_LOCALES } from '../lib/locales';
 
-const NAV_KEYS = ['home', 'services', 'how', 'projects', 'team', 'quote'];
+const NAV_KEYS = ['home', 'services', 'how', 'projects', 'team'];
 /** The two audiences that sit under the "work with us" panel. */
 const TEAM_KEYS = ['realtors', 'partners'];
 /** Entries that scroll to a section. "team" is a panel, so it has no section of its own. */
@@ -15,7 +14,6 @@ const SECTION_KEYS = ['home', 'services', 'how', 'projects', 'realtors', 'partne
 
 export default function Header() {
   const { lang, setLang, t } = useLang();
-  const { openQuote } = useQuote();
   const [menuOpen, setMenuOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
   const [currentHash, setCurrentHash] = useState('');
@@ -123,7 +121,6 @@ export default function Header() {
             {NAV_KEYS.map((key) => {
               const sectionHash = hash(key);
               const isActive = currentHash === sectionHash.toLowerCase() || (key === 'home' && !currentHash);
-              const isCta = key === 'quote';
 
               // Services opens a full width panel below the bar, because nine entries
               // with a line of description each do not fit a small dropdown.
@@ -185,24 +182,6 @@ export default function Header() {
                         ))}
                       </ul>
                     </div>
-                  </li>
-                );
-              }
-
-              // The quote entry raises the dialog rather than scrolling anywhere.
-              if (isCta) {
-                return (
-                  <li key={key}>
-                    <button
-                      type="button"
-                      className="nav-link nav-cta"
-                      onClick={() => {
-                        setMenuOpen(false);
-                        openQuote();
-                      }}
-                    >
-                      {t(`nav.${key}`)}
-                    </button>
                   </li>
                 );
               }

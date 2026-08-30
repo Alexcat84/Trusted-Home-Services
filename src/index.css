@@ -3696,3 +3696,64 @@ button.nav-link {
   .services-panel { animation: none; }
   .services-card:hover { transform: none; }
 }
+
+/* ============================================
+   Standing quote button, pinned bottom right
+   ============================================ */
+.quote-fab {
+  position: fixed;
+  right: clamp(1rem, 2vw, 1.75rem);
+  bottom: clamp(1rem, 2vw, 1.75rem);
+  /* Above the page and the header, below the dialog at 2000 and the cookie
+     banner at 9999, which covers it until the visitor answers it. */
+  z-index: 1400;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.85rem 1.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-text-on-dark);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 30px -8px rgba(10, 35, 60, 0.45);
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+.quote-fab:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px -8px rgba(10, 35, 60, 0.5);
+}
+.quote-fab:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+.quote-fab svg {
+  flex-shrink: 0;
+}
+@media (max-width: 560px) {
+  /* Tight screens keep the icon and drop the word, so the button stays out of
+     the way of the content it sits over. */
+  .quote-fab {
+    padding: 0.9rem;
+  }
+  .quote-fab-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quote-fab:hover {
+    transform: none;
+  }
+}

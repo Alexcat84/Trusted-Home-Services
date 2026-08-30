@@ -4,6 +4,7 @@ import { animate, stagger } from 'animejs';
 import { useLang } from './context/useLang';
 import { useQuote } from './context/useQuote';
 import Modal from './components/Modal';
+import QuoteFab from './components/QuoteFab';
 import { getSectionHash } from './translations';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -2144,6 +2145,7 @@ export default function App() {
   return (
     <>
       {page}
+      <QuoteFab />
       <Modal
         open={quoteOpen}
         onClose={closeQuote}
