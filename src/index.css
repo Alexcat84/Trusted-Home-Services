@@ -500,13 +500,7 @@ button.nav-link {
 
 /* Renovation reel: inset from the sides and lifted off the bottom of its column,
    so it reads as framed rather than wedged into the corner. */
-/* Positioned so the roller below has a fixed anchor. Without this it falls
-   back to whichever ancestor happens to carry a transform, and the entrance
-   animation puts one on a different element depending on how the page was
-   reached, which threw the roller out of place on the way back from a service
-   page. */
 .hero-video-wrap {
-  position: relative;
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
@@ -520,58 +514,14 @@ button.nav-link {
   height: 100%;
   object-fit: cover;
   display: block;
-  background: transparent;
-  /* The outline of the reel is a brush stroke.
-   *
-   * The mask carries the silhouette of a painted patch, taken from the artwork
-   * and flooded solid, so the edge of the video is the edge of the paint. There
-   * is no frame around it and no line: the shape itself is the outline.
-   *
-   * Nothing that follows a rectangle survives this, so the radius and the drop
-   * shadow are gone. A shadow tracks the border box, not the mask, and would
-   * have drawn a clean rectangle behind a ragged edge. */
-  -webkit-mask-image: url('/images/brush-mask.png');
-  mask-image: url('/images/brush-mask.png');
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-}
-
-/* The roller that laid the paint.
- *
- * It rests near the bottom right, where the paint bites furthest into the
- * picture, so it reads as the thing that has just been over that stretch.
- *
- * It sits in the white bite rather than on the footage: inside the box the reel
- * occupies, but outside the paint, so it reads as resting against the edge with
- * only the top of the head over the picture.
- *
- * The tilt matches a sketch of where this should go: the head standing up and
- * leaning right, the handle running out to the left and slightly down.
- *
- * The white halo is doing real work. The drawing is solid black and the reel
- * runs from a dark room to a bright one, so against some frames the roller
- * would vanish. Tracing the silhouette keeps it legible throughout without
- * lightening the artwork itself. */
-.hero-roller {
-  position: absolute;
-  right: 9%;
-  bottom: calc(var(--hero-video-inset-b) - 18px);
-  width: clamp(92px, 9.2vw, 136px);
-  height: auto;
-  transform: rotate(25deg);
-  filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 7px rgba(255, 255, 255, 0.75));
-  transform-origin: 50% 50%;
-  pointer-events: none;
-  z-index: 2;
-}
-
-@media (max-width: 768px) {
-  /* At phone size the reel is small enough that the roller covers a third of it. */
-  .hero-roller {
-    display: none;
-  }
+  background: var(--color-primary);
+  /* A hairline of navy at low opacity, which separates the warm footage from the
+     white hero without the weight of a solid bezel. The soft shadow does the rest
+     of the lifting, matching the card treatment used by the columns either side.
+     Border-box keeps the line inside, so the outer edges stay on the measured column. */
+  border: clamp(2px, 0.18vw, 3px) solid rgba(10, 35, 60, 0.16);
+  border-radius: clamp(14px, 1.6vw, 26px);
+  box-shadow: var(--shadow-lg);
 }
 
 .hero-copy {
@@ -713,8 +663,9 @@ button.nav-link {
     padding-bottom: 1.25rem;
   }
   .hero-video-wrap {
-    /* Just enough room for the brush edge to show. At zero the strokes on the
-       left and right run off screen and the reel looks cropped rather than painted. */
+    /* A little air at the sides. The reel used to run edge to edge here, but the
+       border and the rounded corners need somewhere to sit or they read as
+       clipped against the side of the screen. */
     padding-left: 0.85rem;
     padding-right: 0.85rem;
   }
