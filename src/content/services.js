@@ -8,16 +8,27 @@
  * Order here is the order shown in the navigation menu.
  */
 
+/**
+ * The order of the work, not a catalogue.
+ *
+ * The client asked for the running order of an actual job: cleaning and
+ * decluttering first, because nothing else can start while the rooms are full,
+ * and inspection and staging last. Everything between them follows the sequence
+ * a house goes through on the way to a listing.
+ *
+ * This one list drives both the menu panel and the cards on the home page, so
+ * the two can never drift apart.
+ */
 export const SERVICE_KEYS = [
-  'painting',
-  'curb',
-  'declutter',
-  'staging',
-  'flooring',
   'cleaning',
+  'declutter',
   'handyman',
   'electrical',
+  'painting',
+  'flooring',
+  'curb',
   'inspection',
+  'staging',
 ];
 
 /** Slug used in the URL: /services/<slug>. Shared across languages so a link works in any locale. */
