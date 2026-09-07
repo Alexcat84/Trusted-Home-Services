@@ -4488,3 +4488,95 @@ h3,
     background: #fafafa;
   }
 }
+
+/* The promise, given the room it deserves.
+ *
+ * It is the one thing this company offers that its competitors do not, so it
+ * is sized to be read before the headline rather than after it. */
+.hero-badge {
+  gap: 0.9rem;
+  padding: 0.85rem 1.35rem 0.9rem 1.15rem;
+  border-radius: 8px;
+}
+
+.hero-badge-figure {
+  font-size: clamp(2.9rem, 4.6vw, 4.2rem);
+  line-height: 0.85;
+  letter-spacing: -0.045em;
+}
+
+.hero-badge-text {
+  max-width: 11rem;
+  font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+  line-height: 1.25;
+}
+
+/* ============================================
+   Before and after, and the crew on site
+   ============================================
+   The same two blocks close every trade, so one service reads against another.
+   The images are placeholders until real pairs are shot. */
+
+.ba-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.ba-panel {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #131313;
+}
+
+.ba-panel img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.ba-label {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.ba-label--before {
+  background: rgba(19, 19, 19, 0.82);
+}
+
+.ba-label--after {
+  background: var(--color-accent);
+}
+
+.reel-frame {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #131313;
+  box-shadow: var(--shadow-lg);
+}
+
+.reel-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+@media (max-width: 700px) {
+  .ba-pair {
+    grid-template-columns: 1fr;
+  }
+}

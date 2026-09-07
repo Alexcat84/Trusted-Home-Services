@@ -190,7 +190,6 @@ function Services() {
     <AnimatedSection id={getSectionHash(lang, 'services')} className="section section-services">
       <div className="container container--wide">
         <h2 className="section-title"><AnimatedSectionTitle text={t('services.title')} /></h2>
-        <p className="section-intro">{t('services.intro')}</p>
         <div className="services-grid">
           {services.map((s) => (
             <a
