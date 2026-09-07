@@ -3355,6 +3355,29 @@ button.nav-link {
   color: var(--color-primary);
   margin-bottom: 0.35rem;
 }
+/* Justified where a paragraph runs long enough to read as a block.
+   Hyphenation is not optional here: without it the browser stretches the word
+   spacing instead of breaking words, and a narrow column fills with rivers of
+   white. The language sits on the html element and is updated when the visitor
+   switches, so the hyphen rules follow the text on screen. */
+.service-intro,
+.service-benefit p,
+.service-faq-item dd {
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+@media (max-width: 620px) {
+  /* Below this the column drops to about forty characters, and justifying it
+     pulls the word spacing wide enough to see. Ranged left reads better there. */
+  .service-intro,
+  .service-benefit p,
+  .service-faq-item dd {
+    text-align: left;
+  }
+}
+
 .service-faq-item dd {
   margin: 0;
   color: var(--color-text-muted);
