@@ -115,7 +115,6 @@ const PROJECTS_PAGE_HASHES = ['our-projects', 'nos-projets', 'nuestros-proyectos
 
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
-  const { openQuote } = useQuote();
   const heroVideo = getHeroVideo();
   const copyRef = useRef(null);
 
@@ -152,16 +151,16 @@ function Hero({ skipAnimation = false }) {
         <div className="hero-col hero-col--left">
           <div className="hero-copy">
           <motion.div className="hero-actions" variants={item}>
-            <button type="button" className="btn btn-primary" onClick={openQuote}>{t('hero.cta1')}</button>
             <span className="btn btn-primary" aria-hidden="true">{t('hero.cta2')}</span>
           </motion.div>
-          {/* The promise, stated rather than stamped. A generic satisfaction
-              badge said less than the sentence it sat next to. */}
-          <motion.div className="home-stats-seal hero-stats-seal hero-quality" variants={item}>
-            <div className="home-stats-seal-text">
-              <p className="home-stats-seal-title">{t('homeStats.qualityTitle')}</p>
-              <p className="home-stats-seal-desc">{t('homeStats.qualityDesc')}</p>
-            </div>
+          {/* The promise. It is the first thing worth knowing about this
+              company and the only one no competitor here is making, so it is
+              given the room rather than a badge. The quote button that used to
+              sit above it now lives in the corner of every page. */}
+          <motion.div className="hero-promise" variants={item}>
+            <p className="hero-promise-figure">{t('homeStats.promiseFigure')}</p>
+            <p className="hero-promise-lead">{t('homeStats.promiseLead')}</p>
+            <p className="hero-promise-body">{t('homeStats.promiseBody')}</p>
           </motion.div>
           </div>
         </div>

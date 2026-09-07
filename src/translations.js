@@ -10,8 +10,9 @@ export const TRANSLATIONS = {
       videoLabel: 'A home we prepared in Ottawa, from bare walls to move-in ready'
     },
     homeStats: {
-      qualityTitle: 'No deposit. You pay when it is done.',
-      qualityDesc: 'We have never asked for money up front, on any job, at any size. You pay when the work is finished and it is what we agreed.',
+      promiseFigure: '$0',
+      promiseLead: 'up front, on every job.',
+      promiseBody: 'No deposit, no progress payments, nothing until the work is done. You pay at the end, once it is what we agreed it would be.',
       freeQuoteCard: 'Free quote'
     },
     services: {
@@ -367,8 +368,9 @@ export const TRANSLATIONS = {
       videoLabel: 'Une maison que nous avons préparée à Ottawa, des murs bruts jusqu\'à la remise des clés'
     },
     homeStats: {
-      qualityTitle: 'Aucun acompte. Vous payez à la fin.',
-      qualityDesc: 'Nous n’avons jamais demandé d’argent d’avance, sur aucun chantier, quelle qu’en soit l’ampleur. Vous payez quand les travaux sont terminés et conformes à ce qui a été convenu.',
+      promiseFigure: '0 $',
+      promiseLead: 'à l’avance, sur chaque chantier.',
+      promiseBody: 'Aucun acompte, aucun versement en cours de route, rien avant la fin. Vous payez à la fin, une fois que c’est ce qui avait été convenu.',
       freeQuoteCard: 'Devis gratuit'
     },
     services: {
@@ -725,8 +727,9 @@ export const TRANSLATIONS = {
       videoLabel: 'Una casa que preparamos en Ottawa, de paredes en obra a lista para habitar'
     },
     homeStats: {
-      qualityTitle: 'Calidad garantizada',
-      qualityDesc: 'Nunca hemos pedido depósito. Usted paga cuando el trabajo está terminado y sus expectativas cumplidas.',
+      promiseFigure: '$0',
+      promiseLead: 'por adelantado, en cada trabajo.',
+      promiseBody: 'Sin depósito, sin pagos parciales, nada hasta que el trabajo esté hecho. Usted paga al final, cuando es lo que acordamos.',
       freeQuoteCard: 'Cotización gratuita'
     },
     services: {
