@@ -618,11 +618,8 @@ button.nav-link {
   .hero-quality {
     margin-top: 1.25rem;
   }
-  .hero-quality .home-stats-seal-img {
-    max-width: 64px;
-  }
   .hero-quality .home-stats-seal-title {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
   .hero-quality .home-stats-seal-desc {
     font-size: 0.82rem;
@@ -826,22 +823,16 @@ button.nav-link {
   transform: translateY(-4px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
-.hero-stats-seal .home-stats-seal-img img {
-  height: 130px;
-  width: auto;
-  border-radius: 50%;
-  transition: transform 0.25s ease;
-}
-.hero-stats-seal:hover .home-stats-seal-img img {
-  transform: scale(1.08) translateY(-2px);
-}
 .hero-stats-seal .home-stats-seal-title {
-  font-size: 1.4rem;
+  font-size: clamp(1.5rem, 2.2vw, 2.05rem);
   font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--color-primary);
+  text-wrap: balance;
 }
 .hero-stats-seal .home-stats-seal-desc {
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   line-height: 1.5;
   color: var(--color-text-muted);
 }
@@ -2807,13 +2798,6 @@ button.nav-link {
   background: var(--color-bg-alt, #f7fafc);
   border: 1px solid var(--color-border);
 }
-.home-stats-seal-img {
-  flex-shrink: 0;
-}
-.home-stats-seal-img img {
-  height: 80px;
-  width: auto;
-}
 .home-stats-seal-text {
   text-align: center;
   max-width: 420px;
@@ -2846,24 +2830,14 @@ button.nav-link {
 }
 .hero .home-stats-seal .home-stats-seal-title {
   color: var(--color-primary) !important;
-  font-size: 1.4rem !important;
+  /* The promise carries this corner, so it is sized to be read across the
+     room. This is the rule that wins the cascade, so the size lives here. */
+  font-size: clamp(1.5rem, 2.2vw, 2.05rem) !important;
 }
 .hero .home-stats-seal .home-stats-seal-desc {
   color: var(--color-text-muted) !important;
-  font-size: 1.25rem !important;
-  line-height: 1.5;
-}
-.hero .home-stats-seal .home-stats-seal-img img {
-  height: 130px;
-  box-shadow: none;
-  filter: none;
-}
-.hero .home-stats-seal .home-stats-seal-img img,
-.hero .home-stats-seal:hover .home-stats-seal-img img {
-  transition: transform 0.25s ease;
-}
-.hero .home-stats-seal:hover .home-stats-seal-img img {
-  transform: scale(1.08) translateY(-2px);
+  font-size: 1.02rem !important;
+  line-height: 1.55;
 }
 
 /* Realtors page: proof of work grid */
@@ -3355,29 +3329,6 @@ button.nav-link {
   color: var(--color-primary);
   margin-bottom: 0.35rem;
 }
-/* Justified where a paragraph runs long enough to read as a block.
-   Hyphenation is not optional here: without it the browser stretches the word
-   spacing instead of breaking words, and a narrow column fills with rivers of
-   white. The language sits on the html element and is updated when the visitor
-   switches, so the hyphen rules follow the text on screen. */
-.service-intro,
-.service-benefit p,
-.service-faq-item dd {
-  text-align: justify;
-  -webkit-hyphens: auto;
-  hyphens: auto;
-}
-
-@media (max-width: 620px) {
-  /* Below this the column drops to about forty characters, and justifying it
-     pulls the word spacing wide enough to see. Ranged left reads better there. */
-  .service-intro,
-  .service-benefit p,
-  .service-faq-item dd {
-    text-align: left;
-  }
-}
-
 .service-faq-item dd {
   margin: 0;
   color: var(--color-text-muted);

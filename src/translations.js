@@ -10,8 +10,8 @@ export const TRANSLATIONS = {
       videoLabel: 'A home we prepared in Ottawa, from bare walls to move-in ready'
     },
     homeStats: {
-      qualityTitle: 'Quality guaranteed',
-      qualityDesc: 'We have never required a deposit. You pay when the work is complete and your expectations are met.',
+      qualityTitle: 'No deposit. You pay when it is done.',
+      qualityDesc: 'We have never asked for money up front, on any job, at any size. You pay when the work is finished and it is what we agreed.',
       freeQuoteCard: 'Free quote'
     },
     services: {
@@ -382,8 +382,8 @@ export const TRANSLATIONS = {
       videoLabel: 'Une maison que nous avons préparée à Ottawa, des murs bruts jusqu\'à la remise des clés'
     },
     homeStats: {
-      qualityTitle: 'Qualité garantie',
-      qualityDesc: 'Nous n\'avons jamais demandé d\'acompte. Vous ne payez que lorsque les travaux sont terminés et vos attentes satisfaites.',
+      qualityTitle: 'Aucun acompte. Vous payez à la fin.',
+      qualityDesc: 'Nous n’avons jamais demandé d’argent d’avance, sur aucun chantier, quelle qu’en soit l’ampleur. Vous payez quand les travaux sont terminés et conformes à ce qui a été convenu.',
       freeQuoteCard: 'Devis gratuit'
     },
     services: {

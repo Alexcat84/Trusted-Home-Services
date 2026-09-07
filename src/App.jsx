@@ -155,10 +155,9 @@ function Hero({ skipAnimation = false }) {
             <button type="button" className="btn btn-primary" onClick={openQuote}>{t('hero.cta1')}</button>
             <span className="btn btn-primary" aria-hidden="true">{t('hero.cta2')}</span>
           </motion.div>
+          {/* The promise, stated rather than stamped. A generic satisfaction
+              badge said less than the sentence it sat next to. */}
           <motion.div className="home-stats-seal hero-stats-seal hero-quality" variants={item}>
-            <div className="home-stats-seal-img" aria-hidden="true">
-              <img src="/images/quality%20guarantee%20luxury.png" alt="" />
-            </div>
             <div className="home-stats-seal-text">
               <p className="home-stats-seal-title">{t('homeStats.qualityTitle')}</p>
               <p className="home-stats-seal-desc">{t('homeStats.qualityDesc')}</p>
