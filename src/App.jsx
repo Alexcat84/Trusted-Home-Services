@@ -11,6 +11,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ServicePage from './components/ServicePage';
 import { getServiceList } from './content/services';
+import { SAMPLE_REVIEWS, SAMPLE_POSTS } from './content/sampleContent';
 import { getHeroVideo } from './content/heroVideo';
 import { getServiceFromPath, navigateTo, servicePath } from './lib/routing';
 
@@ -232,6 +233,23 @@ function Reviews() {
         <p className="section-intro reviews-intro">{t('reviews.intro')}</p>
         <p className="reviews-lead">{t('reviews.lead')}</p>
         <Testimonials showTitle={false} />
+        {/* Placeholder reviews, so the block can be judged at the volume the
+            reference runs at. They come out when the real ones go in. */}
+        <ul className="review-grid">
+          {SAMPLE_REVIEWS.map((r) => (
+            <li key={r.id} className="review-card">
+              <div className="review-head">
+                <span className="review-avatar" aria-hidden="true">{r.initial}</span>
+                <span>
+                  <span className="review-name">{r.name}</span>
+                  <span className="review-date">{r.date}</span>
+                </span>
+              </div>
+              <div className="review-stars" aria-hidden="true">★★★★★</div>
+              <p className="review-text">{r.text}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </AnimatedSection>
   );
@@ -273,6 +291,18 @@ function StartHere() {
             </a>
           ))}
         </div>
+        {/* The row the reference fills with recent posts. Placeholder for now. */}
+        <ul className="post-grid">
+          {SAMPLE_POSTS.map((a) => (
+            <li key={a.id} className="post-card">
+              <img className="post-card-img" src={a.img} alt="" loading="lazy" />
+              <span className="post-card-body">
+                <span className="post-card-title">{a.title}</span>
+                <span className="post-card-excerpt">{a.excerpt}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
         <ul className="trust-strip">
           {marks.map((m) => (
             <li key={m} className="trust-mark">
