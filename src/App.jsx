@@ -237,6 +237,55 @@ function Reviews() {
   );
 }
 
+/**
+ * The three card row and the strip of marks the reference runs before its
+ * footer. Their row holds blog posts and their strip holds a supplier logo and
+ * a warranty seal, neither of which exists here yet, so the row points at real
+ * service pages and the strip carries three things this company can say about
+ * itself. Both are slots: real cases and real partner marks drop straight in.
+ */
+function StartHere() {
+  const { t, lang } = useLang();
+  const picks = getServiceList(lang).filter((s) => ['painting', 'flooring', 'curb'].includes(s.key));
+  const marks = ['mark1', 'mark2', 'mark3'];
+
+  return (
+    <AnimatedSection className="section section-start">
+      <div className="container">
+        <h2 className="section-title"><AnimatedSectionTitle text={t('startHere.title')} /></h2>
+        <p className="section-intro">{t('startHere.intro')}</p>
+        <div className="start-grid">
+          {picks.map((s) => (
+            <a
+              key={s.key}
+              href={servicePath(s.key)}
+              className="start-card"
+              onClick={(e) => {
+                e.preventDefault();
+                navigateTo(servicePath(s.key));
+              }}
+            >
+              <img className="start-card-img" src={s.img} alt="" loading="lazy" />
+              <span className="start-card-body">
+                <span className="start-card-name">{s.name}</span>
+                <span className="start-card-desc">{s.tagline}</span>
+              </span>
+            </a>
+          ))}
+        </div>
+        <ul className="trust-strip">
+          {marks.map((m) => (
+            <li key={m} className="trust-mark">
+              <span className="trust-mark-title">{t(`startHere.${m}Title`)}</span>
+              <span className="trust-mark-text">{t(`startHere.${m}Text`)}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </AnimatedSection>
+  );
+}
+
 function HowWeWork() {
   const { t, lang } = useLang();
   // The reference walks the visitor through five, so this does too.
@@ -2139,6 +2188,7 @@ export default function App() {
           <Services />
           <HowWeWork />
           <Reviews />
+          <StartHere />
         </main>
         <Footer />
       </>

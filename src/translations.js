@@ -38,6 +38,16 @@ export const TRANSLATIONS = {
       step4: { title: 'You look it over', text: 'We walk the property with you and put right anything that is not what we agreed. Nothing is due until this point.' },
       step5: { title: 'It is ready', text: 'Call your agent and say the house is ready to photograph, or move in and enjoy it. Either way the work is done and paid for on your terms.' }
     },
+    startHere: {
+      title: 'Where most people start',
+      intro: 'If you are not sure what your property needs first, these three change the most for the least.',
+      mark1Title: 'Ottawa and the region',
+      mark1Text: 'Local crews who know the winters, the housing stock and the condo rules here.',
+      mark2Title: 'English and French',
+      mark2Text: 'Quotes, plans and the people on site, in whichever language suits you.',
+      mark3Title: 'Nothing up front',
+      mark3Text: 'No deposit on any job. You pay when the work is finished and checked.',
+    },
     reviews: {
       title: 'What people say about the work',
       intro: 'Selling a house is exciting and frightening at once. The price decides what your family does next, and it lands in the middle of one of the more stressful moves anyone makes.',
@@ -407,6 +417,16 @@ export const TRANSLATIONS = {
       step3: { title: 'On s’en occupe', text: 'Matériaux, corps de métier, calendrier, qualité et nettoyage final. Une équipe et un seul interlocuteur, sans personne à relancer.' },
       step4: { title: 'Vous vérifiez', text: 'Nous parcourons la propriété avec vous et corrigeons tout ce qui ne correspond pas à ce qui était convenu. Rien n’est dû avant ce moment.' },
       step5: { title: 'C’est prêt', text: 'Appelez votre courtier pour dire que la maison est prête à photographier, ou emménagez. Dans les deux cas, le travail est fait et payé à vos conditions.' }
+    },
+    startHere: {
+      title: 'Par où commencent la plupart des gens',
+      intro: 'Si vous ne savez pas par quoi commencer, ces trois postes changent le plus pour le moins cher.',
+      mark1Title: 'Ottawa et la région',
+      mark1Text: 'Des équipes d’ici, qui connaissent les hivers, le parc immobilier et les règlements de condo.',
+      mark2Title: 'Anglais et français',
+      mark2Text: 'Soumissions, plans et équipes sur place, dans la langue qui vous convient.',
+      mark3Title: 'Rien à l’avance',
+      mark3Text: 'Aucun acompte, sur aucun chantier. Vous payez une fois les travaux terminés et vérifiés.',
     },
     reviews: {
       title: 'Ce qu’on dit du travail',
