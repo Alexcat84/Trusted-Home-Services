@@ -16,20 +16,13 @@ export const TRANSLATIONS = {
     },
     services: {
       title: 'Our Services',
-      intro: 'Everything you need to get your home ready for sale, move-in or everyday peace of mind.',
+      intro: 'Everything a house needs before it goes on the market, or before you move into it, listed in the order the work actually happens.',
       learnMore: 'View details',
       includesTitle: 'What the work includes',
       benefitsTitle: 'Why it matters',
       faqTitle: 'Questions we get asked',
-      allServices: 'All services',
-      paint: { title: 'Painting & coatings', short: 'Interior, exterior, epoxy floors, cabinet refinishing.', text: 'Interior, exterior, commercial, epoxy floors, cabinet refinishing and surface preparation. Professional finish so everything looks spotless.' },
-      repair: { title: 'Repairs & preparation', short: 'Drywall, caulking, minor carpentry, fixtures.', text: 'Drywall, caulking, minor carpentry, light fixtures and hardware. Everything needed so the property is ready to paint and show.' },
-      curb: { title: 'Curb appeal & maintenance', short: 'Lawn, power washing, fence and porch touch-ups.', text: 'Lawn, edging, power washing driveways and doors, fence and porch touch-ups. Strong first impression from the street.' },
-      declutter: { title: 'Decluttering & removal', short: 'Clear-out and final disposition so the property is ready to show.', text: 'We clear spaces and handle removal and final disposition so every room shows at its best. One less worry before listing or move-in.' },
-      staging: { title: 'Staging & organizing', short: 'Prepare every room so buyers see the potential.', text: 'We organize and stage so buyers imagine themselves in the space. Rooms feel welcoming and ready for photos and showings.' },
-      flooring: { title: 'Flooring', short: 'Supply and installation for a fresh, market-ready look.', text: 'New or refreshed flooring so the property stands out. We have experience with flooring projects for listings and move-ins.' },
-      clean: { title: 'Cleaning', short: 'Pre-listing, deep cleaning, post-sale and turnover.', text: 'Pre-listing, deep cleaning, post-sale and turnover for tenants. Kitchens, bathrooms, floors and windows ready for photos and showings.' },
-      handyman: { title: 'Handyman', short: 'General repairs, assembly, and small fixes for your property.', text: 'From furniture assembly and fixture installation to small repairs and odd jobs. One reliable contact for the tasks that keep your home or listing in top shape.' }
+      allServices: 'All services'
+      
     },
     steps: {
       title: 'How We Work',
@@ -394,15 +387,8 @@ export const TRANSLATIONS = {
       benefitsTitle: 'Pourquoi cela compte',
       faqTitle: 'Questions fréquentes',
       ctaTitle: 'Prêts quand vous l\'êtes',
-      allServices: 'Tous les services',
-      paint: { title: 'Peinture et revêtements', short: 'Intérieur, extérieur, sols époxy, armoires.', text: 'Intérieur, extérieur, commercial, sols époxy, refinissage d\'armoires.' },
-      repair: { title: 'Réparations et préparation', short: 'Gypse, calfeutrage, menuiserie, luminaires.', text: 'Gypse, calfeutrage, menuiserie mineure, luminaires.' },
-      curb: { title: 'Attrait de la rue et entretien', short: 'Pelouse, lavage haute pression, clôtures.', text: 'Pelouse, bordures, lavage haute pression.' },
-      declutter: { title: 'Désencombrement et enlèvement', short: 'Vidage et disposition finale pour que le bien soit prêt à montrer.', text: 'Nous libérons les espaces et gérons l\'enlèvement et la disposition finale pour que chaque pièce soit à son avantage.' },
-      staging: { title: 'Staging et organisation', short: 'Préparez chaque pièce pour que les acheteurs voient le potentiel.', text: 'Nous organisons et mettons en scène pour que les acheteurs s\'imaginent dans les lieux. Pièces accueillantes, prêtes pour les visites.' },
-      flooring: { title: 'Planchers', short: 'Fourniture et pose pour un look neuf et prêt à vendre.', text: 'Planchers neufs ou rafraîchis pour que le bien se démarque. Nous avons de l\'expérience en projets de planchers pour annonces et emménagements.' },
-      clean: { title: 'Nettoyage', short: 'Pré-annonce, nettoyage en profondeur, après-vente.', text: 'Pré-annonce, nettoyage en profondeur, après-vente et turnover.' },
-      handyman: { title: 'Bricolage', short: 'Réparations générales, assemblage et petits travaux.', text: 'Assemblage de meubles, pose de luminaires, petites réparations et menus travaux. Un seul contact fiable pour garder votre bien ou annonce au top.' }
+      allServices: 'Tous les services'
+      
     },
     steps: {
       title: 'Notre processus',
@@ -766,15 +752,8 @@ export const TRANSLATIONS = {
       includesTitle: 'Qué incluye el trabajo',
       benefitsTitle: 'Por qué importa',
       faqTitle: 'Preguntas frecuentes',
-      allServices: 'Todos los servicios',
-      paint: { title: 'Pintura y recubrimientos', short: 'Interior, exterior, pisos epoxy, gabinetes.', text: 'Interior, exterior, comercial, epoxy en pisos, refinado de gabinetes.' },
-      repair: { title: 'Reparaciones y preparación', short: 'Drywall, masilla, carpintería, luminarias.', text: 'Drywall, masilla, carpintería menor, luminarias.' },
-      curb: { title: 'Vista exterior y mantenimiento', short: 'Césped, lavado a presión, cercas y porches.', text: 'Césped, bordes, lavado a presión.' },
-      declutter: { title: 'Despeje y retiro', short: 'Vaciar y disposición final para que la propiedad esté lista para mostrar.', text: 'Despejamos espacios y nos encargamos del retiro y la disposición final para que cada habitación se vea al máximo.' },
-      staging: { title: 'Staging y organización', short: 'Preparamos cada habitación para que el comprador vea el potencial.', text: 'Organizamos y hacemos staging para que el comprador se imagine viviendo ahí. Espacios acogedores y listos para fotos y visitas.' },
-      flooring: { title: 'Pisos', short: 'Suministro e instalación para una imagen renovada y lista para el mercado.', text: 'Pisos nuevos o renovados para que la propiedad destaque. Tenemos experiencia en proyectos de pisos para listados y mudanzas.' },
-      clean: { title: 'Limpieza', short: 'Pre-listing, limpieza profunda, post-venta y turnover.', text: 'Pre-listing, limpieza profunda, post-venta y turnover.' },
-      handyman: { title: 'Handyman / Reparaciones generales', short: 'Reparaciones, montaje y arreglos menores para su propiedad.', text: 'Montaje de muebles, instalación de accesorios y pequeñas reparaciones. Un solo contacto de confianza para dejar su hogar o listado en perfectas condiciones.' }
+      allServices: 'Todos los servicios'
+      
     },
     steps: {
       title: 'Cómo trabajamos',
