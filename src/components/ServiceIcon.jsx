@@ -31,6 +31,10 @@ const PATHS = {
   realtors: <><path d="M6 21V5" {...P} /><rect x="6" y="4" width="13" height="7" rx="1" {...P} /><path d="M9.5 7.5h6" {...P} /></>,
   // Two figures, for the partner entry
   partners: <><circle cx="9" cy="8" r="3" {...P} /><path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1" {...P} /><circle cx="17.5" cy="9.5" r="2.5" {...P} /><path d="M15.5 14.3A4.6 4.6 0 0 1 21 18.8V20" {...P} /></>,
+  // Menu entries that are not services
+  how: <><path d="M4 6h16M4 12h16M4 18h10" {...P} /><circle cx="19" cy="18" r="2" {...P} /></>,
+  projects: <><rect x="3" y="5" width="18" height="14" rx="2" {...P} /><path d="m3 15 5-4 4 3 3-2 6 5" {...P} /><circle cx="9" cy="9.5" r="1.4" {...P} /></>,
+  faq: <><circle cx="12" cy="12" r="9" {...P} /><path d="M9.5 9.5a2.5 2.5 0 1 1 3.2 2.4c-.7.3-1.2.9-1.2 1.7v.4" {...P} /><path d="M11.5 17.2h.01" {...P} /></>,
 };
 
 export default function ServiceIcon({ name }) {

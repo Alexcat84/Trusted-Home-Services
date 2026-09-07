@@ -14,7 +14,10 @@
   --color-bg: #ffffff;
   --color-bg-alt: #f7fafc;
   --color-border: #e2e8f0;
-  --font-sans: 'Outfit', 'DM Sans', system-ui, sans-serif;
+  /* The reference sets its headings in Open Sans over body copy in Inter.
+     Both are open licensed, so they are used as they are. */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Open Sans', 'Inter', system-ui, sans-serif;
   --radius: 12px;
   --radius-lg: 20px;
   --shadow: 0 4px 24px rgba(10, 35, 60, 0.08);
@@ -35,8 +38,10 @@ html {
 body {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 1rem;
-  line-height: 1.6;
+  /* 20px over 1.69, which is what the reference reads at. Ours was 16 over
+     1.6, and that quarter is most of why the two did not look alike. */
+  font-size: 1.25rem;
+  line-height: 1.69;
   color: var(--color-text);
   background: var(--color-bg);
   overflow-x: hidden;
@@ -65,7 +70,7 @@ a:hover {
 
 .container {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1140px;
   margin: 0 auto;
   padding: 0 1.25rem;
 }
@@ -908,13 +913,15 @@ button.nav-link {
 }
 .section-services .container--wide {
   margin-bottom: 0;
+  /* The reference measures its content to 1140. The wide container exists for
+     the menu panels, which span the bar, not for a section of the page. */
+  max-width: 1140px;
 }
 .section-services .section-title {
   margin-bottom: 0.35rem;
 }
 .section-services .section-intro {
   margin-bottom: 1rem;
-  font-size: 0.9375rem;
 }
 .section-services .services-grid--four,
 .section-services .services-grid--multi {
@@ -969,7 +976,8 @@ button.nav-link {
 
 
 .section-title {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.4vw, 2.375rem);
   font-weight: 700;
   color: var(--color-primary);
   margin: 0 0 0.5rem;
@@ -3585,8 +3593,10 @@ button.nav-link {
 
 .hero-headline {
   margin: 0 0 clamp(1rem, 1.8vw, 1.5rem);
-  font-size: clamp(1.9rem, 3.4vw, 3.1rem);
-  font-weight: 800;
+  font-family: var(--font-display);
+  /* 90px at full width, which is what the reference runs. */
+  font-size: clamp(2.4rem, 6.4vw, 5.625rem);
+  font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.02em;
   color: #ffffff;
@@ -3976,4 +3986,303 @@ button.nav-link {
   .trust-strip {
     gap: 1.5rem;
   }
+}
+
+/* ============================================
+   Cloned header: mark above, links below
+   ============================================
+   Measured on the reference: a band of about 285px on white, the mark centred
+   at the top, the row of links beneath it at 16px in a plain weight and a
+   near black, and the whole thing scrolling away rather than sitting over the
+   page. */
+
+.header {
+  position: relative;
+  background: #ffffff;
+  border-bottom: 1px solid #ececec;
+  box-shadow: none;
+  padding: 0;
+}
+
+.header-brand {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.6rem 1.25rem 0.9rem;
+}
+
+.header-logo {
+  display: block;
+  line-height: 0;
+}
+
+.header-logo img {
+  height: clamp(72px, 8vw, 118px);
+  width: auto;
+  display: block;
+}
+
+.header-utility {
+  position: absolute;
+  right: clamp(1rem, 3vw, 2.25rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* The switcher sat on a dark bar before, so it needs the other set of colours. */
+.header .lang-group {
+  border-color: rgba(10, 35, 60, 0.25);
+}
+
+.header .lang-btn {
+  color: var(--color-primary);
+}
+
+.header .lang-btn:hover {
+  background: rgba(10, 35, 60, 0.08);
+  color: var(--color-primary);
+}
+
+.header .lang-btn.active {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.header-nav {
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem 0.9rem;
+}
+
+.header-nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem clamp(0.7rem, 1.1vw, 1.15rem);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #333333;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.header-nav-link:hover,
+.header-nav-link.is-active {
+  color: var(--color-accent);
+}
+
+.header-nav-link.is-active {
+  box-shadow: inset 0 -2px 0 var(--color-accent);
+}
+
+.header-nav-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.nav-caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  transition: transform var(--transition);
+}
+
+.nav-item-has-menu.is-open .nav-caret {
+  transform: rotate(180deg);
+}
+
+/* The panels drop from the row of links. */
+.nav-panel {
+  border-top: 1px solid #ececec;
+  background: var(--color-primary-dark);
+  animation: services-panel-in 0.2s ease;
+}
+
+.nav-panel[hidden] {
+  display: none;
+}
+
+.nav-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  padding: 1.75rem 0 2rem;
+  list-style: none;
+  margin: 0;
+}
+
+.nav-panel-item {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  padding: 0.7rem;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition);
+}
+
+.nav-panel-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.nav-panel-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: rgba(249, 119, 43, 0.16);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-panel-name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.nav-panel-desc {
+  display: block;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+/* The hero no longer sits under a fixed bar. */
+.hero-panel,
+.hero-media {
+  padding-top: 0;
+}
+
+.hero-panel {
+  padding: clamp(2.5rem, 4vw, 4.5rem) clamp(1.5rem, 3.5vw, 4rem) clamp(4.5rem, 7vw, 7rem);
+}
+
+/* A page the menu reaches that has nothing in it yet. */
+.holding-main {
+  padding: clamp(3.5rem, 8vw, 7rem) 0 clamp(4rem, 9vw, 8rem);
+}
+
+.holding-inner {
+  max-width: 40rem;
+  text-align: center;
+}
+
+.holding-eyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.holding-title {
+  margin: 0 0 1rem;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--color-primary);
+}
+
+.holding-text {
+  margin: 0 auto 2rem;
+  max-width: 34rem;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 900px) {
+  .nav-panel-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-brand {
+    justify-content: flex-start;
+    padding: 0.9rem 1rem;
+  }
+  .header-logo img {
+    height: 56px;
+  }
+  .header-nav {
+    display: none;
+    padding: 0 1rem 1rem;
+  }
+  .header-nav.is-open {
+    display: block;
+  }
+  .header-nav-list {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .header-nav-link {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.8rem 0.25rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .nav-panel-grid {
+    grid-template-columns: 1fr;
+    padding-top: 0.5rem;
+  }
+}
+
+/* Headings take the display face throughout, as the reference sets them. */
+h1,
+h2,
+h3,
+.hero-headline,
+.section-title,
+.holding-title,
+.service-tile-name,
+.step-title,
+.start-card-name {
+  font-family: var(--font-display);
+}
+
+/* Running text at the size the reference sets it.
+ *
+ * The body element was already at 20px, but every paragraph carried its own
+ * rule landing between 15 and 17, which is what kept the two sites reading
+ * differently even once the layout and the headings matched. Captions on
+ * cards and tiles stay smaller, as they are on the reference too. */
+.hero-panel-body,
+.section-intro,
+.step-text,
+.reviews-intro,
+.reviews-lead,
+.holding-text,
+.service-intro,
+.service-benefit p,
+.service-faq-item dd {
+  font-size: 1.25rem;
+  line-height: 1.69;
 }

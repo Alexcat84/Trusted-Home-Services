@@ -1314,6 +1314,39 @@ function ProjectsPage() {
   );
 }
 
+/**
+ * A page the menu reaches but that has nothing in it yet.
+ *
+ * The cloned navigation carries the reference's full set of entries, and four
+ * of those have no content on this side. Rather than a dead link or a missing
+ * entry, each answers with this until the real page is written.
+ */
+function HoldingPage({ which }) {
+  const { t, lang } = useLang();
+  const homeHash = getSectionHash(lang, 'home');
+  const goHome = (e) => {
+    e.preventDefault();
+    window.location.hash = homeHash;
+    setTimeout(() => window.scrollTo(0, 0), 50);
+  };
+
+  return (
+    <div className="privacy-page holding-page">
+      <a href="#main" className="skip-link">Skip to main content</a>
+      <Header />
+      <main id="main" className="holding-main">
+        <div className="container holding-inner">
+          <p className="holding-eyebrow">{t(`nav.${which}`)}</p>
+          <h1 className="holding-title">{t('holding.title')}</h1>
+          <p className="holding-text">{t('holding.text')}</p>
+          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary">{t('privacy.backToHome')}</a>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
 function RealtorsPage() {
   const { t, lang } = useLang();
   const [realtorModalOpen, setRealtorModalOpen] = useState(false);
@@ -2106,10 +2139,14 @@ function AdminPage() {
   );
 }
 
+/** Pages the cloned menu points at that have nothing in them yet. */
+const HOLDING_PAGES = ['about', 'renovations', 'promise', 'locations'];
+
 function getSubPageFromHash(h) {
   if (REALTORS_PAGE_HASHES.includes(h)) return 'realtors';
   if (PARTNERS_PAGE_HASHES.includes(h)) return 'partners';
   if (PROJECTS_PAGE_HASHES.includes(h)) return 'projects';
+  if (HOLDING_PAGES.includes(h)) return h;
   return null;
 }
 
@@ -2176,6 +2213,7 @@ export default function App() {
     if (legalPage === 'terms') return <TermsOfServicePage />;
     if (legalPage === 'faq') return <FAQPage />;
     if (legalPage === 'admin') return <AdminPage />;
+    if (HOLDING_PAGES.includes(subPage)) return <HoldingPage which={subPage} />;
     if (subPage === 'realtors') return <RealtorsPage />;
     if (subPage === 'partners') return <BecomePartnerPage />;
     if (subPage === 'projects') return <ProjectsPage />;

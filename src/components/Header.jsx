@@ -6,11 +6,19 @@ import { navigateTo, servicePath } from '../lib/routing';
 import ServiceIcon from './ServiceIcon';
 import { ACTIVE_LOCALES } from '../lib/locales';
 
-const NAV_KEYS = ['home', 'services', 'how', 'projects', 'team'];
-/** The two audiences that sit under the "work with us" panel. */
+/* Seven entries in the reference's positions. Two of its slots carry brand
+   terms of its own, so those hold the plain equivalents here. */
+const NAV_KEYS = ['home', 'about', 'services', 'renovations', 'promise', 'locations', 'team'];
+/** The entries that open a panel rather than going somewhere. */
+const MENU_KEYS = ['about', 'services', 'team'];
+/** What sits under About us. */
+const ABOUT_KEYS = ['how', 'projects', 'faq'];
+/** The two audiences that sit under work with us. */
 const TEAM_KEYS = ['realtors', 'partners'];
-/** Entries that scroll to a section. "team" is a panel, so it has no section of its own. */
+/** Entries that scroll to a section rather than opening a page. */
 const SECTION_KEYS = ['home', 'services', 'how', 'projects', 'realtors', 'partners', 'quote'];
+/** Entries with a page of their own, reached by hash. */
+const PAGE_KEYS = ['renovations', 'promise', 'locations', 'faq'];
 
 export default function Header() {
   const { lang, setLang, t } = useLang();
@@ -45,9 +53,6 @@ export default function Header() {
   useEffect(() => {
     if (!openMenu) return undefined;
     const onPointerDown = (e) => {
-      // The toggle sits in the bar and the services panel is its sibling, so the
-      // test has to cover the whole header. Checking only the panel would treat a
-      // click on its own toggle as outside, closing and reopening it in one go.
       if (headerRef.current && !headerRef.current.contains(e.target)) setOpenMenu(null);
     };
     const onKeyDown = (e) => {
@@ -116,6 +121,42 @@ export default function Header() {
     };
   }, [lang]);
 
+  /** Sends a panel entry to wherever it belongs. */
+  const goTo = (key) => (e) => {
+    e.preventDefault();
+    setOpenMenu(null);
+    setMenuOpen(false);
+    if (PAGE_KEYS.includes(key)) {
+      window.location.hash = key;
+      window.scrollTo(0, 0);
+      return;
+    }
+    navigateTo('/', hash(key));
+  };
+
+  /** One panel, laid out the same whichever entry opened it. */
+  const panel = (id, keys) => (
+    <div className="nav-panel" id={id} hidden={openMenu !== id}>
+      <div className="container container--wide">
+        <ul className="nav-panel-grid">
+          {keys.map((k) => (
+            <li key={k}>
+              <a href={`/#${k}`} className="nav-panel-item" onClick={goTo(k)}>
+                <span className="nav-panel-icon" aria-hidden="true">
+                  <ServiceIcon name={k} />
+                </span>
+                <span>
+                  <span className="nav-panel-name">{t(`nav.${k}`)}</span>
+                  <span className="nav-panel-desc">{t(`nav.${k}Tagline`)}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+
   return (
     <header
       className="header"
@@ -123,10 +164,12 @@ export default function Header() {
       ref={headerRef}
       onMouseLeave={canHover ? () => setOpenMenu(null) : undefined}
     >
-      <div className="header-inner">
+      {/* The mark sits alone across the top, centred, with the row of links
+          beneath it. That is the reference arrangement. */}
+      <div className="header-brand">
         <a
           href={`/#${hash('home')}`}
-          className="logo-wrap"
+          className="header-logo"
           aria-label="Trusted Home Services - Home"
           onClick={(e) => {
             if (window.location.pathname !== '/') {
@@ -135,127 +178,111 @@ export default function Header() {
             }
           }}
         >
-          <img src="/images/Logo v4.0 Inverted.jpg" alt="Trusted Home Services" className="logo-img" />
+          <img src="/images/Logo v4.0.jpg" alt="Trusted Home Services" />
         </a>
-        <nav className={`nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
-          <ul className="nav-list">
-            {NAV_KEYS.map((key) => {
-              const sectionHash = hash(key);
-              const isActive = currentHash === sectionHash.toLowerCase() || (key === 'home' && !currentHash);
+        <div className="header-utility">
+          <div className="lang-switcher">
+            <div className="lang-group" role="group" aria-label="Language">
+              {ACTIVE_LOCALES.map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  className={`lang-btn ${lang === l ? 'active' : ''}`}
+                  onClick={() => setLang(l)}
+                  aria-pressed={lang === l}
+                >
+                  {l.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
 
-              // Services opens a full width panel below the bar, because nine entries
-              // with a line of description each do not fit a small dropdown.
-              if (key === 'services') {
-                const isOpen = openMenu === key;
-                return (
-                  <li
-                    key={key}
-                    className={`nav-item-has-menu ${isOpen ? 'is-open' : ''}`}
-                    onMouseEnter={openOnHover(key)}
+      <nav className={`header-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
+        <ul className="header-nav-list">
+          {NAV_KEYS.map((key) => {
+            const sectionHash = hash(key);
+            const isActive = currentHash === sectionHash.toLowerCase() || (key === 'home' && !currentHash);
+
+            if (MENU_KEYS.includes(key)) {
+              const isOpen = openMenu === key;
+              return (
+                <li
+                  key={key}
+                  className={`nav-item-has-menu ${isOpen ? 'is-open' : ''}`}
+                  onMouseEnter={openOnHover(key)}
+                >
+                  <button
+                    type="button"
+                    className={`header-nav-link header-nav-link--toggle ${isActive ? 'is-active' : ''}`}
+                    aria-expanded={isOpen}
+                    aria-controls={key}
+                    onClick={() => toggleMenu(key)}
                   >
-                    <button
-                      type="button"
-                      className={`nav-link nav-link--toggle ${isActive ? 'nav-link--active' : ''}`}
-                      aria-expanded={isOpen}
-                      aria-controls="services-panel"
-                      onClick={() => toggleMenu(key)}
-                    >
-                      {t('nav.services')}
-                      <span className="nav-caret" aria-hidden="true" />
-                    </button>
-                  </li>
-                );
-              }
+                    {t(`nav.${key}`)}
+                    <span className="nav-caret" aria-hidden="true" />
+                  </button>
+                </li>
+              );
+            }
 
-              // Work with us keeps the compact dropdown: two entries would look lost
-              // spread across a full width bar.
-              if (key === 'team') {
-                const isOpen = openMenu === key;
-                return (
-                  <li
-                    key={key}
-                    className={`nav-item-has-menu ${isOpen ? 'is-open' : ''}`}
-                    onMouseEnter={openOnHover(key)}
-                  >
-                    <button
-                      type="button"
-                      className={`nav-link nav-link--toggle ${isActive ? 'nav-link--active' : ''}`}
-                      aria-expanded={isOpen}
-                      aria-controls="team-menu"
-                      onClick={() => toggleMenu(key)}
-                    >
-                      {t('nav.team')}
-                      <span className="nav-caret" aria-hidden="true" />
-                    </button>
-                  </li>
-                );
-              }
-
+            if (PAGE_KEYS.includes(key)) {
               return (
                 <li key={key} onMouseEnter={canHover ? () => setOpenMenu(null) : undefined}>
-                  <a
-                    href={`#${sectionHash}`}
-                    className={`nav-link ${isActive ? 'nav-link--active' : ''}`}
-                    onClick={(e) => {
-                      setMenuOpen(false);
-                      setOpenMenu(null);
-                      // From a service page the hash alone would not leave the page, so route home first.
-                      if (window.location.pathname !== '/') {
-                        e.preventDefault();
-                        navigateTo('/', sectionHash);
-                      }
-                    }}
-                  >
+                  <a href={`/#${key}`} className="header-nav-link" onClick={goTo(key)}>
                     {t(`nav.${key}`)}
                   </a>
                 </li>
               );
-            })}
-          </ul>
-        </nav>
-        <div className="lang-switcher">
-          {/* The outer slot grows so the nav stays centred. The pill inside stays
-              the size of its labels instead of stretching with the slot. */}
-          <div className="lang-group" role="group" aria-label="Language">
-            {ACTIVE_LOCALES.map((l) => (
-              <button
-                key={l}
-                type="button"
-                className={`lang-btn ${lang === l ? 'active' : ''}`}
-                onClick={() => setLang(l)}
-                aria-pressed={lang === l}
-              >
-                {l.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        </div>
-        <button
-          type="button"
-          className="nav-toggle"
-          aria-label="Open menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-      {/* Full width panel, a sibling of the bar rather than a child of the nav item,
-          so it can span the whole header instead of hanging off one entry. */}
-      <div
-        className="services-panel"
-        id="services-panel"
-        hidden={openMenu !== 'services'}
-      >
+            }
+
+            return (
+              <li key={key} onMouseEnter={canHover ? () => setOpenMenu(null) : undefined}>
+                <a
+                  href={`#${sectionHash}`}
+                  className={`header-nav-link ${isActive ? 'is-active' : ''}`}
+                  onClick={(e) => {
+                    setMenuOpen(false);
+                    setOpenMenu(null);
+                    if (window.location.pathname !== '/') {
+                      e.preventDefault();
+                      navigateTo('/', sectionHash);
+                    }
+                  }}
+                >
+                  {t(`nav.${key}`)}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      {panel('about', ABOUT_KEYS)}
+      {panel('team', TEAM_KEYS)}
+
+      {/* Services keeps its own panel, since nine entries with a line each need
+          the full width. */}
+      <div className="nav-panel" id="services" hidden={openMenu !== 'services'}>
         <div className="container container--wide">
-          <ul className="services-panel-grid">
+          <ul className="nav-panel-grid">
             {serviceLinks.map((s) => (
               <li key={s.key}>
                 <a
                   href={servicePath(s.key)}
-                  className="services-panel-item"
+                  className="nav-panel-item"
                   onClick={(e) => {
                     e.preventDefault();
                     setOpenMenu(null);
@@ -263,42 +290,12 @@ export default function Header() {
                     navigateTo(servicePath(s.key));
                   }}
                 >
-                  <span className="services-panel-icon" aria-hidden="true">
+                  <span className="nav-panel-icon" aria-hidden="true">
                     <ServiceIcon name={s.key} />
                   </span>
                   <span>
-                    <span className="services-panel-name">{s.name}</span>
-                    <span className="services-panel-desc">{s.tagline}</span>
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      {/* Work with us gets the same full width treatment as the services panel.
-          Two dropdowns side by side in different shapes read as an accident. */}
-      <div className="services-panel" id="team-menu" hidden={openMenu !== 'team'}>
-        <div className="container container--wide">
-          <ul className="services-panel-grid services-panel-grid--end">
-            {TEAM_KEYS.map((k) => (
-              <li key={k}>
-                <a
-                  href={`/#${hash(k)}`}
-                  className="services-panel-item"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setOpenMenu(null);
-                    setMenuOpen(false);
-                    navigateTo('/', hash(k));
-                  }}
-                >
-                  <span className="services-panel-icon" aria-hidden="true">
-                    <ServiceIcon name={k} />
-                  </span>
-                  <span>
-                    <span className="services-panel-name">{t(`nav.${k}`)}</span>
-                    <span className="services-panel-desc">{t(`nav.${k}Tagline`)}</span>
+                    <span className="nav-panel-name">{s.name}</span>
+                    <span className="nav-panel-desc">{s.tagline}</span>
                   </span>
                 </a>
               </li>
