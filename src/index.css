@@ -4580,3 +4580,72 @@ h3,
     grid-template-columns: 1fr;
   }
 }
+
+/* The process runs two across, each step opening with a round badge carrying
+   the number and a phrase in bold running into the sentence. That is the shape
+   the reference uses, and it reads faster than a single tall column. */
+.steps-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 3vw, 2.75rem) clamp(2rem, 4vw, 3.5rem);
+  max-width: none;
+}
+
+.step-card {
+  grid-template-columns: 2.9rem 1fr;
+  padding: 0;
+  border-top: 0;
+  align-items: start;
+}
+
+.step-number {
+  grid-row: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.step-lead {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.franchise-hero {
+  padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.franchise-title {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 2.9rem);
+  line-height: 1.15;
+  color: var(--color-primary);
+  max-width: 24ch;
+}
+
+.franchise-intro {
+  margin: 0;
+  max-width: 46rem;
+  font-size: 1.25rem;
+  line-height: 1.69;
+  color: var(--color-text-muted);
+}
+
+.franchise-note {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 760px) {
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+}

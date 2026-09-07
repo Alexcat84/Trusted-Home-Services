@@ -345,8 +345,9 @@ function HowWeWork() {
               transition={{ duration: 0.35, delay: i * 0.08 }}
             >
               <span className="step-number" aria-hidden="true">{i + 1}</span>
-              <h3 className="step-title">{t(s.title)}</h3>
-              <p className="step-text">{t(s.text)}</p>
+              <p className="step-text">
+                <strong className="step-lead">{t(s.title)}.</strong> {t(s.text)}
+              </p>
             </motion.div>
           ))}
         </motion.div>
@@ -1048,14 +1049,7 @@ function PrivacyPolicyPage() {
   const renderList = (text) => text.split('\n').filter(Boolean).map((line, i) => <li key={i}>{line}</li>);
   return (
     <div className="privacy-page">
-      <header className="privacy-header">
-        <div className="container privacy-header-inner">
-          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Trusted Home Services - Home">
-            <img src="/images/Logo v4.0 Inverted.jpg" alt="" className="privacy-logo" />
-          </a>
-          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('privacy.backToHome')}</a>
-        </div>
-      </header>
+      <Header />
       <main id="main" className="privacy-main">
         <div className="privacy-hero">
           <div className="container">
@@ -1163,14 +1157,7 @@ function TermsOfServicePage() {
   };
   return (
     <div className="privacy-page">
-      <header className="privacy-header">
-        <div className="container privacy-header-inner">
-          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Trusted Home Services - Home">
-            <img src="/images/Logo v4.0 Inverted.jpg" alt="" className="privacy-logo" />
-          </a>
-          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('terms.backToHome')}</a>
-        </div>
-      </header>
+      <Header />
       <main id="main" className="privacy-main">
         <div className="privacy-hero">
           <div className="container">
@@ -1245,14 +1232,7 @@ function FAQPage() {
   const qa = Array.from({ length: 12 }, (_, i) => ({ q: `faq.q${i + 1}`, a: `faq.a${i + 1}` }));
   return (
     <div className="privacy-page faq-page">
-      <header className="privacy-header">
-        <div className="container privacy-header-inner">
-          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Trusted Home Services - Home">
-            <img src="/images/Logo v4.0 Inverted.jpg" alt="" className="privacy-logo" />
-          </a>
-          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('faq.backToHome')}</a>
-        </div>
-      </header>
+      <Header />
       <main id="main" className="privacy-main">
         <div className="privacy-hero">
           <div className="container">
@@ -1280,24 +1260,10 @@ function FAQPage() {
 const REALTOR_THIRD_IMG_INTERVAL_MS = 4000;
 
 function ProjectsPage() {
-  const { t, lang } = useLang();
-  const homeHash = getSectionHash(lang, 'home');
-  const goHome = (e) => {
-    e.preventDefault();
-    window.location.hash = homeHash;
-    setTimeout(() => window.scrollTo(0, 0), 50);
-  };
-  const proofItems = [1, 2, 3, 4];
+  const { t } = useLang();  const proofItems = [1, 2, 3, 4];
   return (
     <div className="privacy-page projects-page">
-      <header className="privacy-header">
-        <div className="container privacy-header-inner">
-          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Trusted Home Services - Home">
-            <img src="/images/Logo v4.0 Inverted.jpg" alt="" className="privacy-logo" />
-          </a>
-          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('projectsPage.backToHome')}</a>
-        </div>
-      </header>
+      <Header />
       <main id="main" className="privacy-main">
         <div className="privacy-hero">
           <div className="container">
@@ -1376,25 +1342,107 @@ function HoldingPage({ which }) {
   );
 }
 
+/**
+ * Franchises, kept apart from the partner page on purpose.
+ *
+ * Somebody who wants to run their own operation and somebody who wants to
+ * supply one trade are different people asking different questions, and a
+ * single page answering both ranks for neither.
+ */
+function FranchisePage() {
+  const { t, lang } = useLang();
+  const [franchiseModalOpen, setFranchiseModalOpen] = useState(false);
+  const homeHash = getSectionHash(lang, 'home');
+  const included = ['inc1', 'inc2', 'inc3', 'inc4', 'inc5'];
+  const suits = ['fit1', 'fit2', 'fit3'];
+  const steps = ['step1', 'step2', 'step3'];
+
+  return (
+    <div className="privacy-page franchise-page">
+      <a href="#main" className="skip-link">Skip to main content</a>
+      <Header />
+      <main id="main">
+        <section className="section franchise-hero">
+          <div className="container">
+            <p className="holding-eyebrow">{t('nav.franchises')}</p>
+            <h1 className="franchise-title">{t('franchise.title')}</h1>
+            <p className="franchise-intro">{t('franchise.intro')}</p>
+          </div>
+        </section>
+
+        <section className="section section-alt">
+          <div className="container">
+            <h2 className="section-title">{t('franchise.includedTitle')}</h2>
+            <ul className="service-list">
+              {included.map((k) => (
+                <li key={k}>{t(`franchise.${k}`)}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container">
+            <h2 className="section-title">{t('franchise.fitTitle')}</h2>
+            <div className="service-benefit-grid">
+              {suits.map((k) => (
+                <article className="service-benefit" key={k}>
+                  <p>{t(`franchise.${k}`)}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section section-alt">
+          <div className="container">
+            <h2 className="section-title">{t('franchise.stepsTitle')}</h2>
+            <div className="steps-grid">
+              {steps.map((k, i) => (
+                <div className="step-card" key={k}>
+                  <span className="step-number" aria-hidden="true">{i + 1}</span>
+                  <p className="step-text">{t(`franchise.${k}`)}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section franchise-cta">
+          <div className="container">
+            <h2 className="section-title">{t('franchise.ctaTitle')}</h2>
+            <p className="section-intro">{t('franchise.ctaText')}</p>
+            <button
+              type="button"
+              className="btn btn-primary btn-lg"
+              onClick={() => setFranchiseModalOpen(true)}
+            >
+              {t('franchise.ctaButton')}
+            </button>
+            <p className="franchise-note">
+              <a href={`#${homeHash}`}>{t('privacy.backToHome')}</a>
+            </p>
+          </div>
+        </section>
+      </main>
+      <FranchiseFormModal open={franchiseModalOpen} onClose={() => setFranchiseModalOpen(false)} />
+      <Footer />
+    </div>
+  );
+}
+
 function RealtorsPage() {
   const { t, lang } = useLang();
   const [realtorModalOpen, setRealtorModalOpen] = useState(false);
   const openRealtorModal = useCallback(() => setRealtorModalOpen(true), []);
   useCornerCta(t('realtorPage.ctaPrimary'), openRealtorModal, realtorModalOpen);
   const [thirdImgActive, setThirdImgActive] = useState('money');
-  const homeHash = getSectionHash(lang, 'home');
   useEffect(() => {
     const id = setInterval(() => {
       setThirdImgActive((prev) => (prev === 'money' ? 'sold' : 'money'));
     }, REALTOR_THIRD_IMG_INTERVAL_MS);
     return () => clearInterval(id);
-  }, []);
-  const goHome = (e) => {
-    e.preventDefault();
-    window.location.hash = homeHash;
-    setTimeout(() => window.scrollTo(0, 0), 50);
-  };
-  const offerItems = [t('realtorPage.offer1'), t('realtorPage.offer2'), t('realtorPage.offer3'), t('realtorPage.offer4'), t('realtorPage.offer5')];
+  }, []);  const offerItems = [t('realtorPage.offer1'), t('realtorPage.offer2'), t('realtorPage.offer3'), t('realtorPage.offer4'), t('realtorPage.offer5')];
   const whyUs = [t('realtorPage.whyUs1'), t('realtorPage.whyUs2'), t('realtorPage.whyUs3'), t('realtorPage.whyUs4')];
   const howSteps = [
     { titleKey: 'how1Title', textKey: 'how1Text' },
@@ -1411,14 +1459,7 @@ function RealtorsPage() {
   ];
   return (
     <div className="privacy-page realtor-page">
-      <header className="privacy-header">
-        <div className="container privacy-header-inner">
-          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Trusted Home Services - Home">
-            <img src="/images/Logo v4.0 Inverted.jpg" alt="" className="privacy-logo" />
-          </a>
-          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('realtorPage.backToHome')}</a>
-        </div>
-      </header>
+      <Header />
       <main id="main" className="privacy-main">
         <div className="realtor-hero">
           <div className="container">
@@ -1501,26 +1542,11 @@ function RealtorsPage() {
 }
 
 function BecomePartnerPage() {
-  const { t, lang } = useLang();
-  const homeHash = getSectionHash(lang, 'home');
+  const { t } = useLang();
   const [partnerModalOpen, setPartnerModalOpen] = useState(false);
-  const [franchiseModalOpen, setFranchiseModalOpen] = useState(false);
-  useNoCornerCta();
-  const goHome = (e) => {
-    e.preventDefault();
-    window.location.hash = homeHash;
-    setTimeout(() => window.scrollTo(0, 0), 50);
-  };
-  return (
+  useNoCornerCta();  return (
     <div className="privacy-page">
-      <header className="privacy-header">
-        <div className="container privacy-header-inner">
-          <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Home">
-            <img src="/images/Logo v4.0 Inverted.jpg" alt="" className="privacy-logo" />
-          </a>
-          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary privacy-back-btn">{t('partnersPage.backToHome')}</a>
-        </div>
-      </header>
+      <Header />
       <main id="main" className="privacy-main">
         <div className="privacy-hero">
           <div className="container">
@@ -1550,23 +1576,10 @@ function BecomePartnerPage() {
               <p className="become-partner-card-intro">{t('partnersPage.partnerSection.intro')}</p>
               <button type="button" className="btn btn-primary" onClick={() => setPartnerModalOpen(true)}>{t('partnersPage.partnerSection.cta')}</button>
             </motion.section>
-            <motion.section
-              className="become-partner-card"
-              variants={{
-                hidden: { opacity: 0, y: 24 },
-                visible: { opacity: 1, y: 0 }
-              }}
-              transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <h2 className="privacy-section-title">{t('partnersPage.franchiseSection.title')}</h2>
-              <p className="become-partner-card-intro">{t('partnersPage.franchiseSection.intro')}</p>
-              <button type="button" className="btn btn-primary" onClick={() => setFranchiseModalOpen(true)}>{t('partnersPage.franchiseSection.cta')}</button>
-            </motion.section>
           </motion.div>
         </div>
       </main>
       <PartnerFormModal open={partnerModalOpen} onClose={() => setPartnerModalOpen(false)} />
-      <FranchiseFormModal open={franchiseModalOpen} onClose={() => setFranchiseModalOpen(false)} />
       <Footer />
     </div>
   );
@@ -1943,6 +1956,8 @@ function AdminPage() {
 
   return (
     <div className="privacy-page admin-page">
+      {/* The admin panel keeps a bar of its own. It is an internal tool, so it
+          has no use for the public navigation, and it does need the way out. */}
       <header className="privacy-header">
         <div className="container privacy-header-inner">
           <a href={`#${homeHash}`} onClick={goHome} className="privacy-logo-link" aria-label="Home">
@@ -2169,13 +2184,14 @@ function AdminPage() {
 }
 
 /** Pages the cloned menu points at that have nothing in them yet. */
-const HOLDING_PAGES = ['about', 'promise', 'locations', 'franchises'];
+const HOLDING_PAGES = ['about', 'promise', 'locations'];
 
 function getSubPageFromHash(h) {
   if (REALTORS_PAGE_HASHES.includes(h)) return 'realtors';
   if (PARTNERS_PAGE_HASHES.includes(h)) return 'partners';
   if (PROJECTS_PAGE_HASHES.includes(h)) return 'projects';
   if (HOLDING_PAGES.includes(h)) return h;
+  if (h === 'franchises') return 'franchises';
   return null;
 }
 
@@ -2243,6 +2259,7 @@ export default function App() {
     if (legalPage === 'faq') return <FAQPage />;
     if (legalPage === 'admin') return <AdminPage />;
     if (HOLDING_PAGES.includes(subPage)) return <HoldingPage which={subPage} />;
+    if (subPage === 'franchises') return <FranchisePage />;
     if (subPage === 'realtors') return <RealtorsPage />;
     if (subPage === 'partners') return <BecomePartnerPage />;
     if (subPage === 'projects') return <ProjectsPage />;

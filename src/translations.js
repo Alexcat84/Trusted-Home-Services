@@ -1,6 +1,27 @@
 export const TRANSLATIONS = {
   en: {
     nav: { home: 'Home', about: 'About Us', aboutTagline: 'Who we are and how the work runs.', howTagline: 'The five steps, start to finish.', projectsTagline: 'Work we have finished.', faq: 'FAQ', faqTagline: 'The questions we get asked most.', franchises: 'Franchises', franchisesTagline: 'Run a Trusted Home Services crew in your own area.', promise: 'Our Promise', promiseTagline: 'No deposit, on any job, at any size.', locations: 'Locations', locationsTagline: 'Where in the region we work.', services: 'Our Services', how: 'How We Work', projects: 'Our Projects', team: 'Work With Us', realtors: 'For Realtors', realtorsTagline: 'Get your listings market ready, fast.', partners: 'Become a Partner', partnersTagline: 'Join the crew we call on for work.', quote: 'Free Quote' },
+    franchise: {
+      title: 'Run a Trusted Home Services crew in your own area',
+      intro: 'Homeowners in every town need the same work done before they sell, and most of them do not know who to call. A franchise puts a known name, a working system and a trained crew behind you, so you spend your time on the jobs rather than on inventing the business around them.',
+      includedTitle: 'What comes with it',
+      inc1: 'An exclusive territory, so you are never competing with another crew of ours',
+      inc2: 'The trade network already vetted, priced and under agreement',
+      inc3: 'The quoting system, the job scheduling and the paperwork, ready to use',
+      inc4: 'Training on site, on the work and on running the operation behind it',
+      inc5: 'Marketing that runs for your area, including the pages people find you on',
+      fitTitle: 'Who it suits',
+      fit1: 'Someone already in a trade who is tired of chasing the next job on their own and wants a pipeline instead.',
+      fit2: 'Someone who has run a team before, in any field, and would rather manage a crew than swing a hammer.',
+      fit3: 'Someone with a foot in real estate who already knows the agents in their area and what listings need.',
+      stepsTitle: 'How it starts',
+      step1: 'A first call, with no commitment on either side, to see whether your area and your background fit.',
+      step2: 'We show you the numbers: what a territory costs, what a crew earns, and what the first year usually looks like.',
+      step3: 'If it works for both of us, we agree the territory and start the training.',
+      ctaTitle: 'Ask about a territory',
+      ctaText: 'Tell us where you are and what you have done, and we will tell you straight whether it is worth a longer conversation.',
+      ctaButton: 'Ask about a franchise',
+    },
     holding: {
       title: 'This page is on its way',
       text: 'We are still writing this one. Everything else on the site is ready, and you can ask for a quote from any page.',
@@ -348,7 +369,7 @@ export const TRANSLATIONS = {
     partnersPage: {
       backToHome: 'Back to Home',
       title: 'Become a Partner',
-      intro: 'Join us in one of two ways: as a partner or supplier of services or products, or by operating a Trusted Home Services franchise. Choose the option that fits you below.',
+      intro: 'Work with us as a partner or supplier. If you run a trade, a crew or a product line and want steady work in Ottawa, tell us what you do and we will come back to you.',
       partnerSection: {
         title: 'Partner / Supplier',
         intro: 'Are you a trade specialist (floors, windows, repairs, etc.) or supply products and want to work with us? Tell us about yourself.',
@@ -390,6 +411,27 @@ export const TRANSLATIONS = {
   },
   fr: {
     nav: { home: 'Accueil', about: 'À propos', aboutTagline: 'Qui nous sommes et comment le chantier se déroule.', howTagline: 'Les cinq étapes, du début à la fin.', projectsTagline: 'Des chantiers terminés.', faq: 'FAQ', faqTagline: 'Les questions qu’on nous pose le plus.', franchises: 'Franchises', franchisesTagline: 'À la tête d’une équipe Trusted Home Services dans votre secteur.', promise: 'Notre promesse', promiseTagline: 'Aucun acompte, sur aucun chantier.', locations: 'Secteurs desservis', locationsTagline: 'Où nous travaillons dans la région.', services: 'Nos services', how: 'Notre processus', projects: 'Nos projets', team: 'Travaillez avec nous', realtors: 'Pour les courtiers', realtorsTagline: 'Vos inscriptions prêtes pour le marché, rapidement.', partners: 'Devenir partenaire', partnersTagline: 'Joignez l’équipe que nous appelons pour les travaux.', quote: 'Devis gratuit' },
+    franchise: {
+      title: 'Diriger une équipe Trusted Home Services dans votre secteur',
+      intro: 'Partout, les propriétaires ont les mêmes travaux à faire avant de vendre, et la plupart ne savent pas qui appeler. Une franchise met derrière vous un nom connu, un système qui tourne et une équipe formée, pour que votre temps aille aux chantiers plutôt qu’à inventer l’entreprise autour.',
+      includedTitle: 'Ce qui vient avec',
+      inc1: 'Un territoire exclusif, sans jamais une autre de nos équipes en face',
+      inc2: 'Le réseau de corps de métier déjà vérifié, chiffré et sous entente',
+      inc3: 'Le système de soumissions, la planification et la paperasse, prêts à l’emploi',
+      inc4: 'La formation sur le chantier, sur le travail et sur la gestion derrière',
+      inc5: 'Le marketing pour votre secteur, y compris les pages où l’on vous trouve',
+      fitTitle: 'À qui cela convient',
+      fit1: 'Quelqu’un déjà dans un métier, fatigué de courir après le prochain chantier et qui veut un carnet plutôt qu’une chasse.',
+      fit2: 'Quelqu’un qui a déjà dirigé une équipe, dans n’importe quel domaine, et qui préfère gérer que poser lui-même.',
+      fit3: 'Quelqu’un du milieu immobilier, qui connaît déjà les courtiers de son secteur et ce dont une inscription a besoin.',
+      stepsTitle: 'Comment cela commence',
+      step1: 'Un premier appel, sans engagement de part ni d’autre, pour voir si votre secteur et votre parcours conviennent.',
+      step2: 'Nous vous montrons les chiffres : ce que coûte un territoire, ce que gagne une équipe et à quoi ressemble la première année.',
+      step3: 'Si cela convient aux deux, nous fixons le territoire et la formation commence.',
+      ctaTitle: 'Renseignez-vous sur un territoire',
+      ctaText: 'Dites-nous où vous êtes et ce que vous avez fait, et nous vous dirons franchement si cela mérite une conversation plus longue.',
+      ctaButton: 'Me renseigner sur une franchise',
+    },
     holding: {
       title: 'Cette page arrive bientôt',
       text: 'Nous sommes encore en train de l’écrire. Tout le reste du site est prêt, et vous pouvez demander une soumission depuis n’importe quelle page.',
@@ -738,7 +780,7 @@ export const TRANSLATIONS = {
     partnersPage: {
       backToHome: 'Retour à l\'accueil',
       title: 'Devenir partenaire',
-      intro: 'Rejoignez-nous de deux façons : comme partenaire ou fournisseur de services ou produits, ou en exploitant une franchise Trusted Home Services. Choisissez l\'option qui vous convient ci-dessous.',
+      intro: 'Travaillez avec nous comme partenaire ou fournisseur. Si vous menez un métier, une équipe ou une gamme de produits et cherchez du travail régulier à Ottawa, dites-nous ce que vous faites et nous vous recontacterons.',
       partnerSection: {
         title: 'Partenaire / Fournisseur',
         intro: 'Vous êtes spécialisé (planchers, fenêtres, réparations…) ou fournissez des produits et souhaitez travailler avec nous?',
@@ -780,6 +822,27 @@ export const TRANSLATIONS = {
   },
   es: {
     nav: { home: 'Inicio', about: 'Nosotros', aboutTagline: 'Quiénes somos y cómo trabajamos.', howTagline: 'Los cinco pasos, de principio a fin.', projectsTagline: 'Trabajos terminados.', faq: 'Preguntas frecuentes', faqTagline: 'Lo que más nos preguntan.', franchises: 'Franquicias', franchisesTagline: 'Dirija un equipo de Trusted Home Services en su zona.', promise: 'Nuestra promesa', promiseTagline: 'Sin depósito, en ningún trabajo.', locations: 'Zonas de servicio', locationsTagline: 'Dónde trabajamos en la región.', services: 'Nuestros servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', team: 'Trabaje con nosotros', realtors: 'Para agentes', realtorsTagline: 'Sus listados listos para el mercado, rápido.', partners: 'Ser socio', partnersTagline: 'Súmese al equipo al que llamamos para trabajar.', quote: 'Cotización gratuita' },
+    franchise: {
+      title: 'Dirija un equipo de Trusted Home Services en su zona',
+      intro: 'En cualquier ciudad los propietarios necesitan los mismos trabajos antes de vender, y la mayoría no sabe a quién llamar. Una franquicia pone detrás de usted un nombre conocido, un sistema que funciona y un equipo formado, para que su tiempo vaya a las obras y no a inventar la empresa alrededor.',
+      includedTitle: 'Qué incluye',
+      inc1: 'Un territorio exclusivo, sin otro equipo nuestro compitiendo',
+      inc2: 'La red de oficios ya verificada, con precios y acuerdos cerrados',
+      inc3: 'El sistema de cotización, la agenda de obra y el papeleo, listos para usar',
+      inc4: 'Formación en obra, en el trabajo y en la gestión que hay detrás',
+      inc5: 'Marketing para su zona, incluidas las páginas donde le encuentran',
+      fitTitle: 'A quién le encaja',
+      fit1: 'Alguien que ya está en un oficio, cansado de perseguir el siguiente trabajo y que quiere una cartera en su lugar.',
+      fit2: 'Alguien que ya ha dirigido un equipo, en cualquier sector, y prefiere gestionar a estar en la obra.',
+      fit3: 'Alguien del mundo inmobiliario, que ya conoce a los agentes de su zona y lo que necesita un listado.',
+      stepsTitle: 'Cómo empieza',
+      step1: 'Una primera llamada, sin compromiso por ninguna parte, para ver si su zona y su experiencia encajan.',
+      step2: 'Le enseñamos los números: qué cuesta un territorio, qué gana un equipo y cómo suele ser el primer año.',
+      step3: 'Si encaja a los dos, cerramos el territorio y empieza la formación.',
+      ctaTitle: 'Pregunte por un territorio',
+      ctaText: 'Díganos dónde está y qué ha hecho, y le diremos con franqueza si merece una conversación más larga.',
+      ctaButton: 'Preguntar por una franquicia',
+    },
     holding: {
       title: 'Esta página está en camino',
       text: 'Todavía la estamos escribiendo. Todo lo demás del sitio está listo, y puede pedir una cotización desde cualquier página.',
@@ -1105,7 +1168,7 @@ export const TRANSLATIONS = {
     partnersPage: {
       backToHome: 'Volver al inicio',
       title: 'Ser socio',
-      intro: 'Únase a nosotros de dos formas: como socio o proveedor de servicios o productos, o operando una franquicia Trusted Home Services. Elija la opción que le convenga abajo.',
+      intro: 'Trabaje con nosotros como socio o proveedor. Si tiene un oficio, un equipo o una línea de productos y busca trabajo constante en Ottawa, cuéntenos qué hace y le contactamos.',
       partnerSection: {
         title: 'Socio / Proveedor',
         intro: '¿Es especialista (pisos, ventanas, reparaciones…) o provee productos y quiere trabajar con nosotros? Cuéntenos.',
