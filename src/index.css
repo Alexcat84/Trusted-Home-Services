@@ -4436,3 +4436,14 @@ h3,
     grid-template-columns: 1fr;
   }
 }
+
+/* The gutter, taken from the reference: a flat 20px between cells rather than
+   a scale that grows with the viewport. Measured on its live page, where that
+   value appears on 37 of its grids. */
+.service-tiles,
+.review-grid,
+.post-grid,
+.start-grid,
+.nav-panel-grid {
+  gap: 20px;
+}

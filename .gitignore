@@ -41,4 +41,10 @@ Thumbs.db
 # in public/videos are tracked, because these originals run tens of megabytes.
 /media-source/
 /*.mp4
-/*.mov
+/*.mov
+
+# Reference captures. Downloaded copies of other sites are read locally to
+# measure them; they must never enter this repository.
+prepnsell-home.html
+*.capture.html
+www.prepnsell.com/
