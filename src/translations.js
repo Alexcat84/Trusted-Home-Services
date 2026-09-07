@@ -1,6 +1,10 @@
 export const TRANSLATIONS = {
   en: {
-    nav: { home: 'Home', about: 'About Us', aboutTagline: 'Who we are and how the work runs.', howTagline: 'The five steps, start to finish.', projectsTagline: 'Work we have finished.', faq: 'FAQ', faqTagline: 'The questions we get asked most.', renovations: 'Renovations', renovationsTagline: 'Larger projects, one crew, one schedule.', promise: 'Our Promise', promiseTagline: 'No deposit, on any job, at any size.', locations: 'Locations', locationsTagline: 'Where in the region we work.', services: 'Our Services', how: 'How We Work', projects: 'Our Projects', team: 'Work With Us', realtors: 'For Realtors', realtorsTagline: 'Get your listings market ready, fast.', partners: 'Become a Partner', partnersTagline: 'Join the crew we call on for work.', quote: 'Free Quote' },
+    nav: { home: 'Home', about: 'About Us', aboutTagline: 'Who we are and how the work runs.', howTagline: 'The five steps, start to finish.', projectsTagline: 'Work we have finished.', faq: 'FAQ', faqTagline: 'The questions we get asked most.', franchises: 'Franchises', franchisesTagline: 'Run a Trusted Home Services crew in your own area.', promise: 'Our Promise', promiseTagline: 'No deposit, on any job, at any size.', locations: 'Locations', locationsTagline: 'Where in the region we work.', services: 'Our Services', how: 'How We Work', projects: 'Our Projects', team: 'Work With Us', realtors: 'For Realtors', realtorsTagline: 'Get your listings market ready, fast.', partners: 'Become a Partner', partnersTagline: 'Join the crew we call on for work.', quote: 'Free Quote' },
+    holding: {
+      title: 'This page is on its way',
+      text: 'We are still writing this one. Everything else on the site is ready, and you can ask for a quote from any page.',
+    },
     hero: {
       title: 'Your listing, market-ready',
       subtitle: 'Smart fixes, clean execution, a smoother sale. For homeowners and real estate professionals',
@@ -379,7 +383,11 @@ export const TRANSLATIONS = {
     cookieConsent: { message: 'We use cookies to improve your experience and analyse site traffic. By clicking Accept you agree to our use of cookies. See our', privacyLink: 'Privacy Policy', accept: 'Accept', decline: 'Decline' }
   },
   fr: {
-    nav: { home: 'Accueil', about: 'À propos', aboutTagline: 'Qui nous sommes et comment le chantier se déroule.', howTagline: 'Les cinq étapes, du début à la fin.', projectsTagline: 'Des chantiers terminés.', faq: 'FAQ', faqTagline: 'Les questions qu’on nous pose le plus.', renovations: 'Rénovations', renovationsTagline: 'Projets plus lourds, une seule équipe.', promise: 'Notre promesse', promiseTagline: 'Aucun acompte, sur aucun chantier.', locations: 'Secteurs desservis', locationsTagline: 'Où nous travaillons dans la région.', services: 'Nos services', how: 'Notre processus', projects: 'Nos projets', team: 'Travaillez avec nous', realtors: 'Pour les courtiers', realtorsTagline: 'Vos inscriptions prêtes pour le marché, rapidement.', partners: 'Devenir partenaire', partnersTagline: 'Joignez l’équipe que nous appelons pour les travaux.', quote: 'Devis gratuit' },
+    nav: { home: 'Accueil', about: 'À propos', aboutTagline: 'Qui nous sommes et comment le chantier se déroule.', howTagline: 'Les cinq étapes, du début à la fin.', projectsTagline: 'Des chantiers terminés.', faq: 'FAQ', faqTagline: 'Les questions qu’on nous pose le plus.', franchises: 'Franchises', franchisesTagline: 'À la tête d’une équipe Trusted Home Services dans votre secteur.', promise: 'Notre promesse', promiseTagline: 'Aucun acompte, sur aucun chantier.', locations: 'Secteurs desservis', locationsTagline: 'Où nous travaillons dans la région.', services: 'Nos services', how: 'Notre processus', projects: 'Nos projets', team: 'Travaillez avec nous', realtors: 'Pour les courtiers', realtorsTagline: 'Vos inscriptions prêtes pour le marché, rapidement.', partners: 'Devenir partenaire', partnersTagline: 'Joignez l’équipe que nous appelons pour les travaux.', quote: 'Devis gratuit' },
+    holding: {
+      title: 'Cette page arrive bientôt',
+      text: 'Nous sommes encore en train de l’écrire. Tout le reste du site est prêt, et vous pouvez demander une soumission depuis n’importe quelle page.',
+    },
     hero: {
       title: 'Votre annonce, prête pour le marché',
       subtitle: 'Réparations intelligentes, exécution soignée, vente plus fluide. Pour propriétaires et professionnels de l\'immobilier',
@@ -759,7 +767,11 @@ export const TRANSLATIONS = {
     cookieConsent: { message: 'Nous utilisons des cookies pour améliorer votre expérience et analyser le trafic. En cliquant sur Accepter, vous acceptez notre utilisation des cookies. Voir notre', privacyLink: 'Politique de confidentialité', accept: 'Accepter', decline: 'Refuser' }
   },
   es: {
-    nav: { home: 'Inicio', about: 'Nosotros', aboutTagline: 'Quiénes somos y cómo trabajamos.', howTagline: 'Los cinco pasos, de principio a fin.', projectsTagline: 'Trabajos terminados.', faq: 'Preguntas frecuentes', faqTagline: 'Lo que más nos preguntan.', renovations: 'Renovaciones', renovationsTagline: 'Proyectos mayores, un solo equipo.', promise: 'Nuestra promesa', promiseTagline: 'Sin depósito, en ningún trabajo.', locations: 'Zonas de servicio', locationsTagline: 'Dónde trabajamos en la región.', services: 'Nuestros servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', team: 'Trabaje con nosotros', realtors: 'Para agentes', realtorsTagline: 'Sus listados listos para el mercado, rápido.', partners: 'Ser socio', partnersTagline: 'Súmese al equipo al que llamamos para trabajar.', quote: 'Cotización gratuita' },
+    nav: { home: 'Inicio', about: 'Nosotros', aboutTagline: 'Quiénes somos y cómo trabajamos.', howTagline: 'Los cinco pasos, de principio a fin.', projectsTagline: 'Trabajos terminados.', faq: 'Preguntas frecuentes', faqTagline: 'Lo que más nos preguntan.', franchises: 'Franquicias', franchisesTagline: 'Dirija un equipo de Trusted Home Services en su zona.', promise: 'Nuestra promesa', promiseTagline: 'Sin depósito, en ningún trabajo.', locations: 'Zonas de servicio', locationsTagline: 'Dónde trabajamos en la región.', services: 'Nuestros servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', team: 'Trabaje con nosotros', realtors: 'Para agentes', realtorsTagline: 'Sus listados listos para el mercado, rápido.', partners: 'Ser socio', partnersTagline: 'Súmese al equipo al que llamamos para trabajar.', quote: 'Cotización gratuita' },
+    holding: {
+      title: 'Esta página está en camino',
+      text: 'Todavía la estamos escribiendo. Todo lo demás del sitio está listo, y puede pedir una cotización desde cualquier página.',
+    },
     hero: {
       title: 'Su listado, listo para el mercado',
       subtitle: 'Arreglos inteligentes, ejecución impecable, venta más fluida. Para propietarios y profesionales inmobiliarios',

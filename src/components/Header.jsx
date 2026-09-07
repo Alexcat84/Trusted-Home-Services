@@ -3,12 +3,11 @@ import { useLang } from '../context/useLang';
 import { getSectionHash } from '../translations';
 import { getServiceList } from '../content/services';
 import { navigateTo, servicePath } from '../lib/routing';
-import ServiceIcon from './ServiceIcon';
 import { ACTIVE_LOCALES } from '../lib/locales';
 
 /* Seven entries in the reference's positions. Two of its slots carry brand
    terms of its own, so those hold the plain equivalents here. */
-const NAV_KEYS = ['home', 'about', 'services', 'renovations', 'promise', 'locations', 'team'];
+const NAV_KEYS = ['home', 'about', 'services', 'promise', 'locations', 'team', 'franchises'];
 /** The entries that open a panel rather than going somewhere. */
 const MENU_KEYS = ['about', 'services', 'team'];
 /** What sits under About us. */
@@ -18,7 +17,9 @@ const TEAM_KEYS = ['realtors', 'partners'];
 /** Entries that scroll to a section rather than opening a page. */
 const SECTION_KEYS = ['home', 'services', 'how', 'projects', 'realtors', 'partners', 'quote'];
 /** Entries with a page of their own, reached by hash. */
-const PAGE_KEYS = ['renovations', 'promise', 'locations', 'faq'];
+/* Franchises is kept apart from the partner page on purpose: the two answer
+   different searches and each needs its own page to rank for them. */
+const PAGE_KEYS = ['promise', 'locations', 'faq', 'franchises'];
 
 export default function Header() {
   const { lang, setLang, t } = useLang();
@@ -134,26 +135,19 @@ export default function Header() {
     navigateTo('/', hash(key));
   };
 
-  /** One panel, laid out the same whichever entry opened it. */
-  const panel = (id, keys) => (
-    <div className="nav-panel" id={id} hidden={openMenu !== id}>
-      <div className="container container--wide">
-        <ul className="nav-panel-grid">
-          {keys.map((k) => (
-            <li key={k}>
-              <a href={`/#${k}`} className="nav-panel-item" onClick={goTo(k)}>
-                <span className="nav-panel-icon" aria-hidden="true">
-                  <ServiceIcon name={k} />
-                </span>
-                <span>
-                  <span className="nav-panel-name">{t(`nav.${k}`)}</span>
-                  <span className="nav-panel-desc">{t(`nav.${k}Tagline`)}</span>
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+  /** A narrow list under the entry that opened it, which is the shape the
+      reference uses: plain uppercase links, no icons and no descriptions. */
+  const panel = (id, entries) => (
+    <div className="nav-drop" id={id} hidden={openMenu !== id}>
+      <ul className="nav-drop-list">
+        {entries.map((e) => (
+          <li key={e.key}>
+            <a href={e.href} className="nav-drop-link" onClick={e.onClick}>
+              {e.label}
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 
@@ -234,6 +228,24 @@ export default function Header() {
                     {t(`nav.${key}`)}
                     <span className="nav-caret" aria-hidden="true" />
                   </button>
+                  {key === 'services'
+                    ? panel('services', serviceLinks.map((sv) => ({
+                        key: sv.key,
+                        label: sv.name,
+                        href: servicePath(sv.key),
+                        onClick: (ev) => {
+                          ev.preventDefault();
+                          setOpenMenu(null);
+                          setMenuOpen(false);
+                          navigateTo(servicePath(sv.key));
+                        },
+                      })))
+                    : panel(key, (key === 'about' ? ABOUT_KEYS : TEAM_KEYS).map((k) => ({
+                        key: k,
+                        label: t(`nav.${k}`),
+                        href: `/#${k}`,
+                        onClick: goTo(k),
+                      })))}
                 </li>
               );
             }
@@ -270,39 +282,6 @@ export default function Header() {
         </ul>
       </nav>
 
-      {panel('about', ABOUT_KEYS)}
-      {panel('team', TEAM_KEYS)}
-
-      {/* Services keeps its own panel, since nine entries with a line each need
-          the full width. */}
-      <div className="nav-panel" id="services" hidden={openMenu !== 'services'}>
-        <div className="container container--wide">
-          <ul className="nav-panel-grid">
-            {serviceLinks.map((s) => (
-              <li key={s.key}>
-                <a
-                  href={servicePath(s.key)}
-                  className="nav-panel-item"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setOpenMenu(null);
-                    setMenuOpen(false);
-                    navigateTo(servicePath(s.key));
-                  }}
-                >
-                  <span className="nav-panel-icon" aria-hidden="true">
-                    <ServiceIcon name={s.key} />
-                  </span>
-                  <span>
-                    <span className="nav-panel-name">{s.name}</span>
-                    <span className="nav-panel-desc">{s.tagline}</span>
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
     </header>
   );
 }

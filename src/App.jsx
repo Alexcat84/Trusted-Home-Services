@@ -2170,7 +2170,7 @@ function AdminPage() {
 }
 
 /** Pages the cloned menu points at that have nothing in them yet. */
-const HOLDING_PAGES = ['about', 'renovations', 'promise', 'locations'];
+const HOLDING_PAGES = ['about', 'promise', 'locations', 'franchises'];
 
 function getSubPageFromHash(h) {
   if (REALTORS_PAGE_HASHES.includes(h)) return 'realtors';
