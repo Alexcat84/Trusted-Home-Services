@@ -115,22 +115,9 @@ const PROJECTS_PAGE_HASHES = ['our-projects', 'nos-projets', 'nuestros-proyectos
 
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
+  const { openQuote } = useQuote();
   const heroVideo = getHeroVideo();
-  const copyRef = useRef(null);
 
-  // The side columns centre on the reel, which starts below this block. Its height
-  // changes with the viewport and with the language, so it is measured rather than
-  // guessed and handed to the stylesheet as a variable.
-  useEffect(() => {
-    const el = copyRef.current;
-    const hero = el?.closest('.hero');
-    if (!el || !hero || typeof ResizeObserver === 'undefined') return undefined;
-    const publish = () => hero.style.setProperty('--hero-copy-h', `${Math.round(el.offsetHeight)}px`);
-    publish();
-    const observer = new ResizeObserver(publish);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [lang]);
   // Autoplay is motion; readers who ask for less of it get the poster and controls instead.
   const [reduceMotion] = useState(() => {
     try {
@@ -141,55 +128,52 @@ function Hero({ skipAnimation = false }) {
   });
 
   return (
-    <section id={getSectionHash(lang, 'home')} className="hero">
+    <section id={getSectionHash(lang, 'home')} className="hero hero--split">
       <motion.div
-        className={`hero-content hero-content--split ${skipAnimation ? 'hero-content--no-animate' : ''}`}
+        className={`hero-split ${skipAnimation ? 'hero-split--no-animate' : ''}`}
         variants={container}
         initial={skipAnimation ? 'visible' : 'hidden'}
         animate="visible"
       >
-        <div className="hero-col hero-col--left">
-          <div className="hero-copy">
-          <motion.div className="hero-actions" variants={item}>
-            <span className="btn btn-primary" aria-hidden="true">{t('hero.cta2')}</span>
-          </motion.div>
-          {/* The promise. It is the first thing worth knowing about this
-              company and the only one no competitor here is making, so it is
-              given the room rather than a badge. The quote button that used to
-              sit above it now lives in the corner of every page. */}
-          <motion.div className="hero-promise" variants={item}>
-            <p className="hero-promise-figure">{t('homeStats.promiseFigure')}</p>
-            <p className="hero-promise-lead">{t('homeStats.promiseLead')}</p>
-            <p className="hero-promise-body">{t('homeStats.promiseBody')}</p>
-          </motion.div>
+        <div className="hero-panel">
+          <div className="hero-panel-inner">
+            <motion.p className="hero-badge" variants={item}>
+              <span className="hero-badge-figure">{t('homeStats.promiseFigure')}</span>
+              <span className="hero-badge-text">{t('homeStats.promiseLead')}</span>
+            </motion.p>
+            <motion.h1 className="hero-headline" variants={item}>
+              {t('hero.headlineLead')}{' '}
+              <span className="hero-headline-accent">{t('hero.headlineAccent')}</span>
+            </motion.h1>
+            <motion.p className="hero-panel-body" variants={item}>{t('hero.body')}</motion.p>
+            <motion.div className="hero-panel-actions" variants={item}>
+              <button type="button" className="hero-panel-cta" onClick={openQuote}>
+                {t('hero.panelCta')}
+              </button>
+            </motion.div>
           </div>
         </div>
-        <div className="hero-col hero-col--center">
-          <div className="hero-center-copy" ref={copyRef}>
-            <motion.h1 className="hero-title" variants={item}>{t('hero.title')}</motion.h1>
-            <motion.p className="hero-subtitle" variants={item}>{t('hero.subtitle')}</motion.p>
-          </div>
-          <motion.div className="hero-video-wrap" variants={item}>
-            <video
-              key={heroVideo.src}
-              className="hero-video"
-              poster={heroVideo.poster}
-              autoPlay={!reduceMotion}
-              controls={reduceMotion}
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-label={t('hero.videoLabel')}
-            >
-              <source src={heroVideo.src} type="video/mp4" />
-            </video>
-          </motion.div>
-        </div>
-        <motion.div className="hero-col hero-col--right" variants={item}>
-          <Testimonials variant="hero" />
+        <motion.div className="hero-media" variants={item}>
+          <video
+            key={heroVideo.src}
+            className="hero-video"
+            poster={heroVideo.poster}
+            autoPlay={!reduceMotion}
+            controls={reduceMotion}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label={t('hero.videoLabel')}
+          >
+            <source src={heroVideo.src} type="video/mp4" />
+          </video>
         </motion.div>
       </motion.div>
+      {/* The white curve that sweeps across the foot of the reference hero. */}
+      <svg className="hero-sweep" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path d="M0 18 Q720 116 1440 18 L1440 96 L0 96 Z" fill="#ffffff" />
+      </svg>
     </section>
   );
 }

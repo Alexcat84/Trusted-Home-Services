@@ -3606,3 +3606,184 @@ button.nav-link {
     font-size: 0.89rem;
   }
 }
+
+/* ============================================
+   Cloned hero: split panel and media
+   ============================================
+   The reference layout, rebuilt: a near black panel holding the badge, the two
+   tone headline, the paragraph and a pill button, with the reel filling the
+   other half and a white curve sweeping across the foot.
+
+   It replaces the three column hero, so none of that geometry applies here.
+   The section no longer fills the viewport either; it is as tall as it needs
+   to be, which is how the reference behaves. */
+
+.hero--split {
+  position: relative;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  min-height: clamp(30rem, 52vw, 46rem);
+}
+
+.hero-panel {
+  display: flex;
+  align-items: center;
+  background: #131313;
+  /* The header is fixed and sits over the top of the section, so the panel
+     starts below it rather than under it. Measured at 108px. */
+  padding: calc(108px + clamp(2rem, 3.5vw, 3.5rem)) clamp(1.5rem, 3.5vw, 4rem) clamp(4.5rem, 7vw, 7rem);
+}
+
+.hero-panel-inner {
+  max-width: 34rem;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* The badge slot. The reference carries a one call sticker here; this carries
+   the promise, which is the claim this company actually owns. */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 clamp(1.4rem, 2.5vw, 2.1rem);
+  padding: 0.55rem 1rem 0.6rem 0.85rem;
+  background: var(--color-accent);
+  border-radius: 6px;
+  box-shadow: 0 10px 26px -12px rgba(249, 119, 43, 0.9);
+}
+
+.hero-badge-figure {
+  font-size: clamp(1.9rem, 2.8vw, 2.6rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+}
+
+.hero-badge-text {
+  max-width: 7.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
+.hero-headline {
+  margin: 0 0 clamp(1rem, 1.8vw, 1.5rem);
+  font-size: clamp(1.9rem, 3.4vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-wrap: balance;
+}
+
+.hero-headline-accent {
+  color: var(--color-accent);
+}
+
+.hero-panel-body {
+  margin: 0 0 clamp(1.5rem, 2.6vw, 2.2rem);
+  max-width: 32rem;
+  font-size: clamp(0.98rem, 1.15vw, 1.08rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.hero-panel-actions {
+  display: flex;
+}
+
+/* The reference uses a white pill here, which reads as the one bright control
+   on a dark field. */
+.hero-panel-cta {
+  font-family: inherit;
+  font-size: clamp(0.95rem, 1.05vw, 1.02rem);
+  font-weight: 700;
+  color: #131313;
+  background: #ffffff;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.95rem 1.9rem;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.hero-panel-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.7);
+}
+
+.hero-panel-cta:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.hero-media {
+  position: relative;
+  overflow: hidden;
+  background: #131313;
+  padding-top: 108px;
+}
+
+.hero--split .hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: #131313;
+}
+
+/* The curve at the foot, sitting over both halves. */
+.hero-sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  width: 100%;
+  height: clamp(2.5rem, 5vw, 5.5rem);
+  display: block;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .hero-split {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .hero-panel {
+    order: 2;
+    padding: 2.25rem 1.35rem 4rem;
+  }
+  .hero-media {
+    padding-top: 108px;
+  }
+  .hero-panel-inner {
+    margin-left: 0;
+    max-width: none;
+  }
+  .hero-media {
+    order: 1;
+    aspect-ratio: 16 / 10;
+  }
+  .hero-sweep {
+    height: 2.25rem;
+  }
+}

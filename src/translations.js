@@ -4,6 +4,10 @@ export const TRANSLATIONS = {
     hero: {
       title: 'Your listing, market-ready',
       subtitle: 'Smart fixes, clean execution, a smoother sale. For homeowners and real estate professionals',
+      headlineLead: 'Let Trusted Home Services get your home market-ready',
+      headlineAccent: 'so it sells FASTER and for MORE MONEY',
+      body: 'Selling your home is stressful enough. One call gets you the right work, on time and on budget, with nothing to pay until it is finished. Find out exactly what your home needs to sell faster, and for more.',
+      panelCta: 'Get expert advice before you list',
       cta1: 'Get a free quote',
       cta2: 'Call (613) 204-8000',
       scroll: 'Scroll',
@@ -362,6 +366,10 @@ export const TRANSLATIONS = {
     hero: {
       title: 'Votre annonce, prête pour le marché',
       subtitle: 'Réparations intelligentes, exécution soignée, vente plus fluide. Pour propriétaires et professionnels de l\'immobilier',
+      headlineLead: 'Confiez votre maison à Trusted Home Services',
+      headlineAccent: 'pour qu’elle se vende PLUS VITE et PLUS CHER',
+      body: 'Vendre sa maison est déjà bien assez stressant. Un seul appel et vous obtenez les bons travaux, à temps et dans le budget, sans rien à payer avant la fin. Sachez exactement ce dont votre maison a besoin pour se vendre plus vite, et plus cher.',
+      panelCta: 'Obtenez un avis avant de mettre en vente',
       cta1: 'Obtenir un devis gratuit',
       cta2: 'Appeler (613) 204-8000',
       scroll: 'Défiler',
