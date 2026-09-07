@@ -1559,105 +1559,6 @@ button.nav-link {
   line-height: 1.5;
   color: var(--color-text-muted);
 }
-.steps-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-  margin-top: 1.25rem;
-  min-height: 0;
-}
-
-@media (max-width: 768px) {
-  .steps-grid {
-    grid-template-columns: 1fr;
-  }
-  .section-steps {
-    padding-bottom: 2rem;
-  }
-}
-
-.step-card {
-  text-align: center;
-  padding: 1.25rem 1rem 1.5rem;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: var(--color-bg);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  border: 1px solid var(--color-border);
-  position: relative;
-  overflow: visible;
-  isolation: isolate;
-}
-/* Contorno continuo iluminado (blanco-naranja), grueso y pronunciado en hover */
-.step-card::before {
-  content: '';
-  position: absolute;
-  inset: -11px;
-  border-radius: calc(var(--radius-lg) + 11px);
-  padding: 11px;
-  background: rgba(255, 242, 228, 0.95);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 0;
-  filter: drop-shadow(0 0 10px rgba(255, 218, 185, 0.65)) drop-shadow(0 0 18px rgba(255, 200, 160, 0.35));
-}
-.step-card:hover::before {
-  opacity: 1;
-}
-.step-card:hover {
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
-}
-
-.step-num {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  color: var(--color-text-on-dark);
-  font-weight: 700;
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-  transition: transform 0.25s ease;
-  position: relative;
-  z-index: 1;
-}
-.step-card:hover .step-num {
-  transform: scale(1.08);
-}
-.step-card h3,
-.step-card p {
-  position: relative;
-  z-index: 1;
-}
-
-.step-card h3 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  margin: 0 0 0.5rem;
-  line-height: 1.25;
-}
-.step-card p {
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: var(--color-text-muted);
-}
-.step-card a {
-  font-weight: 500;
-}
-
 /* ---- Testimonials ---- */
 .section-testimonials {
   padding-top: 1.5rem;
@@ -3786,4 +3687,195 @@ button.nav-link {
   .hero-sweep {
     height: 2.25rem;
   }
+}
+
+/* ============================================
+   Cloned services: photo tiles
+   ============================================
+   The reference sets each service as a photograph with the name and a line of
+   description laid over the foot of it, four to a row. Nine services do not
+   divide by four, so this runs three to a row and fills exactly. */
+
+.service-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.6rem, 1vw, 1rem);
+  margin-top: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+.service-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #131313;
+  text-decoration: none;
+  isolation: isolate;
+}
+
+.service-tile-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.service-tile:hover .service-tile-img {
+  transform: scale(1.05);
+}
+
+/* The wash that makes white type readable over any photograph. */
+.service-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 12, 16, 0.92) 0%, rgba(10, 12, 16, 0.72) 26%, rgba(10, 12, 16, 0.12) 58%, rgba(10, 12, 16, 0.05) 100%);
+  pointer-events: none;
+}
+
+.service-tile-body {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: clamp(0.9rem, 1.5vw, 1.35rem);
+}
+
+.service-tile-name {
+  font-size: clamp(1.05rem, 1.5vw, 1.32rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.service-tile-desc {
+  font-size: clamp(0.86rem, 1vw, 0.95rem);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.service-tile:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  .service-tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .service-tiles {
+    grid-template-columns: 1fr;
+  }
+  .service-tile {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* ============================================
+   Cloned process: five numbered steps
+   ============================================ */
+
+.steps-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 54rem;
+  margin: clamp(1.75rem, 3vw, 2.5rem) auto 0;
+  counter-reset: step;
+}
+
+.step-card {
+  display: grid;
+  grid-template-columns: 3.25rem 1fr;
+  gap: 0 clamp(0.9rem, 1.6vw, 1.5rem);
+  align-items: start;
+  padding: clamp(1.1rem, 1.8vw, 1.5rem) 0;
+  border-top: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.step-card:first-child {
+  border-top: 0;
+}
+
+.step-number {
+  grid-row: span 2;
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.step-title {
+  margin: 0 0 0.3rem;
+  font-size: clamp(1.02rem, 1.4vw, 1.2rem);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.step-text {
+  margin: 0;
+  font-size: clamp(0.94rem, 1.1vw, 1.02rem);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 560px) {
+  .step-card {
+    grid-template-columns: 2.4rem 1fr;
+  }
+}
+
+/* ============================================
+   Cloned reviews block and footer band
+   ============================================ */
+
+.section-reviews .reviews-intro,
+.section-reviews .reviews-lead {
+  max-width: 44rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.section-reviews .reviews-lead {
+  margin-top: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* The reference caps its footer with a band of brand colour carrying the
+   column headings. This puts the band across the top of ours. */
+.footer {
+  position: relative;
+  padding-top: 0;
+}
+
+.footer-inner {
+  padding-top: 1.5rem;
+}
+
+.footer::before {
+  content: '';
+  display: block;
+  height: 8px;
+  background: var(--color-accent);
+}
+
+.footer-heading {
+  color: var(--color-accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }

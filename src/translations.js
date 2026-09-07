@@ -31,10 +31,17 @@ export const TRANSLATIONS = {
     },
     steps: {
       title: 'How We Work',
-      intro: 'Simple process in three steps.',
-      step1: { title: 'Quote', text: 'Request your free quote on this site or at (613) 204-8000.' },
-      step2: { title: 'Coordination', text: 'Once the quote is accepted, we show up on time with equipment and materials. One contact for everything.' },
-      step3: { title: 'Result', text: 'Your home, ready when you need it. You pay when the work is delivered as agreed.' }
+      intro: 'Five steps, and only one of them is yours.',
+      step1: { title: 'One call', text: 'That is all it takes to book a free walkthrough. We look at the property and tell you what it actually needs, and what it does not.' },
+      step2: { title: 'A plan in writing', text: 'A clear, itemised plan within 24 hours, built around your budget and the date you need to be ready by.' },
+      step3: { title: 'We handle it', text: 'Materials, trades, scheduling, quality and the clean up at the end. One crew and one point of contact, so you are not chasing anybody.' },
+      step4: { title: 'You look it over', text: 'We walk the property with you and put right anything that is not what we agreed. Nothing is due until this point.' },
+      step5: { title: 'It is ready', text: 'Call your agent and say the house is ready to photograph, or move in and enjoy it. Either way the work is done and paid for on your terms.' }
+    },
+    reviews: {
+      title: 'What people say about the work',
+      intro: 'Selling a house is exciting and frightening at once. The price decides what your family does next, and it lands in the middle of one of the more stressful moves anyone makes.',
+      lead: 'Everything above exists to take that part off your hands.',
     },
     testimonials: {
       title: 'What our clients say',
@@ -395,9 +402,16 @@ export const TRANSLATIONS = {
     steps: {
       title: 'Notre processus',
       intro: 'Processus simple en trois étapes.',
-      step1: { title: 'Devis', text: 'Demandez votre devis gratuit sur ce site ou au (613) 204-8000.' },
-      step2: { title: 'Coordination', text: 'Une fois le devis accepté, nous nous présentons à l\'heure avec l\'équipement et les matériaux. Un seul interlocuteur.' },
-      step3: { title: 'Résultat', text: 'Votre maison prête, quand vous en avez besoin. Vous payez lorsque le travail est livré comme convenu.' }
+      step1: { title: 'Un seul appel', text: 'C’est tout ce qu’il faut pour une visite gratuite. Nous regardons la propriété et vous disons ce dont elle a vraiment besoin, et ce dont elle n’a pas besoin.' },
+      step2: { title: 'Un plan par écrit', text: 'Un plan clair et détaillé en moins de 24 heures, bâti sur votre budget et sur la date à laquelle vous devez être prêt.' },
+      step3: { title: 'On s’en occupe', text: 'Matériaux, corps de métier, calendrier, qualité et nettoyage final. Une équipe et un seul interlocuteur, sans personne à relancer.' },
+      step4: { title: 'Vous vérifiez', text: 'Nous parcourons la propriété avec vous et corrigeons tout ce qui ne correspond pas à ce qui était convenu. Rien n’est dû avant ce moment.' },
+      step5: { title: 'C’est prêt', text: 'Appelez votre courtier pour dire que la maison est prête à photographier, ou emménagez. Dans les deux cas, le travail est fait et payé à vos conditions.' }
+    },
+    reviews: {
+      title: 'Ce qu’on dit du travail',
+      intro: 'Vendre une maison est à la fois excitant et angoissant. Le prix décide de la suite pour votre famille, et tout cela tombe au milieu d’un des déménagements les plus stressants qui soient.',
+      lead: 'Tout ce qui précède existe pour vous retirer cette partie des mains.',
     },
     testimonials: {
       title: 'Ce que disent nos clients',

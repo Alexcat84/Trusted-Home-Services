@@ -10,7 +10,6 @@ import { getSectionHash } from './translations';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ServicePage from './components/ServicePage';
-import ServiceIcon from './components/ServiceIcon';
 import { getServiceList } from './content/services';
 import { getHeroVideo } from './content/heroVideo';
 import { getServiceFromPath, navigateTo, servicePath } from './lib/routing';
@@ -196,19 +195,17 @@ function Services() {
             <a
               key={s.key}
               href={servicePath(s.key)}
-              className="services-card"
+              className="service-tile"
               onClick={(e) => {
                 e.preventDefault();
                 navigateTo(servicePath(s.key));
               }}
             >
-              <span className="services-card-head">
-                <span className="services-card-icon" aria-hidden="true">
-                  <ServiceIcon name={s.key} />
-                </span>
-                <span className="services-card-name">{s.name}</span>
+              <img className="service-tile-img" src={s.img} alt="" loading="lazy" />
+              <span className="service-tile-body">
+                <span className="service-tile-name">{s.name}</span>
+                <span className="service-tile-desc">{s.tagline}</span>
               </span>
-              <span className="services-card-desc">{s.tagline}</span>
             </a>
           ))}
         </div>
@@ -217,13 +214,36 @@ function Services() {
   );
 }
 
+/**
+ * The reviews block the reference runs between the process and the footer.
+ *
+ * Their version opens on a star rating and a verified widget carrying 150
+ * reviews. Those belong to them, so this carries the section, the headline and
+ * the testimonials the site already has. The widget slots in below the
+ * testimonials once there are real reviews to show.
+ */
+function Reviews() {
+  const { t } = useLang();
+
+  return (
+    <AnimatedSection className="section section-reviews">
+      <div className="container">
+        <h2 className="section-title"><AnimatedSectionTitle text={t('reviews.title')} /></h2>
+        <p className="section-intro reviews-intro">{t('reviews.intro')}</p>
+        <p className="reviews-lead">{t('reviews.lead')}</p>
+        <Testimonials showTitle={false} />
+      </div>
+    </AnimatedSection>
+  );
+}
+
 function HowWeWork() {
   const { t, lang } = useLang();
-  const steps = [
-    { title: 'steps.step1.title', text: 'steps.step1.text' },
-    { title: 'steps.step2.title', text: 'steps.step2.text' },
-    { title: 'steps.step3.title', text: 'steps.step3.text' },
-  ];
+  // The reference walks the visitor through five, so this does too.
+  const steps = [1, 2, 3, 4, 5].map((n) => ({
+    title: `steps.step${n}.title`,
+    text: `steps.step${n}.text`,
+  }));
 
   return (
     <AnimatedSection id={getSectionHash(lang, 'how')} className="section section-steps">
@@ -246,9 +266,9 @@ function HowWeWork() {
               viewport={{ once: true }}
               transition={{ duration: 0.35, delay: i * 0.08 }}
             >
-              <span className="step-num">{i + 1}</span>
-              <h3>{t(s.title)}</h3>
-              <p>{t(s.text)}</p>
+              <span className="step-number" aria-hidden="true">{i + 1}</span>
+              <h3 className="step-title">{t(s.title)}</h3>
+              <p className="step-text">{t(s.text)}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -257,7 +277,7 @@ function HowWeWork() {
   );
 }
 
-function Testimonials({ variant = 'section' }) {
+function Testimonials({ variant = 'section', showTitle = true }) {
   const { t } = useLang();
   const [activeIndex, setActiveIndex] = useState(0);
   const isHero = variant === 'hero';
@@ -279,7 +299,9 @@ function Testimonials({ variant = 'section' }) {
       aria-label={t('testimonials.title')}
     >
       <div className={isHero ? 'hero-testimonials-panel' : 'container'}>
-        <h2 className={isHero ? 'hero-testimonials-title' : 'section-title'}>{t('testimonials.title')}</h2>
+        {showTitle && (
+          <h2 className={isHero ? 'hero-testimonials-title' : 'section-title'}>{t('testimonials.title')}</h2>
+        )}
         <div className="testimonials-strip">
           {items.map((item, i) => (
             <div
@@ -2116,6 +2138,7 @@ export default function App() {
           <Hero skipAnimation={skipHeroAnimation} />
           <Services />
           <HowWeWork />
+          <Reviews />
         </main>
         <Footer />
       </>
