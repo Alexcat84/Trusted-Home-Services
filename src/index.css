@@ -4254,9 +4254,28 @@ h3,
 /* Our Promise leads with the figure, because the figure is the offer. */
 .promise-figure-wrap {
   display: flex;
-  align-items: baseline;
-  gap: clamp(1.25rem, 3vw, 2.5rem);
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+/* The promise reads down the middle: the figure, then what it means, then the
+   detail under it. Everything else on the page lines up with that axis. */
+.promise-page .privacy-hero {
+  text-align: center;
+}
+
+.promise-page .privacy-hero-title,
+.promise-page .privacy-hero-intro {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.promise-page .service-list {
+  grid-template-columns: minmax(0, 42rem);
+  justify-content: center;
+  text-align: left;
 }
 
 .promise-figure {
@@ -4277,7 +4296,7 @@ h3,
 }
 
 .promise-figure-body {
-  margin: 0;
+  margin: 0 auto;
   max-width: 44rem;
   color: var(--color-text-muted);
 }

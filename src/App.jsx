@@ -1198,7 +1198,7 @@ function PromisePage() {
   const porque = ['w1', 'w2', 'w3'];
 
   return (
-    <div className="privacy-page">
+    <div className="privacy-page promise-page">
       <a href="#main" className="skip-link">Skip to main content</a>
       <Header />
       <main id="main" className="privacy-main">
