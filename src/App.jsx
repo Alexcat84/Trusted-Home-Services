@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import ServicePage from './components/ServicePage';
 import { getServiceList } from './content/services';
 import { SAMPLE_REVIEWS, SAMPLE_POSTS } from './content/sampleContent';
+import BackToHome from './components/BackToHome';
 import { getHeroVideo } from './content/heroVideo';
 import { getServiceFromPath, navigateTo, servicePath } from './lib/routing';
 
@@ -1039,13 +1040,7 @@ function QuoteForm({ onDone = () => {} }) {
 }
 
 function PrivacyPolicyPage() {
-  const { t, lang } = useLang();
-  const homeHash = getSectionHash(lang, 'home');
-  const goHome = (e) => {
-    e.preventDefault();
-    window.location.hash = homeHash;
-    setTimeout(() => window.scrollTo(0, 0), 50);
-  };
+  const { t } = useLang();
   const renderList = (text) => text.split('\n').filter(Boolean).map((line, i) => <li key={i}>{line}</li>);
   return (
     <div className="privacy-page">
@@ -1137,9 +1132,7 @@ function PrivacyPolicyPage() {
             <p>{t('privacy.updatesIntro')}</p>
             <p className="privacy-last-updated"><strong>{t('privacy.lastUpdated')}:</strong> February 16, 2026</p>
           </section>
-          <div className="privacy-back-wrap">
-            <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary">{t('privacy.backToHome')}</a>
-          </div>
+          <BackToHome />
         </div>
       </main>
       <Footer />
@@ -1148,13 +1141,7 @@ function PrivacyPolicyPage() {
 }
 
 function TermsOfServicePage() {
-  const { t, lang } = useLang();
-  const homeHash = getSectionHash(lang, 'home');
-  const goHome = (e) => {
-    e.preventDefault();
-    window.location.hash = homeHash;
-    setTimeout(() => window.scrollTo(0, 0), 50);
-  };
+  const { t } = useLang();
   return (
     <div className="privacy-page">
       <Header />
@@ -1211,9 +1198,7 @@ function TermsOfServicePage() {
             <p className="legal-section-body">{t('terms.updatesIntro')}</p>
             <p className="privacy-last-updated"><strong>{t('terms.lastUpdated')}:</strong> February 16, 2026</p>
           </section>
-          <div className="privacy-back-wrap">
-            <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary">{t('terms.backToHome')}</a>
-          </div>
+          <BackToHome />
         </div>
       </main>
       <Footer />
@@ -1222,13 +1207,7 @@ function TermsOfServicePage() {
 }
 
 function FAQPage() {
-  const { t, lang } = useLang();
-  const homeHash = getSectionHash(lang, 'home');
-  const goHome = (e) => {
-    e.preventDefault();
-    window.location.hash = homeHash;
-    setTimeout(() => window.scrollTo(0, 0), 50);
-  };
+  const { t } = useLang();
   const qa = Array.from({ length: 12 }, (_, i) => ({ q: `faq.q${i + 1}`, a: `faq.a${i + 1}` }));
   return (
     <div className="privacy-page faq-page">
@@ -1247,9 +1226,7 @@ function FAQPage() {
               <p className="legal-section-body faq-answer">{t(a)}</p>
             </section>
           ))}
-          <div className="privacy-back-wrap">
-            <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary">{t('faq.backToHome')}</a>
-          </div>
+          <BackToHome />
         </div>
       </main>
       <Footer />
@@ -1317,13 +1294,7 @@ function ProjectsPage() {
  * entry, each answers with this until the real page is written.
  */
 function HoldingPage({ which }) {
-  const { t, lang } = useLang();
-  const homeHash = getSectionHash(lang, 'home');
-  const goHome = (e) => {
-    e.preventDefault();
-    window.location.hash = homeHash;
-    setTimeout(() => window.scrollTo(0, 0), 50);
-  };
+  const { t } = useLang();
 
   return (
     <div className="privacy-page holding-page">
@@ -1334,7 +1305,7 @@ function HoldingPage({ which }) {
           <p className="holding-eyebrow">{t(`nav.${which}`)}</p>
           <h1 className="holding-title">{t('holding.title')}</h1>
           <p className="holding-text">{t('holding.text')}</p>
-          <a href={`#${homeHash}`} onClick={goHome} className="btn btn-primary">{t('privacy.backToHome')}</a>
+          <BackToHome />
         </div>
       </main>
       <Footer />
@@ -1350,9 +1321,12 @@ function HoldingPage({ which }) {
  * single page answering both ranks for neither.
  */
 function FranchisePage() {
-  const { t, lang } = useLang();
+  const { t } = useLang();
   const [franchiseModalOpen, setFranchiseModalOpen] = useState(false);
-  const homeHash = getSectionHash(lang, 'home');
+  const openFranchiseModal = useCallback(() => setFranchiseModalOpen(true), []);
+  // The page has a form of its own, so the corner button offers that instead
+  // of the general quote, and the page does not repeat it lower down.
+  useCornerCta(t('franchise.ctaButton'), openFranchiseModal, franchiseModalOpen);
   const included = ['inc1', 'inc2', 'inc3', 'inc4', 'inc5'];
   const suits = ['fit1', 'fit2', 'fit3'];
   const steps = ['step1', 'step2', 'step3'];
@@ -1362,13 +1336,12 @@ function FranchisePage() {
       <a href="#main" className="skip-link">Skip to main content</a>
       <Header />
       <main id="main">
-        <section className="section franchise-hero">
+        <div className="privacy-hero">
           <div className="container">
-            <p className="holding-eyebrow">{t('nav.franchises')}</p>
-            <h1 className="franchise-title">{t('franchise.title')}</h1>
-            <p className="franchise-intro">{t('franchise.intro')}</p>
+            <h1 className="privacy-hero-title">{t('franchise.title')}</h1>
+            <p className="privacy-hero-intro">{t('franchise.intro')}</p>
           </div>
-        </section>
+        </div>
 
         <section className="section section-alt">
           <div className="container">
@@ -1408,22 +1381,9 @@ function FranchisePage() {
           </div>
         </section>
 
-        <section className="section franchise-cta">
-          <div className="container">
-            <h2 className="section-title">{t('franchise.ctaTitle')}</h2>
-            <p className="section-intro">{t('franchise.ctaText')}</p>
-            <button
-              type="button"
-              className="btn btn-primary btn-lg"
-              onClick={() => setFranchiseModalOpen(true)}
-            >
-              {t('franchise.ctaButton')}
-            </button>
-            <p className="franchise-note">
-              <a href={`#${homeHash}`}>{t('privacy.backToHome')}</a>
-            </p>
-          </div>
-        </section>
+        <div className="container">
+          <BackToHome />
+        </div>
       </main>
       <FranchiseFormModal open={franchiseModalOpen} onClose={() => setFranchiseModalOpen(false)} />
       <Footer />
@@ -1450,22 +1410,14 @@ function RealtorsPage() {
     { titleKey: 'how3Title', textKey: 'how3Text' },
     { titleKey: 'how4Title', textKey: 'how4Text' },
   ];
-  const realtorFaqItems = [
-    { qKey: 'realtorPage.realtorFaq1Q', aKey: 'realtorPage.realtorFaq1A' },
-    { qKey: 'realtorPage.realtorFaq2Q', aKey: 'realtorPage.realtorFaq2A' },
-    { qKey: 'realtorPage.realtorFaq3Q', aKey: 'realtorPage.realtorFaq3A' },
-    { qKey: 'realtorPage.realtorFaq4Q', aKey: 'realtorPage.realtorFaq4A' },
-    { qKey: 'realtorPage.realtorFaq5Q', aKey: 'realtorPage.realtorFaq5A' },
-  ];
   return (
     <div className="privacy-page realtor-page">
       <Header />
       <main id="main" className="privacy-main">
-        <div className="realtor-hero">
+        <div className="privacy-hero">
           <div className="container">
-            <h1 className="realtor-hero-title">{t('realtorPage.headline')}</h1>
-            <p className="realtor-hero-sub">{t('realtorPage.subhead')}</p>
-            <p className="realtor-hero-tagline">{t('realtorPage.heroTagline')}</p>
+            <h1 className="privacy-hero-title">{t('realtorPage.headline')}</h1>
+            <p className="privacy-hero-intro">{t('realtorPage.subhead')}</p>
           </div>
         </div>
         <div className="container privacy-content realtor-content">
@@ -1521,18 +1473,7 @@ function RealtorsPage() {
             <p className="realtor-projects-link-intro">{t('realtorPage.projectsLinkIntro')}</p>
             <a href={`#${getSectionHash(lang, 'projects')}`} className="btn btn-primary">{t('realtorPage.projectsLinkText')}</a>
           </section>
-          <section className="privacy-section realtor-faq-section" id="realtor-faq">
-            <h2 className="privacy-section-title realtor-faq-title">{t('realtorPage.realtorFaqTitle')}</h2>
-            {realtorFaqItems.map(({ qKey, aKey }, i) => (
-              <div key={i} className="realtor-faq-item">
-                <h3 className="realtor-faq-question">{t(qKey)}</h3>
-                <p className="realtor-faq-answer">{t(aKey)}</p>
-              </div>
-            ))}
-          </section>
-          <section className="privacy-section realtor-cta-section">
-            <button type="button" className="btn btn-secondary" onClick={() => setRealtorModalOpen(true)}>{t('realtorPage.ctaSecondary')}</button>
-          </section>
+          <BackToHome />
         </div>
       </main>
       <RealtorFormModal open={realtorModalOpen} onClose={() => setRealtorModalOpen(false)} />
@@ -1663,6 +1604,11 @@ function getAdminStatusLabel(status, type) {
 function AdminPage() {
   const { lang } = useLang();
   const homeHash = getSectionHash(lang, 'home');
+  const goHome = (e) => {
+    e.preventDefault();
+    window.location.hash = homeHash;
+    setTimeout(() => window.scrollTo(0, 0), 50);
+  };
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [submissions, setSubmissions] = useState([]);
@@ -1916,11 +1862,6 @@ function AdminPage() {
     }
   };
 
-  const goHome = (e) => {
-    e.preventDefault();
-    window.location.hash = homeHash;
-    setTimeout(() => window.scrollTo(0, 0), 50);
-  };
 
   const escapeCsvCell = (v) => {
     let s = String(v ?? '').trim();

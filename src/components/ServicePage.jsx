@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
+import BackToHome from './BackToHome';
 import { motion } from 'framer-motion';
 import { useLang } from '../context/useLang';
 import { getServiceContent, SERVICE_IMAGES } from '../content/services';
-import { getHeroVideo } from '../content/heroVideo';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -35,7 +35,6 @@ function useServiceMeta(content) {
 export default function ServicePage({ serviceKey }) {
   const { t, lang } = useLang();
   const content = getServiceContent(lang, serviceKey);
-  const heroVideo = getHeroVideo();
   useServiceMeta(content);
 
   useEffect(() => {
@@ -101,15 +100,12 @@ export default function ServicePage({ serviceKey }) {
         <section className="section service-ba">
           <div className="container">
             <h2 className="section-title">{t('services.baTitle')}</h2>
-            <p className="section-intro">{t('services.baIntro')}</p>
             <div className="ba-pair">
               <figure className="ba-panel">
-                <img src={SERVICE_IMAGES[serviceKey]} alt="" loading="lazy" />
-                <figcaption className="ba-label ba-label--before">{t('services.baBefore')}</figcaption>
+                <figcaption className="ba-label">{t('services.baBefore')}</figcaption>
               </figure>
               <figure className="ba-panel">
-                <img src={SERVICE_IMAGES[serviceKey]} alt="" loading="lazy" />
-                <figcaption className="ba-label ba-label--after">{t('services.baAfter')}</figcaption>
+                <figcaption className="ba-label">{t('services.baAfter')}</figcaption>
               </figure>
             </div>
           </div>
@@ -118,21 +114,15 @@ export default function ServicePage({ serviceKey }) {
         <section className="section section-alt service-reel">
           <div className="container">
             <h2 className="section-title">{t('services.reelTitle')}</h2>
-            <p className="section-intro">{t('services.reelIntro')}</p>
             <div className="reel-frame">
-              <video
-                className="reel-video"
-                poster={heroVideo.poster}
-                controls
-                preload="metadata"
-                playsInline
-                aria-label={t('services.reelTitle')}
-              >
-                <source src={heroVideo.src} type="video/mp4" />
-              </video>
+              <span className="reel-label">{t('services.reelLabel')}</span>
             </div>
           </div>
         </section>
+
+        <div className="container">
+          <BackToHome />
+        </div>
 
       </main>
       <Footer />

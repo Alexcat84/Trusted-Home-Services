@@ -10,7 +10,10 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    base: './',
+    // Absolute, because the service pages live on real nested paths. With a
+    // relative base the bundle is requested from /services/assets/ and a direct
+    // visit to /services/<slug> loads a blank page.
+    base: '/',
     server: proxy ? { proxy } : undefined,
   };
 });

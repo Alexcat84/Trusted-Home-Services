@@ -59,7 +59,7 @@ export const SERVICE_IMAGES = {
 const EN = {
   cleaning: {
     name: 'Cleaning',
-    tagline: 'The first pass through the house, and the last one before the photos.',
+    tagline: 'Get it spotless, and get the smell out, before anyone walks in.',
     metaTitle: 'Deep Cleaning Services in Ottawa | Trusted Home Services',
     metaDescription:
       'Deep cleaning, move in and move out cleaning and odour treatment in Ottawa. The first job on site and the last one before photography.',
@@ -87,7 +87,7 @@ const EN = {
   },
   declutter: {
     name: 'Decluttering & Removal',
-    tagline: 'Nothing else can start while the rooms are still full.',
+    tagline: 'Empty the rooms first, because nothing else can start until they are.',
     metaTitle: 'Decluttering and Junk Removal in Ottawa | Trusted Home Services',
     metaDescription:
       'Room by room clear out, donation runs and junk removal in Ottawa. We empty the house so the painters, the cleaners and the camera can do their work.',
@@ -113,7 +113,7 @@ const EN = {
   },
   handyman: {
     name: 'Handyman',
-    tagline: 'The small things that together make a house look neglected.',
+    tagline: 'Put right the small faults a buyer silently counts against you.',
     metaTitle: 'Handyman Repairs in Ottawa | Trusted Home Services',
     metaDescription:
       'Drywall, caulking, minor carpentry, fixtures and general repairs in Ottawa. One crew for the whole list, with no deposit.',
@@ -140,7 +140,7 @@ const EN = {
   },
   electrical: {
     name: 'Electrical',
-    tagline: 'The part of a house nobody thinks about until somebody writes it down.',
+    tagline: 'Clear the wiring faults before an inspector puts them in writing.',
     metaTitle: 'Electrical Services in Ottawa | Trusted Home Services',
     metaDescription:
       'Electrical work in Ottawa: fixtures, outlets, GFCI protection, panel labelling and pre-listing safety checks. Permits arranged where the job requires them.',
@@ -168,7 +168,7 @@ const EN = {
   },
   painting: {
     name: 'Painting & Coatings',
-    tagline: 'The cheapest way to make a house look cared for.',
+    tagline: 'Freshen every wall, for the least money on the whole list.',
     metaTitle: 'House Painting Services in Ottawa | Trusted Home Services',
     metaDescription:
       'Interior and exterior painting in Ottawa for homes going on the market or being moved into. No deposit. You pay when the work is complete.',
@@ -194,7 +194,7 @@ const EN = {
   },
   flooring: {
     name: 'Flooring',
-    tagline: 'The surface that runs through every photograph of every room.',
+    tagline: 'Repair or replace the floor that runs through every photograph.',
     metaTitle: 'Flooring Installation in Ottawa | Trusted Home Services',
     metaDescription:
       'Vinyl, laminate, hardwood refinishing and tile installation in Ottawa. Supply and install with no deposit required.',
@@ -220,7 +220,7 @@ const EN = {
   },
   curb: {
     name: 'Curb Appeal',
-    tagline: 'The photograph people decide on before they read a word.',
+    tagline: 'Win the drive-by, before anyone gets as far as the door.',
     metaTitle: 'Curb Appeal Services in Ottawa | Trusted Home Services',
     metaDescription:
       'Exterior clean up, landscaping and entry repairs in Ottawa so your property makes a strong first impression. Free quote within 24 hours.',
@@ -246,7 +246,7 @@ const EN = {
   },
   inspection: {
     name: 'Home Inspection',
-    tagline: 'Find what a buyer would find, while it is still your decision.',
+    tagline: 'Find what a buyer would find, while it is still your call.',
     metaTitle: 'Pre-Listing Home Inspection in Ottawa | Trusted Home Services',
     metaDescription:
       'Pre-listing home inspection in Ottawa with a written photo report. Find the problems before a buyer does and decide what to fix on your own terms.',
@@ -274,7 +274,7 @@ const EN = {
   },
   staging: {
     name: 'Home Staging',
-    tagline: 'The last thing done, and the one that ends up in the photographs.',
+    tagline: 'Set each room so it photographs well and shows even better.',
     metaTitle: 'Home Staging Services in Ottawa | Trusted Home Services',
     metaDescription:
       'Room by room staging in Ottawa using what you already own where possible. We prepare the house so people can picture themselves living in it.',
@@ -303,7 +303,7 @@ const EN = {
 const FR = {
   cleaning: {
     name: 'Nettoyage',
-    tagline: 'Le premier passage dans la maison, et le dernier avant les photos.',
+    tagline: 'Rendez-la impeccable, et faites partir les odeurs, avant la première visite.',
     metaTitle: 'Services de nettoyage en profondeur à Ottawa | Trusted Home Services',
     metaDescription:
       'Nettoyage en profondeur, nettoyage d’emménagement et de déménagement et traitement des odeurs à Ottawa. Le premier travail sur place et le dernier avant la séance photo.',
@@ -331,7 +331,7 @@ const FR = {
   },
   declutter: {
     name: 'Désencombrement et débarras',
-    tagline: 'Rien d’autre ne peut commencer tant que les pièces sont pleines.',
+    tagline: 'Videz les pièces d’abord, car rien d’autre ne commence avant.',
     metaTitle: 'Désencombrement et débarras à Ottawa | Trusted Home Services',
     metaDescription:
       'Vidage pièce par pièce, dons et enlèvement des rebuts à Ottawa. Nous libérons la maison pour que les peintres, les nettoyeurs et l’appareil photo puissent travailler.',
@@ -357,7 +357,7 @@ const FR = {
   },
   handyman: {
     name: 'Bricolage',
-    tagline: 'Les petites choses qui, ensemble, donnent l’air d’une maison négligée.',
+    tagline: 'Réglez les petits défauts qu’un acheteur compte contre vous sans le dire.',
     metaTitle: 'Réparations et bricolage à Ottawa | Trusted Home Services',
     metaDescription:
       'Gypse, calfeutrage, menuiserie légère, luminaires et réparations générales à Ottawa. Une seule équipe pour toute la liste, sans acompte.',
@@ -384,7 +384,7 @@ const FR = {
   },
   electrical: {
     name: 'Électricité',
-    tagline: 'La partie de la maison à laquelle on ne pense pas avant qu’on l’écrive.',
+    tagline: 'Corrigez les défauts électriques avant qu’un inspecteur les inscrive.',
     metaTitle: 'Services d’électricité à Ottawa | Trusted Home Services',
     metaDescription:
       'Travaux électriques à Ottawa : luminaires, prises, protection DDFT, panneau étiqueté et vérification avant la mise en vente. Permis obtenus lorsque requis.',
@@ -412,7 +412,7 @@ const FR = {
   },
   painting: {
     name: 'Peinture et revêtements',
-    tagline: 'La façon la moins chère de montrer qu’une maison a été soignée.',
+    tagline: 'Rafraîchissez chaque mur, pour le moins cher de toute la liste.',
     metaTitle: 'Services de peinture résidentielle à Ottawa | Trusted Home Services',
     metaDescription:
       'Peinture intérieure et extérieure à Ottawa pour les maisons mises en vente ou prêtes à habiter. Aucun acompte. Vous payez à la fin des travaux.',
@@ -438,7 +438,7 @@ const FR = {
   },
   flooring: {
     name: 'Revêtements de sol',
-    tagline: 'La surface qui traverse chaque photo de chaque pièce.',
+    tagline: 'Réparez ou remplacez le sol qui traverse toutes les photos.',
     metaTitle: 'Pose de planchers à Ottawa | Trusted Home Services',
     metaDescription:
       'Vinyle, stratifié, sablage de bois franc et pose de céramique à Ottawa. Fourniture et pose, sans acompte.',
@@ -464,7 +464,7 @@ const FR = {
   },
   curb: {
     name: 'Attrait extérieur',
-    tagline: 'La photo sur laquelle on se décide avant d’avoir lu un mot.',
+    tagline: 'Gagnez le coup d’oeil de la rue, avant même qu’on arrive à la porte.',
     metaTitle: 'Aménagement et attrait extérieur à Ottawa | Trusted Home Services',
     metaDescription:
       'Nettoyage extérieur, aménagement paysager léger et réparations d’entrée à Ottawa pour une première impression réussie. Soumission en 24 heures.',
@@ -490,7 +490,7 @@ const FR = {
   },
   inspection: {
     name: 'Inspection résidentielle',
-    tagline: 'Trouvez ce qu’un acheteur trouverait, pendant que la décision est encore la vôtre.',
+    tagline: 'Trouvez ce qu’un acheteur trouverait, pendant que la décision est la vôtre.',
     metaTitle: 'Inspection avant mise en vente à Ottawa | Trusted Home Services',
     metaDescription:
       'Inspection avant la mise en vente à Ottawa, avec rapport écrit et photos. Trouvez les problèmes avant l’acheteur et décidez quoi corriger à vos conditions.',
@@ -518,7 +518,7 @@ const FR = {
   },
   staging: {
     name: 'Mise en valeur',
-    tagline: 'La dernière chose faite, et celle qui se retrouve sur les photos.',
+    tagline: 'Disposez chaque pièce pour qu’elle photographie bien et se visite mieux.',
     metaTitle: 'Mise en valeur résidentielle à Ottawa | Trusted Home Services',
     metaDescription:
       'Mise en valeur pièce par pièce à Ottawa, avec ce que vous possédez déjà lorsque c’est possible. Nous préparons la maison pour qu’on s’y projette.',

@@ -2307,52 +2307,36 @@ button.nav-link {
   color: var(--color-text);
   text-align: justify;
 }
-.privacy-back-wrap {
-  margin-top: 2rem;
-  text-align: center;
+/* The way back, identical on every individual page. Quiet enough not to
+   compete with whatever the page is actually asking for. */
+.back-home-wrap {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
 }
-.privacy-back-wrap .btn {
-  padding: 0.75rem 1.5rem;
+.back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.back-home-arrow {
+  color: var(--color-accent);
+  font-size: 1.1em;
+  transition: transform 0.18s ease;
+}
+.back-home:hover {
+  color: var(--color-accent);
+}
+.back-home:hover .back-home-arrow {
+  transform: translateX(-3px);
 }
 
 /* ---- For Realtors page ---- */
-.realtor-hero {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 50%, #050f1c 100%);
-  color: var(--color-text-on-dark);
-  padding: 2.5rem 0;
-  text-align: center;
-}
-.realtor-hero-title {
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.35rem, 3.5vw, 2rem);
-  font-weight: 700;
-  max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.realtor-hero-sub {
-  margin: 0;
-  font-size: 1rem;
-  opacity: 0.95;
-}
-.realtor-hero-tagline {
-  margin: 0.75rem 0 0;
-  font-size: 1.0625rem;
-  font-weight: 600;
-  opacity: 0.95;
-}
-.realtor-hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-.realtor-hero-actions .btn-primary { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
-.realtor-hero-actions .btn-primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); color: #fff; }
-.realtor-hero-actions .btn-secondary { background: transparent; color: rgba(255,255,255,0.95); border-color: rgba(255,255,255,0.6); }
-.realtor-hero-actions .btn-secondary:hover { background: rgba(255,255,255,0.15); border-color: #fff; color: #fff; }
 .realtor-list {
   margin: 0 0 1rem;
   padding-left: 1.25rem;
@@ -4531,55 +4515,36 @@ h3,
   margin-top: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-.ba-panel {
-  position: relative;
+/* The photographs and the film are not shot yet. An empty frame that names
+   what belongs in it is honest; a stand-in photograph pretending to be a
+   result is not. */
+.ba-panel,
+.reel-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
-  overflow: hidden;
+  border: 2px dashed var(--color-border);
   border-radius: 4px;
-  background: #131313;
+  background: var(--color-bg-alt, #f7fafc);
 }
 
-.ba-panel img {
-  display: block;
-  width: 100%;
+.ba-panel {
   aspect-ratio: 4 / 3;
-  object-fit: cover;
-}
-
-.ba-label {
-  position: absolute;
-  top: 0.9rem;
-  left: 0.9rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-
-.ba-label--before {
-  background: rgba(19, 19, 19, 0.82);
-}
-
-.ba-label--after {
-  background: var(--color-accent);
 }
 
 .reel-frame {
   margin-top: clamp(1.5rem, 3vw, 2.5rem);
-  border-radius: 6px;
-  overflow: hidden;
-  background: #131313;
-  box-shadow: var(--shadow-lg);
+  aspect-ratio: 16 / 9;
 }
 
-.reel-video {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+.ba-label,
+.reel-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 @media (max-width: 700px) {
@@ -4623,32 +4588,6 @@ h3,
 .step-lead {
   font-weight: 700;
   color: var(--color-primary);
-}
-
-.franchise-hero {
-  padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
-}
-
-.franchise-title {
-  margin: 0 0 1rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.9rem, 4vw, 2.9rem);
-  line-height: 1.15;
-  color: var(--color-primary);
-  max-width: 24ch;
-}
-
-.franchise-intro {
-  margin: 0;
-  max-width: 46rem;
-  font-size: 1.25rem;
-  line-height: 1.69;
-  color: var(--color-text-muted);
-}
-
-.franchise-note {
-  margin-top: 1.5rem;
-  font-size: 0.95rem;
 }
 
 @media (max-width: 760px) {
