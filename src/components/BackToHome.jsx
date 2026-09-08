@@ -1,5 +1,6 @@
 import { useLang } from '../context/useLang';
 import { getSectionHash } from '../translations';
+import { goToHash } from '../lib/routing';
 
 /**
  * One way back, the same on every individual page.
@@ -15,7 +16,7 @@ export default function BackToHome() {
 
   const goHome = (e) => {
     e.preventDefault();
-    window.location.hash = homeHash;
+    goToHash(homeHash);
     setTimeout(() => window.scrollTo(0, 0), 50);
   };
 

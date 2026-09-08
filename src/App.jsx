@@ -1185,6 +1185,75 @@ function HoldingPage({ which }) {
 }
 
 /**
+ * Our Promise.
+ *
+ * Nothing here is a new claim. The figure, the free walkthrough, the written
+ * plan and the walk before the invoice all appear elsewhere on the site; this
+ * is the one page that puts them together for somebody who came looking for
+ * exactly that.
+ */
+function PromisePage() {
+  const { t } = useLang();
+  const cubre = ['c1', 'c2', 'c3', 'c4'];
+  const porque = ['w1', 'w2', 'w3'];
+
+  return (
+    <div className="privacy-page">
+      <a href="#main" className="skip-link">Skip to main content</a>
+      <Header />
+      <main id="main" className="privacy-main">
+        <div className="privacy-hero">
+          <div className="container">
+            <h1 className="privacy-hero-title">{t('promisePage.title')}</h1>
+            <p className="privacy-hero-intro">{t('promisePage.intro')}</p>
+          </div>
+        </div>
+
+        <section className="section promise-figure-section">
+          <div className="container promise-figure-wrap">
+            <p className="promise-figure" aria-hidden="true">{t('homeStats.promiseFigure')}</p>
+            <div>
+              <p className="promise-figure-lead">{t('homeStats.promiseLead')}</p>
+              <p className="promise-figure-body">{t('homeStats.promiseBody')}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="section section-alt">
+          <div className="container">
+            <h2 className="section-title">{t('promisePage.coversTitle')}</h2>
+            <ul className="service-list">
+              {cubre.map((k) => (
+                <li key={k}>{t(`promisePage.${k}`)}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container">
+            <h2 className="section-title">{t('promisePage.whyTitle')}</h2>
+            <div className="service-benefit-grid">
+              {porque.map((k) => (
+                <article className="service-benefit" key={k}>
+                  <h3>{t(`promisePage.${k}Title`)}</h3>
+                  <p>{t(`promisePage.${k}Text`)}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="container">
+          <BackToHome />
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+/**
  * Franchises, kept apart from the partner page on purpose.
  *
  * Somebody who wants to run their own operation and somebody who wants to
@@ -2030,7 +2099,7 @@ function AdminPage() {
 }
 
 /** Pages the cloned menu points at that have nothing in them yet. */
-const HOLDING_PAGES = ['about', 'promise', 'locations'];
+const HOLDING_PAGES = ['about', 'locations'];
 
 function getSubPageFromHash(h) {
   if (REALTORS_PAGE_HASHES.includes(h)) return 'realtors';
@@ -2038,6 +2107,7 @@ function getSubPageFromHash(h) {
   if (PROJECTS_PAGE_HASHES.includes(h)) return 'projects';
   if (HOLDING_PAGES.includes(h)) return h;
   if (h === 'franchises') return 'franchises';
+  if (h === 'promise') return 'promise';
   return null;
 }
 
@@ -2106,6 +2176,7 @@ export default function App() {
     if (legalPage === 'admin') return <AdminPage />;
     if (HOLDING_PAGES.includes(subPage)) return <HoldingPage which={subPage} />;
     if (subPage === 'franchises') return <FranchisePage />;
+    if (subPage === 'promise') return <PromisePage />;
     if (subPage === 'realtors') return <RealtorsPage />;
     if (subPage === 'partners') return <BecomePartnerPage />;
     if (subPage === 'projects') return <ProjectsPage />;

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLang } from '../context/useLang';
 import { getSectionHash } from '../translations';
 import { getServiceList } from '../content/services';
-import { navigateTo, servicePath } from '../lib/routing';
+import { navigateTo, servicePath, goToHash } from '../lib/routing';
 import { ACTIVE_LOCALES } from '../lib/locales';
 
 /* Seven entries in the reference's positions. Two of its slots carry brand
@@ -130,7 +130,7 @@ export default function Header() {
     setOpenMenu(null);
     setMenuOpen(false);
     if (PAGE_KEYS.includes(key)) {
-      window.location.hash = PAGE_HASH[key] || key;
+      goToHash(PAGE_HASH[key] || key);
       window.scrollTo(0, 0);
       return;
     }
@@ -138,11 +138,7 @@ export default function Header() {
     // From another page, change page first. On the home page, assign the hash,
     // which is what actually scrolls: pushState does not, and neither does it
     // fire hashchange.
-    if (window.location.pathname !== '/') {
-      navigateTo('/', id);
-    } else if (window.location.hash.slice(1) !== id) {
-      window.location.hash = id;
-    }
+    goToHash(id);
     // After a page change the section is not mounted yet, and when the hash was
     // already correct nothing fires at all, so land it either way.
     window.requestAnimationFrame(() => {

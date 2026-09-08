@@ -42,3 +42,19 @@ export function navigateTo(path, hash = '') {
 export function isOnSubPath() {
   return window.location.pathname !== '/' && window.location.pathname !== '';
 }
+
+/**
+ * Goes to a hash target, dropping any service path on the way.
+ *
+ * The service pages are the only part of the site on a real path, and the path
+ * is read first. Setting a hash while standing on one leaves the reader exactly
+ * where they were, on a URL like /services/cleaning#promise.
+ */
+export function goToHash(hash) {
+  if (isOnSubPath()) {
+    navigateTo('/', hash);
+    return;
+  }
+  if (window.location.hash.slice(1) === hash) return;
+  window.location.hash = hash;
+}

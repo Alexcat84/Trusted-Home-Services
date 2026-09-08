@@ -1,4 +1,5 @@
 import { useLang } from '../context/useLang';
+import { goToHash } from '../lib/routing';
 import { useQuote } from '../context/useQuote';
 import { getSectionHash } from '../translations';
 
@@ -21,21 +22,21 @@ export default function Footer() {
         <div className="footer-col footer-quicklinks">
           <h3 className="footer-heading">{t('footer.quickLinks')}</h3>
           <nav className="footer-nav" aria-label="Quick links">
-            <a href={`#${hash('home')}`}>{t('footer.home')}</a>
-            <a href={`#${hash('services')}`}>{t('footer.services')}</a>
-            <a href={`#${hash('how')}`}>{t('footer.how')}</a>
-            <a href={`#${hash('projects')}`}>{t('footer.projects')}</a>
-            <a href={`#${hash('realtors')}`}>{t('footer.realtors')}</a>
+            <a href={`#${hash('home')}`} onClick={(e) => { e.preventDefault(); goToHash(hash('home')); }}>{t('footer.home')}</a>
+            <a href={`#${hash('services')}`} onClick={(e) => { e.preventDefault(); goToHash(hash('services')); }}>{t('footer.services')}</a>
+            <a href={`#${hash('how')}`} onClick={(e) => { e.preventDefault(); goToHash(hash('how')); }}>{t('footer.how')}</a>
+            <a href={`#${hash('projects')}`} onClick={(e) => { e.preventDefault(); goToHash(hash('projects')); }}>{t('footer.projects')}</a>
+            <a href={`#${hash('realtors')}`} onClick={(e) => { e.preventDefault(); goToHash(hash('realtors')); }}>{t('footer.realtors')}</a>
             <button type="button" className="footer-link-button" onClick={openQuote}>{t('footer.quote')}</button>
-            <a href={`#${hash('partners')}`}>{t('footer.partners')}</a>
+            <a href={`#${hash('partners')}`} onClick={(e) => { e.preventDefault(); goToHash(hash('partners')); }}>{t('footer.partners')}</a>
           </nav>
         </div>
         <div className="footer-col footer-support">
           <h3 className="footer-heading">{t('footer.support')}</h3>
           <nav className="footer-nav" aria-label="Support and legal">
-            <a href="#faq">{t('footer.faq')}</a>
-            <a href="#privacy">{t('footer.privacyPolicy')}</a>
-            <a href="#terms">{t('footer.termsOfService')}</a>
+            <a href="#faq" onClick={(e) => { e.preventDefault(); goToHash('faq'); }}>{t('footer.faq')}</a>
+            <a href="#privacy" onClick={(e) => { e.preventDefault(); goToHash('privacy'); }}>{t('footer.privacyPolicy')}</a>
+            <a href="#terms" onClick={(e) => { e.preventDefault(); goToHash('terms'); }}>{t('footer.termsOfService')}</a>
           </nav>
         </div>
       </div>
@@ -43,8 +44,8 @@ export default function Footer() {
         <div className="container footer-bottom-inner">
           <p className="footer-rights">{t('footer.rights')}</p>
           <nav className="footer-legal" aria-label="Legal">
-            <a href="#privacy">{t('footer.privacyPolicy')}</a>
-            <a href="#terms">{t('footer.termsOfService')}</a>
+            <a href="#privacy" onClick={(e) => { e.preventDefault(); goToHash('privacy'); }}>{t('footer.privacyPolicy')}</a>
+            <a href="#terms" onClick={(e) => { e.preventDefault(); goToHash('terms'); }}>{t('footer.termsOfService')}</a>
           </nav>
         </div>
       </div>
