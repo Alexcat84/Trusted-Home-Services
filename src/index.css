@@ -14,6 +14,10 @@
   --color-bg: #ffffff;
   --color-bg-alt: #f7fafc;
   --color-border: #e2e8f0;
+  /* Sampled from the ground of Logo v4.0 Inverted.jpg. The mark is a JPEG, so
+     its background is painted rather than transparent, and the band has to be
+     this exact value or the logo shows as a rectangle on it. */
+  --color-logo-ground: #0e2340;
   /* The reference sets its headings in Open Sans over body copy in Inter.
      Both are open licensed, so they are used as they are. */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -1590,6 +1594,18 @@ button.nav-link {
   justify-content: center;
   gap: 0.5rem;
   margin-top: 1.25rem;
+}
+.testimonials-strip {
+  position: relative;
+  max-width: 520px;
+  margin: 0 auto;
+  min-height: 200px;
+}
+.testimonial-stars {
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  color: var(--color-accent);
+  margin-bottom: 0.75rem;
 }
 .testimonial-card {
   position: absolute;
@@ -3786,8 +3802,8 @@ button.nav-link {
 
 .header {
   position: relative;
-  background: #ffffff;
-  border-bottom: 1px solid #ececec;
+  background: var(--color-logo-ground);
+  border-bottom: 0;
   box-shadow: none;
   padding: 0;
 }
@@ -3819,25 +3835,6 @@ button.nav-link {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-}
-
-/* The switcher sat on a dark bar before, so it needs the other set of colours. */
-.header .lang-group {
-  border-color: rgba(10, 35, 60, 0.25);
-}
-
-.header .lang-btn {
-  color: var(--color-primary);
-}
-
-.header .lang-btn:hover {
-  background: rgba(10, 35, 60, 0.08);
-  color: var(--color-primary);
-}
-
-.header .lang-btn.active {
-  background: var(--color-accent);
-  color: #ffffff;
 }
 
 .header-nav {

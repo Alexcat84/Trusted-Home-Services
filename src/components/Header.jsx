@@ -184,7 +184,7 @@ export default function Header() {
             }
           }}
         >
-          <img src="/images/Logo v4.0.jpg" alt="Trusted Home Services" />
+          <img src="/images/Logo v4.0 Inverted.jpg" alt="Trusted Home Services" />
         </a>
         <div className="header-utility">
           <div className="lang-switcher">
