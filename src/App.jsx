@@ -3,7 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import { animate, stagger } from 'animejs';
 import { useLang } from './context/useLang';
 import { useQuote } from './context/useQuote';
-import { useCornerCta, useNoCornerCta } from './context/useCornerCta';
+import { useCornerCta } from './context/useCornerCta';
 import Modal from './components/Modal';
 import QuoteFab from './components/QuoteFab';
 import { getSectionHash } from './translations';
@@ -11,7 +11,6 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ServicePage from './components/ServicePage';
 import { getServiceList } from './content/services';
-import { SAMPLE_REVIEWS, SAMPLE_POSTS } from './content/sampleContent';
 import BackToHome from './components/BackToHome';
 import { getHeroVideo } from './content/heroVideo';
 import { getServiceFromPath, navigateTo, servicePath } from './lib/routing';
@@ -232,24 +231,6 @@ function Reviews() {
         <h2 className="section-title"><AnimatedSectionTitle text={t('reviews.title')} /></h2>
         <p className="section-intro reviews-intro">{t('reviews.intro')}</p>
         <p className="reviews-lead">{t('reviews.lead')}</p>
-        <Testimonials showTitle={false} />
-        {/* Placeholder reviews, so the block can be judged at the volume the
-            reference runs at. They come out when the real ones go in. */}
-        <ul className="review-grid">
-          {SAMPLE_REVIEWS.map((r) => (
-            <li key={r.id} className="review-card">
-              <div className="review-head">
-                <span className="review-avatar" aria-hidden="true">{r.initial}</span>
-                <span>
-                  <span className="review-name">{r.name}</span>
-                  <span className="review-date">{r.date}</span>
-                </span>
-              </div>
-              <div className="review-stars" aria-hidden="true">★★★★★</div>
-              <p className="review-text">{r.text}</p>
-            </li>
-          ))}
-        </ul>
       </div>
     </AnimatedSection>
   );
@@ -262,60 +243,6 @@ function Reviews() {
  * service pages and the strip carries three things this company can say about
  * itself. Both are slots: real cases and real partner marks drop straight in.
  */
-function StartHere() {
-  const { t, lang } = useLang();
-  const picks = getServiceList(lang).filter((s) => ['painting', 'flooring', 'curb'].includes(s.key));
-  const marks = ['mark1', 'mark2', 'mark3'];
-
-  return (
-    <AnimatedSection className="section section-start">
-      <div className="container">
-        <h2 className="section-title"><AnimatedSectionTitle text={t('startHere.title')} /></h2>
-        <p className="section-intro">{t('startHere.intro')}</p>
-        <div className="start-grid">
-          {picks.map((s) => (
-            <a
-              key={s.key}
-              href={servicePath(s.key)}
-              className="start-card"
-              onClick={(e) => {
-                e.preventDefault();
-                navigateTo(servicePath(s.key));
-              }}
-            >
-              <img className="start-card-img" src={s.img} alt="" loading="lazy" />
-              <span className="start-card-body">
-                <span className="start-card-name">{s.name}</span>
-                <span className="start-card-desc">{s.tagline}</span>
-              </span>
-            </a>
-          ))}
-        </div>
-        {/* The row the reference fills with recent posts. Placeholder for now. */}
-        <ul className="post-grid">
-          {SAMPLE_POSTS.map((a) => (
-            <li key={a.id} className="post-card">
-              <img className="post-card-img" src={a.img} alt="" loading="lazy" />
-              <span className="post-card-body">
-                <span className="post-card-title">{a.title}</span>
-                <span className="post-card-excerpt">{a.excerpt}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-        <ul className="trust-strip">
-          {marks.map((m) => (
-            <li key={m} className="trust-mark">
-              <span className="trust-mark-title">{t(`startHere.${m}Title`)}</span>
-              <span className="trust-mark-text">{t(`startHere.${m}Text`)}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </AnimatedSection>
-  );
-}
-
 function HowWeWork() {
   const { t, lang } = useLang();
   // The reference walks the visitor through five, so this does too.
@@ -354,62 +281,6 @@ function HowWeWork() {
         </motion.div>
       </div>
     </AnimatedSection>
-  );
-}
-
-function Testimonials({ variant = 'section', showTitle = true }) {
-  const { t } = useLang();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const isHero = variant === 'hero';
-  const items = [
-    { nameKey: 'testimonials.name1', roleKey: 'testimonials.role1', quoteKey: 'testimonials.quote1', img: '/images/woman1.jpg' },
-    { nameKey: 'testimonials.name2', roleKey: 'testimonials.role2', quoteKey: 'testimonials.quote2', img: '/images/man1.jpg' },
-    { nameKey: 'testimonials.name4', roleKey: 'testimonials.role4', quoteKey: 'testimonials.quote4', img: '/images/man2.jpg' },
-    { nameKey: 'testimonials.name3', roleKey: 'testimonials.role3', quoteKey: 'testimonials.quote3', img: '/images/woman2.jpg' },
-  ];
-
-  useEffect(() => {
-    const id = setInterval(() => setActiveIndex((i) => (i + 1) % items.length), 5000);
-    return () => clearInterval(id);
-  }, [items.length]);
-
-  return (
-    <section
-      className={isHero ? 'hero-testimonials' : 'section section-testimonials'}
-      aria-label={t('testimonials.title')}
-    >
-      <div className={isHero ? 'hero-testimonials-panel' : 'container'}>
-        {showTitle && (
-          <h2 className={isHero ? 'hero-testimonials-title' : 'section-title'}>{t('testimonials.title')}</h2>
-        )}
-        <div className="testimonials-strip">
-          {items.map((item, i) => (
-            <div
-              key={i}
-              className={`testimonial-card ${i === activeIndex ? 'active' : ''}`}
-              aria-hidden={i !== activeIndex}
-            >
-              <img src={item.img} alt="" className="testimonial-avatar" />
-              <div className="testimonial-stars" aria-hidden="true">★★★★★</div>
-              <p className="testimonial-quote">"{t(item.quoteKey)}"</p>
-              <p className="testimonial-name">{t(item.nameKey)}</p>
-              <p className="testimonial-role">{t(item.roleKey)}</p>
-            </div>
-          ))}
-        </div>
-        <div className="testimonials-dots" aria-hidden="true">
-          {items.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              className={`testimonials-dot ${i === activeIndex ? 'active' : ''}`}
-              onClick={() => setActiveIndex(i)}
-              aria-label={`${t('testimonials.title')} ${i + 1}`}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -1482,10 +1353,25 @@ function RealtorsPage() {
   );
 }
 
+/**
+ * Become a Partner.
+ *
+ * Kept separate from the franchise page: a trade offering one service and
+ * somebody who wants to run a territory are different readers with different
+ * questions. This page answers the first.
+ */
 function BecomePartnerPage() {
   const { t } = useLang();
   const [partnerModalOpen, setPartnerModalOpen] = useState(false);
-  useNoCornerCta();  return (
+  const openPartnerModal = useCallback(() => setPartnerModalOpen(true), []);
+  // The page carries its own form, so the corner button offers that rather
+  // than the general quote, and the page does not repeat it further down.
+  useCornerCta(t('partnersPage.ctaButton'), openPartnerModal, partnerModalOpen);
+  const trades = ['trade1', 'trade2', 'trade3', 'trade4', 'trade5', 'trade6', 'trade7'];
+  const gains = ['gain1', 'gain2', 'gain3', 'gain4'];
+  const steps = ['step1', 'step2', 'step3'];
+
+  return (
     <div className="privacy-page">
       <Header />
       <main id="main" className="privacy-main">
@@ -1495,29 +1381,48 @@ function BecomePartnerPage() {
             <p className="privacy-hero-intro">{t('partnersPage.intro')}</p>
           </div>
         </div>
-        <div className="container privacy-content">
-          <motion.div
-            className="become-partner-cols"
-            initial="hidden"
-            animate="visible"
-            variants={{
-              visible: { transition: { staggerChildren: 0.12 } },
-              hidden: {}
-            }}
-          >
-            <motion.section
-              className="become-partner-card"
-              variants={{
-                hidden: { opacity: 0, y: 24 },
-                visible: { opacity: 1, y: 0 }
-              }}
-              transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <h2 className="privacy-section-title">{t('partnersPage.partnerSection.title')}</h2>
-              <p className="become-partner-card-intro">{t('partnersPage.partnerSection.intro')}</p>
-              <button type="button" className="btn btn-primary" onClick={() => setPartnerModalOpen(true)}>{t('partnersPage.partnerSection.cta')}</button>
-            </motion.section>
-          </motion.div>
+
+        <section className="section section-alt">
+          <div className="container">
+            <h2 className="section-title">{t('partnersPage.tradesTitle')}</h2>
+            <ul className="service-list">
+              {trades.map((k) => (
+                <li key={k}>{t(`partnersPage.${k}`)}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container">
+            <h2 className="section-title">{t('partnersPage.gainsTitle')}</h2>
+            <div className="service-benefit-grid">
+              {gains.map((k) => (
+                <article className="service-benefit" key={k}>
+                  <h3>{t(`partnersPage.${k}Title`)}</h3>
+                  <p>{t(`partnersPage.${k}Text`)}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section section-alt">
+          <div className="container">
+            <h2 className="section-title">{t('partnersPage.stepsTitle')}</h2>
+            <div className="steps-grid">
+              {steps.map((k, i) => (
+                <div className="step-card" key={k}>
+                  <span className="step-number" aria-hidden="true">{i + 1}</span>
+                  <p className="step-text">{t(`partnersPage.${k}`)}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="container">
+          <BackToHome />
         </div>
       </main>
       <PartnerFormModal open={partnerModalOpen} onClose={() => setPartnerModalOpen(false)} />
@@ -2213,7 +2118,6 @@ export default function App() {
           <Services />
           <HowWeWork />
           <Reviews />
-          <StartHere />
         </main>
         <Footer />
       </>

@@ -20,15 +20,21 @@ export function LangProvider({ children }) {
       localStorage.setItem(STORAGE_KEY, lang);
     } catch { /* storage unavailable (e.g. private mode); ignore */ }
     document.documentElement.lang = lang;
+    // The address follows the language, but the reader does not move. Assigning
+    // window.location.hash would scroll to the anchor, which turned a language
+    // switch into a jump to whichever section the URL happened to name.
     const hash = window.location.hash.slice(1);
     const sectionKey = getSectionKeyFromHash(hash);
     if (sectionKey) {
       const newHash = getSectionHash(lang, sectionKey);
-      if (newHash !== hash) window.location.hash = newHash;
+      if (newHash !== hash) {
+        window.history.replaceState(null, '', `${window.location.pathname}#${newHash}`);
+      }
     }
   }, [lang]);
 
   const setLang = (l) => setLangState(normalizeLocale(l));
+
   const translate = (key) => t(lang, key);
 
   return (

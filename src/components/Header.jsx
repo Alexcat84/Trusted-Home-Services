@@ -11,7 +11,7 @@ const NAV_KEYS = ['home', 'about', 'services', 'promise', 'locations', 'team', '
 /** The entries that open a panel rather than going somewhere. */
 const MENU_KEYS = ['about', 'services', 'team'];
 /** What sits under About us. */
-const ABOUT_KEYS = ['how', 'projects', 'faq'];
+const ABOUT_KEYS = ['who', 'how', 'projects', 'faq'];
 /** The two audiences that sit under work with us. */
 const TEAM_KEYS = ['realtors', 'partners'];
 /** Entries that scroll to a section rather than opening a page. */
@@ -19,7 +19,9 @@ const SECTION_KEYS = ['home', 'services', 'how', 'projects', 'realtors', 'partne
 /** Entries with a page of their own, reached by hash. */
 /* Franchises is kept apart from the partner page on purpose: the two answer
    different searches and each needs its own page to rank for them. */
-const PAGE_KEYS = ['promise', 'locations', 'faq', 'franchises'];
+const PAGE_KEYS = ['who', 'promise', 'locations', 'faq', 'franchises'];
+/** Where an entry goes when its label and its page do not share a name. */
+const PAGE_HASH = { who: 'about' };
 
 export default function Header() {
   const { lang, setLang, t } = useLang();
@@ -128,11 +130,25 @@ export default function Header() {
     setOpenMenu(null);
     setMenuOpen(false);
     if (PAGE_KEYS.includes(key)) {
-      window.location.hash = key;
+      window.location.hash = PAGE_HASH[key] || key;
       window.scrollTo(0, 0);
       return;
     }
-    navigateTo('/', hash(key));
+    const id = hash(key);
+    // From another page, change page first. On the home page, assign the hash,
+    // which is what actually scrolls: pushState does not, and neither does it
+    // fire hashchange.
+    if (window.location.pathname !== '/') {
+      navigateTo('/', id);
+    } else if (window.location.hash.slice(1) !== id) {
+      window.location.hash = id;
+    }
+    // After a page change the section is not mounted yet, and when the hash was
+    // already correct nothing fires at all, so land it either way.
+    window.requestAnimationFrame(() => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   };
 
   /** A narrow list under the entry that opened it, which is the shape the
