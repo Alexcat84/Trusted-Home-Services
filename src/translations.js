@@ -115,6 +115,21 @@ export const TRANSLATIONS = {
       intro: 'Selling a house is exciting and frightening at once. The price decides what your family does next, and it lands in the middle of one of the more stressful moves anyone makes.',
       lead: 'Everything above exists to take that part off your hands.',
     },
+    testimonials: {
+      title: 'What our clients say',
+      name1: 'Sarah M.',
+      role1: 'Homeowner',
+      quote1: 'They painted the whole main floor and repaired a few drywall dings. The house looked brand new for listing day.',
+      name2: 'James K.',
+      role2: 'Realtor',
+      quote2: 'I use them for listing prep on my listings. Always on time, and the photos turn out great.',
+      name3: 'Linda P.',
+      role3: 'Homeowner',
+      quote3: 'Needed a quick clean and touch-ups before the open house. They squeezed us in and delivered.',
+      name4: 'David T.',
+      role4: 'Realtor',
+      quote4: 'Professional work and one point of contact. My clients are happy and the closings go smoothly.'
+    },
     realtors: {
       title: 'Are you a real estate agent?',
       text: 'We understand timelines and the pressure of preparing a home. We offer fast turnaround, bundled services and one point of contact so your listings stand out.',
@@ -564,6 +579,21 @@ export const TRANSLATIONS = {
       intro: 'Vendre une maison est à la fois excitant et angoissant. Le prix décide de la suite pour votre famille, et tout cela tombe au milieu d’un des déménagements les plus stressants qui soient.',
       lead: 'Tout ce qui précède existe pour vous retirer cette partie des mains.',
     },
+    testimonials: {
+      title: 'Ce que disent nos clients',
+      name1: 'Sarah M.',
+      role1: 'Propriétaire',
+      quote1: 'Ils ont peint tout l\'étage principal et réparé quelques trous dans le gypse. La maison semblait neuve pour la mise en vente.',
+      name2: 'James K.',
+      role2: 'Courtier',
+      quote2: 'Je les utilise pour la préparation de mes annonces. Toujours à l\'heure, et les photos sont superbes.',
+      name3: 'Linda P.',
+      role3: 'Propriétaire',
+      quote3: 'Nettoyage et retouches rapides avant la portes ouvertes. Ils nous ont pris en urgence et ont livré.',
+      name4: 'David T.',
+      role4: 'Courtier',
+      quote4: 'Travail professionnel et un seul interlocuteur. Mes clients sont satisfaits et les ventes se passent bien.'
+    },
     realtors: {
       title: 'Vous êtes agent immobilier?',
       text: 'Nous comprenons les délais et la pression de préparer une maison. Un seul interlocuteur pour vos annonces.',
@@ -1000,6 +1030,21 @@ export const TRANSLATIONS = {
       step1: { title: 'Cotización', text: 'Pide tu cotización gratuita por esta web o al (613) 204-8000.' },
       step2: { title: 'Coordinación', text: 'Una vez aceptada la cotización, llegamos a la hora con equipo y materiales. Un solo contacto para todo.' },
       step3: { title: 'Resultado', text: 'Tu hogar listo cuando lo necesites. Pagas cuando el trabajo esté entregado como acordado.' }
+    },
+    testimonials: {
+      title: 'Lo que dicen nuestros clientes',
+      name1: 'Sarah M.',
+      role1: 'Propietaria',
+      quote1: 'Pintaron toda la planta principal y repararon algunos golpes en el drywall. La casa se veía como nueva para el listado.',
+      name2: 'James K.',
+      role2: 'Agente',
+      quote2: 'Los uso para preparar mis listados. Siempre a tiempo y las fotos quedan excelentes.',
+      name3: 'Linda P.',
+      role3: 'Propietaria',
+      quote3: 'Necesitábamos limpieza y retoques antes del open house. Nos acomodaron y cumplieron.',
+      name4: 'David T.',
+      role4: 'Agente',
+      quote4: 'Trabajo profesional y un solo contacto. Mis clientes quedan contentos y los cierres van sin problemas.'
     },
     realtors: {
       title: '¿Eres agente inmobiliario?',

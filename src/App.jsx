@@ -214,6 +214,63 @@ function Services() {
   );
 }
 
+function Testimonials({ variant = 'section', showTitle = true }) {
+  const { t } = useLang();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const isHero = variant === 'hero';
+  const items = [
+    { nameKey: 'testimonials.name1', roleKey: 'testimonials.role1', quoteKey: 'testimonials.quote1', img: '/images/woman1.jpg' },
+    { nameKey: 'testimonials.name2', roleKey: 'testimonials.role2', quoteKey: 'testimonials.quote2', img: '/images/man1.jpg' },
+    { nameKey: 'testimonials.name4', roleKey: 'testimonials.role4', quoteKey: 'testimonials.quote4', img: '/images/man2.jpg' },
+    { nameKey: 'testimonials.name3', roleKey: 'testimonials.role3', quoteKey: 'testimonials.quote3', img: '/images/woman2.jpg' },
+  ];
+
+  useEffect(() => {
+    const id = setInterval(() => setActiveIndex((i) => (i + 1) % items.length), 5000);
+    return () => clearInterval(id);
+  }, [items.length]);
+
+  return (
+    <section
+      className={isHero ? 'hero-testimonials' : 'section section-testimonials'}
+      aria-label={t('testimonials.title')}
+    >
+      <div className={isHero ? 'hero-testimonials-panel' : 'container'}>
+        {showTitle && (
+          <h2 className={isHero ? 'hero-testimonials-title' : 'section-title'}>{t('testimonials.title')}</h2>
+        )}
+        <div className="testimonials-strip">
+          {items.map((item, i) => (
+            <div
+              key={i}
+              className={`testimonial-card ${i === activeIndex ? 'active' : ''}`}
+              aria-hidden={i !== activeIndex}
+            >
+              <img src={item.img} alt="" className="testimonial-avatar" />
+              <div className="testimonial-stars" aria-hidden="true">★★★★★</div>
+              <p className="testimonial-quote">"{t(item.quoteKey)}"</p>
+              <p className="testimonial-name">{t(item.nameKey)}</p>
+              <p className="testimonial-role">{t(item.roleKey)}</p>
+            </div>
+          ))}
+        </div>
+        <div className="testimonials-dots" aria-hidden="true">
+          {items.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              className={`testimonials-dot ${i === activeIndex ? 'active' : ''}`}
+              onClick={() => setActiveIndex(i)}
+              aria-label={`${t('testimonials.title')} ${i + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
 /**
  * The reviews block the reference runs between the process and the footer.
  *
@@ -231,6 +288,7 @@ function Reviews() {
         <h2 className="section-title"><AnimatedSectionTitle text={t('reviews.title')} /></h2>
         <p className="section-intro reviews-intro">{t('reviews.intro')}</p>
         <p className="reviews-lead">{t('reviews.lead')}</p>
+        <Testimonials showTitle={false} />
       </div>
     </AnimatedSection>
   );

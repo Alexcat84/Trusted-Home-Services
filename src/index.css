@@ -1574,6 +1574,23 @@ button.nav-link {
 .section-testimonials .section-title {
   margin-bottom: 1.25rem;
 }
+.testimonial-name {
+  margin: 0 0 0.2rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--color-primary);
+}
+.testimonial-role {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+.testimonials-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
 .testimonial-card {
   position: absolute;
   inset: 0;
