@@ -1267,7 +1267,11 @@ function FranchisePage() {
   // The page has a form of its own, so the corner button offers that instead
   // of the general quote, and the page does not repeat it lower down.
   useCornerCta(t('franchise.ctaButton'), openFranchiseModal, franchiseModalOpen);
+  const market = ['m1', 'm2', 'm3'];
+  const standard = ['s1', 's2', 's3', 's4'];
+  const demand = ['d1', 'd2', 'd3'];
   const included = ['inc1', 'inc2', 'inc3', 'inc4', 'inc5'];
+  const support = ['p1', 'p2', 'p3', 'p4', 'p5'];
   const suits = ['fit1', 'fit2', 'fit3'];
   const steps = ['step1', 'step2', 'step3'];
 
@@ -1285,9 +1289,60 @@ function FranchisePage() {
 
         <section className="section section-alt">
           <div className="container">
+            <h2 className="section-title">{t('franchise.marketTitle')}</h2>
+            <p className="section-intro">{t('franchise.marketText')}</p>
+            <div className="service-benefit-grid">
+              {market.map((k) => (
+                <article className="service-benefit" key={k}>
+                  <h3>{t(`franchise.${k}Title`)}</h3>
+                  <p>{t(`franchise.${k}Text`)}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container">
+            <h2 className="section-title">{t('franchise.standardTitle')}</h2>
+            <ul className="service-list">
+              {standard.map((k) => (
+                <li key={k}>{t(`franchise.${k}`)}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="section section-alt">
+          <div className="container">
+            <h2 className="section-title">{t('franchise.demandTitle')}</h2>
+            <div className="service-benefit-grid">
+              {demand.map((k) => (
+                <article className="service-benefit" key={k}>
+                  <h3>{t(`franchise.${k}Title`)}</h3>
+                  <p>{t(`franchise.${k}Text`)}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container">
             <h2 className="section-title">{t('franchise.includedTitle')}</h2>
             <ul className="service-list">
               {included.map((k) => (
+                <li key={k}>{t(`franchise.${k}`)}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="section section-alt">
+          <div className="container">
+            <h2 className="section-title">{t('franchise.supportTitle')}</h2>
+            <ul className="service-list">
+              {support.map((k) => (
                 <li key={k}>{t(`franchise.${k}`)}</li>
               ))}
             </ul>

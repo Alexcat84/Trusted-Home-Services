@@ -3407,7 +3407,7 @@ button.nav-link {
 .hero-panel {
   display: flex;
   align-items: center;
-  background: #131313;
+  background: var(--color-primary);
   /* The header is fixed and sits over the top of the section, so the panel
      starts below it rather than under it. Measured at 108px. */
   padding: calc(108px + clamp(2rem, 3.5vw, 3.5rem)) clamp(1.5rem, 3.5vw, 4rem) clamp(4.5rem, 7vw, 7rem);
@@ -3487,7 +3487,7 @@ button.nav-link {
   font-family: inherit;
   font-size: clamp(0.95rem, 1.05vw, 1.02rem);
   font-weight: 700;
-  color: #131313;
+  color: var(--color-primary);
   background: #ffffff;
   border: 0;
   border-radius: 999px;
@@ -3509,7 +3509,7 @@ button.nav-link {
 .hero-media {
   position: relative;
   overflow: hidden;
-  background: #131313;
+  background: var(--color-primary);
   padding-top: 108px;
 }
 
@@ -3521,7 +3521,7 @@ button.nav-link {
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  background: #131313;
+  background: var(--color-primary);
 }
 
 /* The curve at the foot, sitting over both halves. */
