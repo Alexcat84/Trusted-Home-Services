@@ -146,6 +146,7 @@ export default function ServicePage({ serviceKey }) {
                   src={media.reel.src}
                   poster={media.reel.poster}
                   controls
+                  loop
                   preload="metadata"
                   playsInline
                   aria-label={t('services.reelTitle')}

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * The photographs beside a service, one fading into the next.
@@ -13,8 +13,7 @@ export default function ServiceGallery({ images, ratio, interval = 1500, label }
   const [index, setIndex] = useState(0);
   const [held, setHeld] = useState(false);
   const [stillness, setStillness] = useState(false);
-  const countRef = useRef(images.length);
-  countRef.current = images.length;
+  const total = images.length;
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -25,12 +24,17 @@ export default function ServiceGallery({ images, ratio, interval = 1500, label }
   }, []);
 
   useEffect(() => {
-    if (held || stillness || images.length < 2) return undefined;
-    const id = setInterval(() => setIndex((i) => (i + 1) % countRef.current), interval);
+    if (held || stillness || total < 2) return undefined;
+    // The modulo is what makes it endless: the last photograph hands back to
+    // the first and it keeps going for as long as the page is open.
+    const id = setInterval(() => setIndex((i) => (i + 1) % total), interval);
     return () => clearInterval(id);
-  }, [held, stillness, interval, images.length]);
+  }, [held, stillness, interval, total]);
 
-  if (images.length === 0) return null;
+  if (total === 0) return null;
+  // Guards the one case the modulo above cannot: a shorter set arriving while
+  // we are past its end.
+  const current = index % total;
 
   return (
     <div
@@ -43,22 +47,22 @@ export default function ServiceGallery({ images, ratio, interval = 1500, label }
           <img
             key={src}
             src={src}
-            alt={i === index ? label : ''}
-            className={`service-gallery-img ${i === index ? 'is-current' : ''}`}
+            alt={i === current ? label : ''}
+            className={`service-gallery-img ${i === current ? 'is-current' : ''}`}
             loading={i === 0 ? 'eager' : 'lazy'}
-            aria-hidden={i !== index}
+            aria-hidden={i !== current}
           />
         ))}
       </div>
-      {images.length > 1 && (
+      {total > 1 && (
         <div className="service-gallery-dots">
           {images.map((src, i) => (
             <button
               key={src}
               type="button"
-              className={`service-gallery-dot ${i === index ? 'is-current' : ''}`}
+              className={`service-gallery-dot ${i === current ? 'is-current' : ''}`}
               aria-label={`${label} ${i + 1}`}
-              aria-current={i === index}
+              aria-current={i === current}
               onFocus={() => setHeld(true)}
               onBlur={() => setHeld(false)}
               onClick={() => setIndex(i)}
