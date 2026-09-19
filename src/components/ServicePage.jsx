@@ -3,6 +3,8 @@ import BackToHome from './BackToHome';
 import { motion } from 'framer-motion';
 import { useLang } from '../context/useLang';
 import { getServiceContent, SERVICE_IMAGES } from '../content/services';
+import { getServiceMedia } from '../content/serviceMedia';
+import ServiceGallery from './ServiceGallery';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -35,6 +37,7 @@ function useServiceMeta(content) {
 export default function ServicePage({ serviceKey }) {
   const { t, lang } = useLang();
   const content = getServiceContent(lang, serviceKey);
+  const media = getServiceMedia(serviceKey);
   useServiceMeta(content);
 
   useEffect(() => {
@@ -57,7 +60,16 @@ export default function ServicePage({ serviceKey }) {
               <p className="service-intro">{content.intro}</p>
             </div>
             <div className="service-hero-media">
-              <img src={SERVICE_IMAGES[serviceKey]} alt="" loading="eager" />
+              {media.gallery ? (
+                <ServiceGallery
+                  images={media.gallery.images}
+                  ratio={media.gallery.ratio}
+                  interval={media.gallery.interval}
+                  label={content.name}
+                />
+              ) : (
+                <img src={SERVICE_IMAGES[serviceKey]} alt="" loading="eager" />
+              )}
             </div>
           </div>
         </section>
@@ -100,23 +112,50 @@ export default function ServicePage({ serviceKey }) {
         <section className="section service-ba">
           <div className="container">
             <h2 className="section-title">{t('services.baTitle')}</h2>
-            <div className="ba-pair">
-              <figure className="ba-panel">
-                <figcaption className="ba-label">{t('services.baBefore')}</figcaption>
-              </figure>
-              <figure className="ba-panel">
-                <figcaption className="ba-label">{t('services.baAfter')}</figcaption>
-              </figure>
-            </div>
+            {media.beforeAfter ? (
+              <div className="ba-pair ba-pair--filled">
+                <figure className="ba-panel ba-panel--filled" style={{ aspectRatio: media.beforeAfter.ratio }}>
+                  <img src={media.beforeAfter.before} alt={t('services.baBefore')} loading="lazy" />
+                  <figcaption className="ba-label ba-label--over">{t('services.baBefore')}</figcaption>
+                </figure>
+                <figure className="ba-panel ba-panel--filled" style={{ aspectRatio: media.beforeAfter.ratio }}>
+                  <img src={media.beforeAfter.after} alt={t('services.baAfter')} loading="lazy" />
+                  <figcaption className="ba-label ba-label--over ba-label--after">{t('services.baAfter')}</figcaption>
+                </figure>
+              </div>
+            ) : (
+              <div className="ba-pair">
+                <figure className="ba-panel">
+                  <figcaption className="ba-label">{t('services.baBefore')}</figcaption>
+                </figure>
+                <figure className="ba-panel">
+                  <figcaption className="ba-label">{t('services.baAfter')}</figcaption>
+                </figure>
+              </div>
+            )}
           </div>
         </section>
 
         <section className="section section-alt service-reel">
           <div className="container">
             <h2 className="section-title">{t('services.reelTitle')}</h2>
-            <div className="reel-frame">
-              <span className="reel-label">{t('services.reelLabel')}</span>
-            </div>
+            {media.reel ? (
+              <div className="reel-frame reel-frame--filled" style={{ aspectRatio: media.reel.ratio }}>
+                <video
+                  className="reel-video"
+                  src={media.reel.src}
+                  poster={media.reel.poster}
+                  controls
+                  preload="metadata"
+                  playsInline
+                  aria-label={t('services.reelTitle')}
+                />
+              </div>
+            ) : (
+              <div className="reel-frame">
+                <span className="reel-label">{t('services.reelLabel')}</span>
+              </div>
+            )}
           </div>
         </section>
 

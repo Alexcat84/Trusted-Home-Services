@@ -4338,3 +4338,127 @@ h3,
   max-width: 44rem;
   color: var(--color-text-muted);
 }
+
+/* ============================================
+   Real material on a service page
+   ============================================ */
+
+/* The gallery beside the service. Its proportion comes from the photographs,
+   set inline, because a frame cut for landscape would throw away most of a
+   phone photograph. */
+.service-gallery {
+  width: 100%;
+  max-width: 22rem;
+  margin-inline: auto;
+}
+
+.service-gallery-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  background: var(--color-bg-alt);
+}
+
+/* Beats .service-hero-media img, which squares every still into 4 by 3. */
+.service-hero-media .service-gallery .service-gallery-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.service-hero-media .service-gallery .service-gallery-img.is-current {
+  opacity: 1;
+}
+
+.service-gallery-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 0.9rem;
+}
+
+.service-gallery-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-border);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.service-gallery-dot:hover {
+  background: var(--color-text-muted);
+}
+
+.service-gallery-dot.is-current {
+  background: var(--color-accent);
+  transform: scale(1.25);
+}
+
+/* A filled pair, as against the dashed frames that stand in for material we
+   do not have yet. Tall photographs, so the pair is held narrow enough that
+   the two of them do not run past a screen. */
+.ba-pair--filled {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.ba-panel--filled {
+  position: relative;
+  display: block;
+  border: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-bg-alt);
+}
+
+.ba-panel--filled img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ba-label--over {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(10, 35, 60, 0.82);
+  color: #ffffff;
+  letter-spacing: 0.12em;
+}
+
+.ba-label--over.ba-label--after {
+  background: var(--color-accent);
+}
+
+.reel-frame--filled {
+  display: block;
+  max-width: 54rem;
+  margin-inline: auto;
+  border: 0;
+  overflow: hidden;
+  background: var(--color-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.reel-frame--filled .reel-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
