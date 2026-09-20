@@ -38,7 +38,9 @@ export const SERVICE_MEDIA = {
       after: `${CLEANING}/cleaning-after.webp`,
     },
     reel: {
-      ratio: '4 / 3',
+      // Two vertical clips side by side come to nine by eight exactly, so the
+      // pair fills the frame with no bars and nothing to fill in behind them.
+      ratio: '9 / 8',
       src: '/videos/cleaning-crew.mp4',
       poster: '/videos/cleaning-crew-poster.jpg',
     },
