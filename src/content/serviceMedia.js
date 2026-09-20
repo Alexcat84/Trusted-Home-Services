@@ -15,6 +15,7 @@
  */
 
 const CLEANING = '/images/services/cleaning';
+const DECLUTTER = '/images/services/declutter';
 
 export const SERVICE_MEDIA = {
   cleaning: {
@@ -43,6 +44,31 @@ export const SERVICE_MEDIA = {
       ratio: '9 / 8',
       src: '/videos/cleaning-crew.mp4',
       poster: '/videos/cleaning-crew-poster.jpg',
+    },
+  },
+  declutter: {
+    gallery: {
+      ratio: '9 / 16',
+      interval: 1500,
+      images: [
+        `${DECLUTTER}/declutter-01.webp`,
+        `${DECLUTTER}/declutter-02.webp`,
+        `${DECLUTTER}/declutter-03.webp`,
+        `${DECLUTTER}/declutter-04.webp`,
+        `${DECLUTTER}/declutter-05.webp`,
+        `${DECLUTTER}/declutter-06.webp`,
+        `${DECLUTTER}/declutter-07.webp`,
+        `${DECLUTTER}/declutter-08.webp`,
+        `${DECLUTTER}/declutter-09.webp`,
+      ],
+    },
+    // No pair yet. The after we hold was taken from the driveway looking in,
+    // and every before we hold was taken from inside the garage, so the two
+    // cannot line up. The labelled empty frames stay until there is a pair.
+    reel: {
+      ratio: '9 / 8',
+      src: '/videos/declutter-crew.mp4',
+      poster: '/videos/declutter-crew-poster.jpg',
     },
   },
 };
