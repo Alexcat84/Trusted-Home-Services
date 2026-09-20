@@ -62,9 +62,11 @@ export const SERVICE_MEDIA = {
         `${DECLUTTER}/declutter-09.webp`,
       ],
     },
-    // No pair yet. The after we hold was taken from the driveway looking in,
-    // and every before we hold was taken from inside the garage, so the two
-    // cannot line up. The labelled empty frames stay until there is a pair.
+    beforeAfter: {
+      ratio: '9 / 16',
+      before: `${DECLUTTER}/declutter-before.webp`,
+      after: `${DECLUTTER}/declutter-after.webp`,
+    },
     reel: {
       ratio: '9 / 8',
       src: '/videos/declutter-crew.mp4',
