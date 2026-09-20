@@ -20,9 +20,6 @@ const BASE = '/images/services';
 /** The frame a set is shown in. Phone photographs are tall, and a frame cut for
     landscape would throw away most of every one of them. */
 const TALL = '9 / 16';
-/** Taller again. Some phones shoot nearer 9:19, and cutting those to 9:16 would
-    take a sixth of the picture off the top and bottom. */
-const TALLER = '800 / 1712';
 /** Two vertical clips side by side come to nine by eight exactly, so the pair
     fills its frame with no bars and nothing to fill in behind them. */
 const REEL = '9 / 8';
@@ -58,7 +55,10 @@ export const SERVICE_MEDIA = {
   curb: { gallery: stills('curb', 9), beforeAfter: pair('curb'), reel: film('curb') },
   flooring: { gallery: stills('flooring', 11), beforeAfter: pair('flooring'), reel: film('flooring') },
   // No film on this one: there are no clips yet, so the frame stays labelled.
-  electrical: { gallery: stills('electrical', 10, TALLER), beforeAfter: pair('electrical', TALLER) },
+  // The stills came nearer nine by nineteen and are cut to the same frame as
+  // everything else rather than given a taller one: what the crop takes is
+  // floor and ceiling, and a longer frame reads as a strip on the page.
+  electrical: { gallery: stills('electrical', 10), beforeAfter: pair('electrical') },
   // Two stills each, and nothing else yet.
   handyman: { gallery: stills('handyman', 2) },
   // The second clip has not arrived, so the film waits rather than going out
