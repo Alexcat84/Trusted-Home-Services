@@ -17,15 +17,21 @@
 
 const BASE = '/images/services';
 
-/** The frame a set is shown in. Phone photographs are tall, and a frame cut for
-    landscape would throw away most of every one of them. */
-const TALL = '9 / 16';
+/** The frame a set is shown in.
+ *
+ * The photographs come off a phone at nine by sixteen, and they were shown
+ * that way at first. On the page it read badly: the frame stood 626px against
+ * copy of 330 to 417, so every service page carried a column of empty space
+ * beside the text. Square is wider, little more than half the height, and the
+ * crop was checked against all of them before it was taken: nothing loses a
+ * head or its subject, and the outdoor work reads better for it. */
+const SQUARE = '1 / 1';
 /** Two vertical clips side by side come to nine by eight exactly, so the pair
     fills its frame with no bars and nothing to fill in behind them. */
 const REEL = '9 / 8';
 
 /** The stills for a service, numbered from one. */
-const stills = (key, count, ratio = TALL) => ({
+const stills = (key, count, ratio = SQUARE) => ({
   ratio,
   // What was asked for: one and a half seconds on each.
   interval: 1500,
@@ -36,7 +42,7 @@ const stills = (key, count, ratio = TALL) => ({
 });
 
 /** The one shot twice, before the work and after it. */
-const pair = (key, ratio = TALL) => ({
+const pair = (key, ratio = SQUARE) => ({
   ratio,
   before: `${BASE}/${key}/${key}-before.webp`,
   after: `${BASE}/${key}/${key}-after.webp`,

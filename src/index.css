@@ -4348,7 +4348,7 @@ h3,
    phone photograph. */
 .service-gallery {
   width: 100%;
-  max-width: 22rem;
+  max-width: 28rem;
   margin-inline: auto;
 }
 
@@ -4410,7 +4410,9 @@ h3,
    do not have yet. Tall photographs, so the pair is held narrow enough that
    the two of them do not run past a screen. */
 .ba-pair--filled {
-  max-width: 44rem;
+  /* Two square panels sized to match the gallery frame on the same page, so
+     the proof shot does not read as the smaller picture. */
+  max-width: 56rem;
   margin-inline: auto;
 }
 
