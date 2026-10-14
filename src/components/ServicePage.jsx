@@ -38,6 +38,8 @@ export default function ServicePage({ serviceKey }) {
   const { t, lang } = useLang();
   const content = getServiceContent(lang, serviceKey);
   const media = getServiceMedia(serviceKey);
+  /** A section left off for this trade, rather than shown as an empty frame. */
+  const omitted = (section) => (media.omit || []).includes(section);
   useServiceMeta(content);
 
   useEffect(() => {
@@ -109,56 +111,60 @@ export default function ServicePage({ serviceKey }) {
         {/* The same two blocks close every trade, so one service reads against
             another. Before and after carries the result; the reel below it
             carries the crew doing the work. */}
-        <section className="section service-ba">
-          <div className="container">
-            <h2 className="section-title">{t('services.baTitle')}</h2>
-            {media.beforeAfter ? (
-              <div className="ba-pair ba-pair--filled">
-                <figure className="ba-panel ba-panel--filled" style={{ aspectRatio: media.beforeAfter.ratio }}>
-                  <img src={media.beforeAfter.before} alt={t('services.baBefore')} loading="lazy" />
-                  <figcaption className="ba-label ba-label--over">{t('services.baBefore')}</figcaption>
-                </figure>
-                <figure className="ba-panel ba-panel--filled" style={{ aspectRatio: media.beforeAfter.ratio }}>
-                  <img src={media.beforeAfter.after} alt={t('services.baAfter')} loading="lazy" />
-                  <figcaption className="ba-label ba-label--over ba-label--after">{t('services.baAfter')}</figcaption>
-                </figure>
-              </div>
-            ) : (
-              <div className="ba-pair">
-                <figure className="ba-panel">
-                  <figcaption className="ba-label">{t('services.baBefore')}</figcaption>
-                </figure>
-                <figure className="ba-panel">
-                  <figcaption className="ba-label">{t('services.baAfter')}</figcaption>
-                </figure>
-              </div>
-            )}
-          </div>
-        </section>
+        {!omitted('beforeAfter') && (
+          <section className="section service-ba">
+            <div className="container">
+              <h2 className="section-title">{t('services.baTitle')}</h2>
+              {media.beforeAfter ? (
+                <div className="ba-pair ba-pair--filled">
+                  <figure className="ba-panel ba-panel--filled" style={{ aspectRatio: media.beforeAfter.ratio }}>
+                    <img src={media.beforeAfter.before} alt={t('services.baBefore')} loading="lazy" />
+                    <figcaption className="ba-label ba-label--over">{t('services.baBefore')}</figcaption>
+                  </figure>
+                  <figure className="ba-panel ba-panel--filled" style={{ aspectRatio: media.beforeAfter.ratio }}>
+                    <img src={media.beforeAfter.after} alt={t('services.baAfter')} loading="lazy" />
+                    <figcaption className="ba-label ba-label--over ba-label--after">{t('services.baAfter')}</figcaption>
+                  </figure>
+                </div>
+              ) : (
+                <div className="ba-pair">
+                  <figure className="ba-panel">
+                    <figcaption className="ba-label">{t('services.baBefore')}</figcaption>
+                  </figure>
+                  <figure className="ba-panel">
+                    <figcaption className="ba-label">{t('services.baAfter')}</figcaption>
+                  </figure>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
-        <section className="section section-alt service-reel">
-          <div className="container">
-            <h2 className="section-title">{t('services.reelTitle')}</h2>
-            {media.reel ? (
-              <div className="reel-frame reel-frame--filled" style={{ aspectRatio: media.reel.ratio }}>
-                <video
-                  className="reel-video"
-                  src={media.reel.src}
-                  poster={media.reel.poster}
-                  controls
-                  loop
-                  preload="metadata"
-                  playsInline
-                  aria-label={t('services.reelTitle')}
-                />
-              </div>
-            ) : (
-              <div className="reel-frame">
-                <span className="reel-label">{t('services.reelLabel')}</span>
-              </div>
-            )}
-          </div>
-        </section>
+        {!omitted('reel') && (
+          <section className="section section-alt service-reel">
+            <div className="container">
+              <h2 className="section-title">{t('services.reelTitle')}</h2>
+              {media.reel ? (
+                <div className="reel-frame reel-frame--filled" style={{ aspectRatio: media.reel.ratio }}>
+                  <video
+                    className="reel-video"
+                    src={media.reel.src}
+                    poster={media.reel.poster}
+                    controls
+                    loop
+                    preload="metadata"
+                    playsInline
+                    aria-label={t('services.reelTitle')}
+                  />
+                </div>
+              ) : (
+                <div className="reel-frame">
+                  <span className="reel-label">{t('services.reelLabel')}</span>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         <div className="container">
           <BackToHome />

@@ -48,6 +48,15 @@ const pair = (key, ratio = SQUARE) => ({
   after: `${BASE}/${key}/${key}-after.webp`,
 });
 
+/**
+ * Sections a trade leaves out altogether, as against showing them empty.
+ *
+ * An empty frame says the material is coming. That is right while it is, and
+ * wrong once a trade is not going to have it, or not for a long while. These
+ * are the ones asked to be left off rather than held open.
+ */
+const without = (...sections) => ({ omit: sections });
+
 /** The crew on site. */
 const film = (key) => ({
   ratio: REEL,
@@ -60,16 +69,19 @@ export const SERVICE_MEDIA = {
   declutter: { gallery: stills('declutter', 9), beforeAfter: pair('declutter'), reel: film('declutter') },
   curb: { gallery: stills('curb', 9), beforeAfter: pair('curb'), reel: film('curb') },
   flooring: { gallery: stills('flooring', 11), beforeAfter: pair('flooring'), reel: film('flooring') },
-  // No film on this one: there are no clips yet, so the frame stays labelled.
   // The stills came nearer nine by nineteen and are cut to the same frame as
   // everything else rather than given a taller one: what the crop takes is
-  // floor and ceiling, and a longer frame reads as a strip on the page.
-  electrical: { gallery: stills('electrical', 10), beforeAfter: pair('electrical') },
-  // Two stills each, and nothing else yet.
-  handyman: { gallery: stills('handyman', 2) },
+  // floor and ceiling.
+  electrical: { gallery: stills('electrical', 10), beforeAfter: pair('electrical'), ...without('reel') },
+  // Two stills, and the other two sections left off rather than held open.
+  handyman: { gallery: stills('handyman', 2), ...without('beforeAfter', 'reel') },
   // The second clip has not arrived, so the film waits rather than going out
   // half built. The stills go now.
   painting: { gallery: stills('painting', 2) },
+  // Nothing shot for either of these yet. They keep the pair open, since that
+  // is the shot to ask for first, and leave the film off.
+  inspection: without('reel'),
+  staging: without('reel'),
 };
 
 /** What we hold for one service, or an empty set when we hold nothing yet. */
