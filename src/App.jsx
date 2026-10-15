@@ -1248,6 +1248,84 @@ function HoldingPage({ which }) {
 }
 
 /**
+ * Who we are.
+ *
+ * Built as the answer to a page of solid text: a figure at the top, one
+ * photograph of the crew, and the argument in ruled rows. The copy is
+ * invented, and the two claims it rests on, thirty years and no invoice
+ * until the owner is satisfied, have to be confirmed before this is public.
+ */
+function AboutPage() {
+  const { t } = useLang();
+  const trust = ['t1', 't2', 't3'];
+  const craft = ['c1', 'c2', 'c3'];
+
+  return (
+    <div className="privacy-page about-page">
+      <a href="#main" className="skip-link">Skip to main content</a>
+      <Header />
+      <main id="main" className="privacy-main">
+        <div className="privacy-hero">
+          <div className="container">
+            <h1 className="privacy-hero-title">{t('about.title')}</h1>
+            <p className="privacy-hero-intro">{t('about.intro')}</p>
+          </div>
+        </div>
+
+        <section className="section section-alt">
+          <div className="container promise-figure-wrap">
+            <p className="promise-figure" aria-hidden="true">{t('about.figure')}</p>
+            <div>
+              <p className="promise-figure-lead">{t('about.figureLead')}</p>
+              <p className="promise-figure-body">{t('about.figureBody')}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container about-split">
+            <figure className="about-shot">
+              <img src="/images/services/cleaning/cleaning-01.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('about.trustTitle')}</h2>
+              <p className="about-lead">{t('about.trustLead')}</p>
+              <div className="service-benefit-grid">
+                {trust.map((k) => (
+                  <article className="service-benefit" key={k}>
+                    <h3>{t(`about.${k}Title`)}</h3>
+                    <p>{t(`about.${k}Text`)}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section section-alt">
+          <div className="container">
+            <h2 className="section-title">{t('about.craftTitle')}</h2>
+            <div className="service-benefit-grid">
+              {craft.map((k) => (
+                <article className="service-benefit" key={k}>
+                  <h3>{t(`about.${k}Title`)}</h3>
+                  <p>{t(`about.${k}Text`)}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="container">
+          <BackToHome />
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+/**
  * Our Promise.
  *
  * Nothing here is a new claim. The figure, the free walkthrough, the written
@@ -2217,7 +2295,7 @@ function AdminPage() {
 }
 
 /** Pages the cloned menu points at that have nothing in them yet. */
-const HOLDING_PAGES = ['about', 'locations'];
+const HOLDING_PAGES = ['locations'];
 
 function getSubPageFromHash(h) {
   if (REALTORS_PAGE_HASHES.includes(h)) return 'realtors';
@@ -2226,6 +2304,7 @@ function getSubPageFromHash(h) {
   if (HOLDING_PAGES.includes(h)) return h;
   if (h === 'franchises') return 'franchises';
   if (h === 'promise') return 'promise';
+  if (h === 'about') return 'about';
   return null;
 }
 
@@ -2295,6 +2374,7 @@ export default function App() {
     if (HOLDING_PAGES.includes(subPage)) return <HoldingPage which={subPage} />;
     if (subPage === 'franchises') return <FranchisePage />;
     if (subPage === 'promise') return <PromisePage />;
+    if (subPage === 'about') return <AboutPage />;
     if (subPage === 'realtors') return <RealtorsPage />;
     if (subPage === 'partners') return <BecomePartnerPage />;
     if (subPage === 'projects') return <ProjectsPage />;
