@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import ServicePage from './components/ServicePage';
 import { getServiceList } from './content/services';
 import BackToHome from './components/BackToHome';
+import { getProjects } from './content/projects';
 import { getHeroVideo } from './content/heroVideo';
 import { getServiceFromPath, navigateTo, servicePath } from './lib/routing';
 
@@ -1165,8 +1166,17 @@ function FAQPage() {
 
 const REALTOR_THIRD_IMG_INTERVAL_MS = 4000;
 
+/**
+ * Our Projects.
+ *
+ * Eight jobs, each shown as the one shot twice. The captions and the
+ * photographs are both placeholder: see the warning at the head of
+ * content/projects.js before this page goes anywhere public.
+ */
 function ProjectsPage() {
-  const { t } = useLang();  const proofItems = [1, 2, 3, 4];
+  const { t, lang } = useLang();
+  const projects = getProjects(lang);
+
   return (
     <div className="privacy-page projects-page">
       <Header />
@@ -1178,50 +1188,45 @@ function ProjectsPage() {
           </div>
         </div>
         <div className="container privacy-content">
-          <section className="privacy-section realtor-proof-section">
-            <motion.div
-              className="realtor-proof-grid"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-60px' }}
-              variants={{
-                visible: { transition: { staggerChildren: 0.1 } },
-                hidden: {}
-              }}
-            >
-              {proofItems.map((num, i) => (
-                <motion.article
-                  key={i}
-                  className="realtor-proof-card"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  <div className="realtor-proof-card-placeholder">
-                    <span className="realtor-proof-card-placeholder-label">{t('realtorPage.proofProject')} {num}</span>
-                  </div>
-                  <p className="realtor-proof-card-location">{t('realtorPage.proofLocationLabel')}: {t('realtorPage.proofLocationPlaceholder')}</p>
-                  <p className="realtor-proof-card-desc">{t('realtorPage.proofDescLabel')}: {t('realtorPage.proofDescPlaceholder')}</p>
-                </motion.article>
-              ))}
-            </motion.div>
-          </section>
+          <motion.div
+            className="project-list"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-60px' }}
+            variants={{ visible: { transition: { staggerChildren: 0.08 } }, hidden: {} }}
+          >
+            {projects.map((project) => (
+              <motion.article
+                className="project-item"
+                key={project.key}
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                <div className="ba-pair ba-pair--filled project-pair">
+                  <figure className="ba-panel ba-panel--filled">
+                    <img src={project.before} alt={`${project.title}, ${t('services.baBefore')}`} loading="lazy" />
+                    <figcaption className="ba-label ba-label--over">{t('services.baBefore')}</figcaption>
+                  </figure>
+                  <figure className="ba-panel ba-panel--filled">
+                    <img src={project.after} alt={`${project.title}, ${t('services.baAfter')}`} loading="lazy" />
+                    <figcaption className="ba-label ba-label--over ba-label--after">{t('services.baAfter')}</figcaption>
+                  </figure>
+                </div>
+                <div className="project-caption">
+                  <h2 className="project-title">{project.title}</h2>
+                  <p className="project-place">{project.place}</p>
+                  <p className="project-text">{project.text}</p>
+                </div>
+              </motion.article>
+            ))}
+          </motion.div>
+          <BackToHome />
         </div>
       </main>
       <Footer />
     </div>
   );
 }
-
-/**
- * A page the menu reaches but that has nothing in it yet.
- *
- * The cloned navigation carries the reference's full set of entries, and four
- * of those have no content on this side. Rather than a dead link or a missing
- * entry, each answers with this until the real page is written.
- */
 function HoldingPage({ which }) {
   const { t } = useLang();
 

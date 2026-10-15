@@ -41,6 +41,7 @@ Thumbs.db
 # in public/videos are tracked, because these originals run tens of megabytes.
 /media-source/
 /Pictures and videos/
+/New pictures/
 /*.mp4
 /*.mov
 

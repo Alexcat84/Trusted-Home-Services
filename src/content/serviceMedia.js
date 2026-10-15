@@ -64,24 +64,41 @@ const film = (key) => ({
   poster: `/videos/${key}-crew-poster.jpg`,
 });
 
+/*
+ * WHICH STILLS ARE REAL AND WHICH ARE PLACEHOLDER
+ *
+ * The galleries below mix the crew's own photographs with generated stand ins
+ * brought in so the client could see a full site. Nothing on the page says
+ * which is which, and the client knows, so the record lives here. Replace by
+ * index when the real photographs arrive:
+ *
+ *   cleaning      01 to 07   all real
+ *   declutter     01 to 09   all real
+ *   curb          01 to 09   all real
+ *   flooring      01 to 11   all real
+ *   electrical    01 to 10   real        11 to 14  placeholder
+ *   handyman      01 to 02   real        03 to 06  placeholder
+ *   painting      01 to 02   real        03 to 10  placeholder
+ *   inspection    01 to 04   all placeholder
+ *   staging       01 to 08   all placeholder, and so is its pair
+ *
+ * The four pairs on cleaning, declutter, curb and flooring are the crew's own,
+ * as are all four films. Everything on the projects page is placeholder: see
+ * the warning at the head of content/projects.js.
+ */
 export const SERVICE_MEDIA = {
   cleaning: { gallery: stills('cleaning', 7), beforeAfter: pair('cleaning'), reel: film('cleaning') },
   declutter: { gallery: stills('declutter', 9), beforeAfter: pair('declutter'), reel: film('declutter') },
   curb: { gallery: stills('curb', 9), beforeAfter: pair('curb'), reel: film('curb') },
   flooring: { gallery: stills('flooring', 11), beforeAfter: pair('flooring'), reel: film('flooring') },
-  // The stills came nearer nine by nineteen and are cut to the same frame as
-  // everything else rather than given a taller one: what the crop takes is
-  // floor and ceiling.
-  electrical: { gallery: stills('electrical', 10), beforeAfter: pair('electrical'), ...without('reel') },
-  // Two stills, and the other two sections left off rather than held open.
-  handyman: { gallery: stills('handyman', 2), ...without('beforeAfter', 'reel') },
+  electrical: { gallery: stills('electrical', 14), beforeAfter: pair('electrical'), ...without('reel') },
+  handyman: { gallery: stills('handyman', 6), ...without('beforeAfter', 'reel') },
   // The second clip has not arrived, so the film waits rather than going out
   // half built. The stills go now.
-  painting: { gallery: stills('painting', 2) },
-  // Nothing shot for either of these yet. They keep the pair open, since that
-  // is the shot to ask for first, and leave the film off.
-  inspection: without('reel'),
-  staging: without('reel'),
+  painting: { gallery: stills('painting', 10) },
+  // No pair shot for this one yet, so that frame stays open; the film is off.
+  inspection: { gallery: stills('inspection', 4), ...without('reel') },
+  staging: { gallery: stills('staging', 8), beforeAfter: pair('staging'), ...without('reel') },
 };
 
 /** What we hold for one service, or an empty set when we hold nothing yet. */
