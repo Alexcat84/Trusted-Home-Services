@@ -2198,7 +2198,8 @@ button.nav-link {
 }
 .privacy-hero-intro {
   margin: 0;
-  max-width: 46rem;
+  /* 46rem ran to 78 characters a line. This holds it near 65. */
+  max-width: 38rem;
   font-size: 1.25rem;
   line-height: 1.69;
   color: var(--color-text-muted);
@@ -2977,49 +2978,82 @@ button.nav-link {
   object-fit: cover;
   aspect-ratio: 4 / 3;
 }
+/* Two columns, not three. At three the items ran 33 characters to the line,
+   half of what reads comfortably, so every entry broke into a ragged stack. */
 .service-list {
   list-style: none;
-  margin: 1.5rem 0 0;
+  margin: 1.75rem 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 0.7rem 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+  gap: 1rem 3rem;
 }
 .service-list li {
   position: relative;
   padding-left: 1.6rem;
+  max-width: 34rem;
+  font-size: 1.0625rem;
+  line-height: 1.62;
   color: var(--color-text);
 }
 .service-list li::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.55em;
-  width: 0.5rem;
-  height: 0.5rem;
+  top: 0.62em;
+  width: 0.4rem;
+  height: 0.4rem;
   border-radius: 50%;
   background: var(--color-accent);
 }
+/* These were three boxes side by side, which squeezed running text to 29
+   characters a line and stacked it six deep. As ruled rows the heading sits
+   beside its paragraph and the paragraph gets a readable measure. */
 .service-benefit-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.25rem;
-  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  border-top: 1px solid var(--color-border);
 }
 .service-benefit {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 1.4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  gap: 0.35rem 2.5rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+  background: none;
+  border-radius: 0;
 }
+/* Some of these carry a paragraph and no heading. Without this the paragraph
+   lands in the narrow heading column and reads 26 characters to the line. */
+.service-benefit > p:only-child {
+  grid-column: 1 / -1;
+  max-width: 46rem;
+}
+
+@media (max-width: 760px) {
+  .service-benefit {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+    padding: 1.25rem 0;
+  }
+}
+/* The heading is a label in its own column now, level with the first line of
+   the paragraph beside it rather than stacked above it. */
 .service-benefit h3 {
   color: var(--color-primary);
-  margin: 0 0 0.5rem;
-  font-size: 1.1rem;
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.55;
+  text-wrap: balance;
 }
 .service-benefit p {
   color: var(--color-text-muted);
   margin: 0;
+  max-width: 36rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
 }
 
 @media (max-width: 900px) {
@@ -3737,8 +3771,8 @@ button.nav-link {
 
 .step-text {
   margin: 0;
-  font-size: clamp(0.94rem, 1.1vw, 1.02rem);
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.62;
   color: var(--color-text-muted);
 }
 
@@ -4026,12 +4060,10 @@ h3,
  * cards and tiles stay smaller, as they are on the reference too. */
 .hero-panel-body,
 .section-intro,
-.step-text,
 .reviews-intro,
 .reviews-lead,
 .holding-text,
 .service-intro,
-.service-benefit p,
 .service-faq-item dd {
   font-size: 1.25rem;
   line-height: 1.69;
