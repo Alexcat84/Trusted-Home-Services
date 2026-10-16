@@ -4,6 +4,7 @@ import { getSectionHash } from '../translations';
 import { getServiceList } from '../content/services';
 import { navigateTo, servicePath, goToHash } from '../lib/routing';
 import { ACTIVE_LOCALES } from '../lib/locales';
+import { PHONE_DISPLAY, PHONE_TEL } from '../content/contact';
 
 /* Seven entries in the reference's positions. Two of its slots carry brand
    terms of its own, so those hold the plain equivalents here. */
@@ -190,6 +191,12 @@ export default function Header() {
           <img src="/images/Logo v4.0.jpg" alt="Trusted Home Services" />
         </a>
         <div className="header-utility">
+          <a className="header-call" href={`tel:${PHONE_TEL}`} aria-label={`${t('common.call')} ${PHONE_DISPLAY}`}>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+              <path d="M6.6 10.8c1.2 2.3 3.1 4.2 5.4 5.4l1.8-1.8c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V19c0 .6-.4 1-1 1-8.3 0-15-6.7-15-15 0-.6.4-1 1-1h3.2c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .7-.2 1l-1.8 1.8z"/>
+            </svg>
+            <span className="header-call-number">{PHONE_DISPLAY}</span>
+          </a>
           <div className="lang-switcher">
             <div className="lang-group" role="group" aria-label="Language">
               {ACTIVE_LOCALES.map((l) => (
@@ -208,7 +215,7 @@ export default function Header() {
           <button
             type="button"
             className="nav-toggle"
-            aria-label="Open menu"
+            aria-label={menuOpen ? t('common.closeMenu') : t('common.openMenu')}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen(!menuOpen)}
           >

@@ -1,6 +1,6 @@
 export const TRANSLATIONS = {
   en: {
-    common: { backToHome: 'Back to Home' },
+    common: { backToHome: 'Back to Home', openMenu: 'Open menu', closeMenu: 'Close menu', call: 'Call', callUs: 'Call us' },
     nav: { home: 'Home', about: 'About Us', who: 'Who we are', aboutTagline: 'Who we are and how the work runs.', howTagline: 'The five steps, start to finish.', projectsTagline: 'Work we have finished.', faq: 'FAQ', faqTagline: 'The questions we get asked most.', franchises: 'Franchises', franchisesTagline: 'Run a Trusted Home Services crew in your own area.', promise: 'Our Promise', promiseTagline: 'No deposit, on any job, at any size.', locations: 'Locations', locationsTagline: 'Where in the region we work.', services: 'Our Services', how: 'How We Work', projects: 'Our Projects', team: 'Work With Us', realtors: 'For Realtors', realtorsTagline: 'Get your listings market ready, fast.', partners: 'Become a Partner', partnersTagline: 'Join the crew we call on for work.', quote: 'Free Quote' },
     franchise: {
       title: 'Run a Trusted Home Services crew in your own area',
@@ -460,11 +460,11 @@ export const TRANSLATIONS = {
         errors: { name: 'Please enter your name.', contact: 'Please enter at least one of email or phone.', consent: 'Please accept the consent.', submit: 'Could not send. Please try again or call (613) 204-8000.' }
       }
     },
-    footer: { desc: 'Property preparation for sale and move-in. Ottawa, Ontario.', home: 'Home', services: 'Services', how: 'How We Work', projects: 'Our Projects', realtors: 'For Realtors', quote: 'Quote', partners: 'Become a Partner', rights: '© 2026 Trusted Home Services. All rights reserved.', quickLinks: 'Quick Links', support: 'Support', faq: 'FAQ', privacyPolicy: 'Privacy Policy', termsOfService: 'Terms of Service' },
+    footer: { desc: 'Property preparation for sale and move-in. Ottawa, Ontario.', home: 'Home', services: 'Services', how: 'How We Work', projects: 'Our Projects', realtors: 'For Realtors', quote: 'Quote', partners: 'Become a Partner', rights: '© 2026 Trusted Home Services. All rights reserved.', contact: 'Contact', quickLinks: 'Quick Links', support: 'Support', faq: 'FAQ', privacyPolicy: 'Privacy Policy', termsOfService: 'Terms of Service' },
     cookieConsent: { message: 'We use cookies to improve your experience and analyse site traffic. By clicking Accept you agree to our use of cookies. See our', privacyLink: 'Privacy Policy', accept: 'Accept', decline: 'Decline' }
   },
   fr: {
-    common: { backToHome: 'Retour à l\'accueil' },
+    common: { backToHome: 'Retour à l\'accueil', openMenu: 'Ouvrir le menu', closeMenu: 'Fermer le menu', call: 'Appeler', callUs: 'Appelez-nous' },
     nav: { home: 'Accueil', about: 'À propos', who: 'Qui nous sommes', aboutTagline: 'Qui nous sommes et comment le chantier se déroule.', howTagline: 'Les cinq étapes, du début à la fin.', projectsTagline: 'Des chantiers terminés.', faq: 'FAQ', faqTagline: 'Les questions qu’on nous pose le plus.', franchises: 'Franchises', franchisesTagline: 'À la tête d’une équipe Trusted Home Services dans votre secteur.', promise: 'Notre promesse', promiseTagline: 'Aucun acompte, sur aucun chantier.', locations: 'Secteurs desservis', locationsTagline: 'Où nous travaillons dans la région.', services: 'Nos services', how: 'Notre processus', projects: 'Nos projets', team: 'Travaillez avec nous', realtors: 'Pour les courtiers', realtorsTagline: 'Vos inscriptions prêtes pour le marché, rapidement.', partners: 'Devenir partenaire', partnersTagline: 'Joignez l’équipe que nous appelons pour les travaux.', quote: 'Devis gratuit' },
     franchise: {
       title: 'Diriger une équipe Trusted Home Services dans votre secteur',
@@ -924,7 +924,7 @@ export const TRANSLATIONS = {
         errors: { name: 'Veuillez entrer votre nom.', contact: 'Veuillez entrer au moins le courriel ou le téléphone.', consent: 'Veuillez accepter le consentement.', submit: 'Envoi impossible. Réessayez ou appelez le (613) 204-8000.' }
       }
     },
-    footer: { desc: 'Préparation de propriétés. Ottawa, Ontario.', home: 'Accueil', services: 'Services', how: 'Notre processus', projects: 'Nos projets', realtors: 'Pour courtiers', quote: 'Devis', partners: 'Devenir partenaire', rights: '© 2026 Trusted Home Services. Tous droits réservés.', quickLinks: 'Liens rapides', support: 'Support', faq: 'FAQ', privacyPolicy: 'Politique de confidentialité', termsOfService: 'Conditions d\'utilisation' },
+    footer: { desc: 'Préparation de propriétés. Ottawa, Ontario.', home: 'Accueil', services: 'Services', how: 'Notre processus', projects: 'Nos projets', realtors: 'Pour courtiers', quote: 'Devis', partners: 'Devenir partenaire', rights: '© 2026 Trusted Home Services. Tous droits réservés.', contact: 'Contact', quickLinks: 'Liens rapides', support: 'Support', faq: 'FAQ', privacyPolicy: 'Politique de confidentialité', termsOfService: 'Conditions d\'utilisation' },
     cookieConsent: { message: 'Nous utilisons des cookies pour améliorer votre expérience et analyser le trafic. En cliquant sur Accepter, vous acceptez notre utilisation des cookies. Voir notre', privacyLink: 'Politique de confidentialité', accept: 'Accepter', decline: 'Refuser' }
   }
 };
