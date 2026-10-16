@@ -13,7 +13,7 @@ import ServicePage from './components/ServicePage';
 import { getServiceList } from './content/services';
 import BackToHome from './components/BackToHome';
 import { getProjects } from './content/projects';
-import { getHeroVideo } from './content/heroVideo';
+import { getHeroSequence } from './content/heroVideo';
 import { getServiceFromPath, navigateTo, servicePath } from './lib/routing';
 
 /** Base URL for API (same origin if not set). No trailing slash. */
@@ -117,7 +117,11 @@ const PROJECTS_PAGE_HASHES = ['our-projects', 'nos-projets', 'nuestros-proyectos
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
   const { openQuote } = useQuote();
-  const heroVideo = getHeroVideo();
+  // One cut follows the other and then it starts again. Only the first is
+  // fetched with the page; the next is left until the one before it ends.
+  const heroClips = getHeroSequence();
+  const [heroClip, setHeroClip] = useState(0);
+  const heroVideo = heroClips[heroClip] || heroClips[0];
 
   // Autoplay is motion; readers who ask for less of it get the poster and controls instead.
   const [reduceMotion] = useState(() => {
@@ -162,9 +166,12 @@ function Hero({ skipAnimation = false }) {
             autoPlay={!reduceMotion}
             controls={reduceMotion}
             muted
-            loop
+            loop={heroClips.length < 2}
             playsInline
-            preload="metadata"
+            preload={heroClip === 0 ? 'metadata' : 'auto'}
+            onEnded={() => {
+              if (!reduceMotion) setHeroClip((i) => (i + 1) % heroClips.length);
+            }}
             aria-label={t('hero.videoLabel')}
           >
             <source src={heroVideo.src} type="video/mp4" />
