@@ -96,9 +96,8 @@ export const SERVICE_MEDIA = {
   flooring: { gallery: stills('flooring', 11), beforeAfter: pair('flooring'), reel: film('flooring') },
   electrical: { gallery: stills('electrical', 14), beforeAfter: pair('electrical'), ...without('reel') },
   handyman: { gallery: stills('handyman', 6), ...without('beforeAfter', 'reel') },
-  // The second clip has not arrived, so the film waits rather than going out
-  // half built. The stills go now.
-  painting: { gallery: stills('painting', 10), beforeAfter: pair('painting') },
+  // No second clip, so the film section comes off rather than standing open.
+  painting: { gallery: stills('painting', 10), beforeAfter: pair('painting'), ...without('reel') },
   // No pair shot for this one yet, so that frame stays open; the film is off.
   // Nothing shot twice for this one, so the pair comes off rather than
   // standing open.

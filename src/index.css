@@ -1993,13 +1993,29 @@ button.nav-link {
   padding: 1.25rem 0 0.5rem;
 }
 
+/* The brand column was taking 813px to hold a 247px logo, which pushed the
+   links into two 118px stacks against the right edge and made the footer
+   334px tall. The mark now hugs its own width and the links take the room. */
 .footer-inner {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 0.8fr);
   align-items: start;
-  gap: 1.75rem;
+  gap: clamp(2rem, 5vw, 4.5rem);
   padding-bottom: 1.25rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Seven entries down one column is a tall column. Two across halves it. */
+.footer-quicklinks .footer-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .footer-quicklinks .footer-nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .footer-brand {
@@ -4335,14 +4351,26 @@ h3,
 
 /* The promise reads down the middle: the figure, then what it means, then the
    detail under it. Everything else on the page lines up with that axis. */
-.promise-page .privacy-hero {
+.promise-page .privacy-hero,
+.about-page .privacy-hero,
+.franchise-page .privacy-hero,
+.partner-page .privacy-hero {
   text-align: center;
 }
 
 .promise-page .privacy-hero-title,
-.promise-page .privacy-hero-intro {
+.promise-page .privacy-hero-intro,
+.about-page .privacy-hero-title,
+.about-page .privacy-hero-intro,
+.franchise-page .privacy-hero-title,
+.franchise-page .privacy-hero-intro,
+.partner-page .privacy-hero-title,
+.partner-page .privacy-hero-intro {
   margin-left: auto;
   margin-right: auto;
+  /* The paragraph sets text-align itself, so centring the container is not
+     enough to centre the words inside it. */
+  text-align: center;
 }
 
 .promise-page .service-list {

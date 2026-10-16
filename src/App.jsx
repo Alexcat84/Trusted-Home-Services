@@ -1716,7 +1716,7 @@ function BecomePartnerPage() {
   const steps = ['step1', 'step2', 'step3'];
 
   return (
-    <div className="privacy-page">
+    <div className="privacy-page partner-page">
       <Header />
       <main id="main" className="privacy-main">
         <div className="privacy-hero">
@@ -1726,9 +1726,7 @@ function BecomePartnerPage() {
           </div>
         </div>
 
-        <FigureBand prefix="partnersPage" keys={['band1', 'band2', 'band3']} />
-
-        <section className="section">
+        <section className="section section-alt">
           <div className="container feature-split">
             <figure className="feature-shot">
               <img src="/images/business/partner-01.webp" alt="" loading="lazy" />

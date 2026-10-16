@@ -7,7 +7,10 @@ import { ACTIVE_LOCALES } from '../lib/locales';
 
 /* Seven entries in the reference's positions. Two of its slots carry brand
    terms of its own, so those hold the plain equivalents here. */
-const NAV_KEYS = ['home', 'about', 'services', 'promise', 'locations', 'team', 'franchises'];
+/* Locations is off the menu until there are areas to list. The page, its
+   route and its entry below all stay where they are: putting it back is
+   adding the key to this line. */
+const NAV_KEYS = ['home', 'about', 'services', 'promise', 'team', 'franchises'];
 /** The entries that open a panel rather than going somewhere. */
 const MENU_KEYS = ['about', 'services', 'team'];
 /** What sits under About us. */
