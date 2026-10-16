@@ -58,3 +58,26 @@ export function goToHash(hash) {
   if (window.location.hash.slice(1) === hash) return;
   window.location.hash = hash;
 }
+
+/**
+ * Home means the top of the page, not the top of the hero.
+ *
+ * The hero section carries the home anchor, and it begins under the header, so
+ * scrolling to it landed the reader on the line between the menu and the video
+ * with the logo already above the fold. Every other anchor wants its element;
+ * this one wants the document.
+ *
+ * The URL still gets the hash, written with replaceState rather than assigned,
+ * because assigning it is itself what scrolls to the element we are avoiding.
+ */
+export function goToHome(homeHash) {
+  const destino = `#${homeHash}`;
+  if (isOnSubPath()) {
+    window.history.pushState({}, '', `/${destino}`);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo(0, 0);
+    return;
+  }
+  if (window.location.hash !== destino) window.history.replaceState({}, '', destino);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}

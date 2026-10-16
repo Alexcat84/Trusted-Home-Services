@@ -1,5 +1,5 @@
 import { useLang } from '../context/useLang';
-import { goToHash } from '../lib/routing';
+import { goToHash, goToHome } from '../lib/routing';
 import { useQuote } from '../context/useQuote';
 import { getSectionHash } from '../translations';
 import { PHONE_DISPLAY, PHONE_TEL } from '../content/contact';
@@ -33,7 +33,7 @@ export default function Footer() {
         <div className="footer-col footer-quicklinks">
           <h3 className="footer-heading">{t('footer.quickLinks')}</h3>
           <nav className="footer-nav" aria-label="Quick links">
-            <a href={`#${hash('home')}`} onClick={(e) => { e.preventDefault(); goToHash(hash('home')); }}>{t('footer.home')}</a>
+            <a href={`#${hash('home')}`} onClick={(e) => { e.preventDefault(); goToHome(hash('home')); }}>{t('footer.home')}</a>
             <a href={`#${hash('services')}`} onClick={(e) => { e.preventDefault(); goToHash(hash('services')); }}>{t('footer.services')}</a>
             <a href={`#${hash('how')}`} onClick={(e) => { e.preventDefault(); goToHash(hash('how')); }}>{t('footer.how')}</a>
             <a href={`#${hash('projects')}`} onClick={(e) => { e.preventDefault(); goToHash(hash('projects')); }}>{t('footer.projects')}</a>

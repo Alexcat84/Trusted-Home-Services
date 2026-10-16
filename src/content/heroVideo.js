@@ -34,8 +34,15 @@ export const ACTIVE = 'proposal';
  * What the hero plays, in order, before starting again.
  *
  * Only the first is fetched with the page. The rest are left alone until the
- * one before them ends, which matters here: the drone cut is 2.9MB against
+ * one before them ends, which matters here: the drone cut is 10.5MB against
  * 832KB for the opener, and nobody should pay for it on arrival.
+ *
+ * That 10.5MB is deliberate. The cut was first encoded at 960x540 and looked
+ * soft on the site, which read as poor footage; the master is 2560x1440 and
+ * sharp, so the softness was ours. It is 1280x720 now, matching the opener,
+ * at 2.6 Mbps. Thirty four seconds of drone motion over foliage is the worst
+ * case for any codec: AV1 and VP9 were tried and neither beat x264 here, and
+ * dropping to 24fps saved nothing. The remaining lever is length.
  */
 export const SEQUENCE = ['proposal', 'drone'];
 
