@@ -2,6 +2,12 @@ export const TRANSLATIONS = {
   en: {
     nav: { home: 'Home', about: 'About Us', who: 'Who we are', aboutTagline: 'Who we are and how the work runs.', howTagline: 'The five steps, start to finish.', projectsTagline: 'Work we have finished.', faq: 'FAQ', faqTagline: 'The questions we get asked most.', franchises: 'Franchises', franchisesTagline: 'Run a Trusted Home Services crew in your own area.', promise: 'Our Promise', promiseTagline: 'No deposit, on any job, at any size.', locations: 'Locations', locationsTagline: 'Where in the region we work.', services: 'Our Services', how: 'How We Work', projects: 'Our Projects', team: 'Work With Us', realtors: 'For Realtors', realtorsTagline: 'Get your listings market ready, fast.', partners: 'Become a Partner', partnersTagline: 'Join the crew we call on for work.', quote: 'Free Quote' },
     franchise: {
+      band1n: '30',
+      band1t: 'years of this work behind the system',
+      band2n: '9',
+      band2t: 'services already built and priced',
+      band3n: '1',
+      band3t: 'territory, and it is yours alone',
       title: 'Run a Trusted Home Services crew in your own area',
       intro: 'Homeowners in every town need the same work done before they sell, and most of them do not know who to call. A franchise puts a known name, a working system and a trained crew behind you, so you spend your time on the jobs rather than on inventing the business around them.',
       marketTitle: 'The work is already needed',
@@ -420,6 +426,12 @@ export const TRANSLATIONS = {
       subtitle: 'Our work speaks for itself. See the value we\'ve added to properties, whether preparing for sale or for the place you call home.',
     },
     partnersPage: {
+      band1n: '30',
+      band1t: 'years in the trades behind the work',
+      band2n: '$0',
+      band2t: 'taken from the owner up front, carried by us',
+      band3n: '9',
+      band3t: 'trades and suppliers we call on',
       backToHome: 'Back to Home',
       title: 'Become a Partner',
       intro: 'Work with us as a partner or supplier. If you run a trade, a crew or a product line and want steady work in Ottawa, tell us what you do and we will come back to you.',
@@ -487,6 +499,12 @@ export const TRANSLATIONS = {
   fr: {
     nav: { home: 'Accueil', about: 'À propos', who: 'Qui nous sommes', aboutTagline: 'Qui nous sommes et comment le chantier se déroule.', howTagline: 'Les cinq étapes, du début à la fin.', projectsTagline: 'Des chantiers terminés.', faq: 'FAQ', faqTagline: 'Les questions qu’on nous pose le plus.', franchises: 'Franchises', franchisesTagline: 'À la tête d’une équipe Trusted Home Services dans votre secteur.', promise: 'Notre promesse', promiseTagline: 'Aucun acompte, sur aucun chantier.', locations: 'Secteurs desservis', locationsTagline: 'Où nous travaillons dans la région.', services: 'Nos services', how: 'Notre processus', projects: 'Nos projets', team: 'Travaillez avec nous', realtors: 'Pour les courtiers', realtorsTagline: 'Vos inscriptions prêtes pour le marché, rapidement.', partners: 'Devenir partenaire', partnersTagline: 'Joignez l’équipe que nous appelons pour les travaux.', quote: 'Devis gratuit' },
     franchise: {
+      band1n: '30',
+      band1t: 'ans de ce métier derrière le système',
+      band2n: '9',
+      band2t: 'services déjà construits et chiffrés',
+      band3n: '1',
+      band3t: 'territoire, et il est à vous seul',
       title: 'Diriger une équipe Trusted Home Services dans votre secteur',
       intro: 'Partout, les propriétaires ont les mêmes travaux à faire avant de vendre, et la plupart ne savent pas qui appeler. Une franchise met derrière vous un nom connu, un système qui tourne et une équipe formée, pour que votre temps aille aux chantiers plutôt qu’à inventer l’entreprise autour.',
       marketTitle: 'Le travail est déjà demandé',
@@ -906,6 +924,12 @@ export const TRANSLATIONS = {
       subtitle: 'Notre travail parle de lui-même. Voyez la valeur ajoutée aux propriétés, que ce soit pour la vente ou pour y rester.',
     },
     partnersPage: {
+      band1n: '30',
+      band1t: 'ans de métier derrière le travail',
+      band2n: '0 $',
+      band2t: 'demandé au propriétaire d’avance, porté par nous',
+      band3n: '9',
+      band3t: 'métiers et fournisseurs que nous appelons',
       backToHome: 'Retour à l\'accueil',
       title: 'Devenir partenaire',
       intro: 'Travaillez avec nous comme partenaire ou fournisseur. Si vous menez un métier, une équipe ou une gamme de produits et cherchez du travail régulier à Ottawa, dites-nous ce que vous faites et nous vous recontacterons.',
@@ -973,6 +997,12 @@ export const TRANSLATIONS = {
   es: {
     nav: { home: 'Inicio', about: 'Nosotros', who: 'Quiénes somos', aboutTagline: 'Quiénes somos y cómo trabajamos.', howTagline: 'Los cinco pasos, de principio a fin.', projectsTagline: 'Trabajos terminados.', faq: 'Preguntas frecuentes', faqTagline: 'Lo que más nos preguntan.', franchises: 'Franquicias', franchisesTagline: 'Dirija un equipo de Trusted Home Services en su zona.', promise: 'Nuestra promesa', promiseTagline: 'Sin depósito, en ningún trabajo.', locations: 'Zonas de servicio', locationsTagline: 'Dónde trabajamos en la región.', services: 'Nuestros servicios', how: 'Cómo trabajamos', projects: 'Nuestros proyectos', team: 'Trabaje con nosotros', realtors: 'Para agentes', realtorsTagline: 'Sus listados listos para el mercado, rápido.', partners: 'Ser socio', partnersTagline: 'Súmese al equipo al que llamamos para trabajar.', quote: 'Cotización gratuita' },
     franchise: {
+      band1n: '30',
+      band1t: 'años de este oficio detrás del sistema',
+      band2n: '9',
+      band2t: 'servicios ya construidos y con precio',
+      band3n: '1',
+      band3t: 'territorio, y es suyo solo',
       title: 'Dirija un equipo de Trusted Home Services en su zona',
       intro: 'En cualquier ciudad los propietarios necesitan los mismos trabajos antes de vender, y la mayoría no sabe a quién llamar. Una franquicia pone detrás de usted un nombre conocido, un sistema que funciona y un equipo formado, para que su tiempo vaya a las obras y no a inventar la empresa alrededor.',
       marketTitle: 'El trabajo ya hace falta',
@@ -1379,6 +1409,12 @@ export const TRANSLATIONS = {
       subtitle: 'Nuestro trabajo habla por sí solo. Vea el valor que hemos aportado a las propiedades, para vender o para quedarse.',
     },
     partnersPage: {
+      band1n: '30',
+      band1t: 'años de oficio detrás del trabajo',
+      band2n: '$0',
+      band2t: 'pedidos al propietario por adelantado, los cargamos nosotros',
+      band3n: '9',
+      band3t: 'oficios y proveedores a los que llamamos',
       backToHome: 'Volver al inicio',
       title: 'Ser socio',
       intro: 'Trabaje con nosotros como socio o proveedor. Si tiene un oficio, un equipo o una línea de productos y busca trabajo constante en Ottawa, cuéntenos qué hace y le contactamos.',

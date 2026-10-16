@@ -2996,15 +2996,18 @@ button.nav-link {
   line-height: 1.62;
   color: var(--color-text);
 }
+/* A tick, not a bullet. These lists are inventories of what is included, and
+   a row of ticks reads as a checklist instead of as more prose. */
 .service-list li::before {
   content: "";
   position: absolute;
-  left: 0;
-  top: 0.62em;
-  width: 0.4rem;
-  height: 0.4rem;
-  border-radius: 50%;
-  background: var(--color-accent);
+  left: 0.15rem;
+  top: 0.42em;
+  width: 0.38rem;
+  height: 0.68rem;
+  border: solid var(--color-accent);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 /* These were three boxes side by side, which squeezed running text to 29
    characters a line and stacked it six deep. As ruled rows the heading sits
@@ -4596,5 +4599,89 @@ h3,
   .about-split {
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
     align-items: center;
+  }
+}
+
+/* ---- Figures under a hero, and a photograph beside an argument ---- */
+.figure-band-section {
+  padding-block: clamp(2rem, 4vw, 3rem);
+}
+
+.figure-band {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.figure-band-number {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+.figure-band-label {
+  margin: 0 auto;
+  max-width: 17rem;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+/* Photograph one side, argument the other, alternating down the page so the
+   reader is not scrolling through the same shape seven times. */
+.feature-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.feature-shot {
+  margin: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  aspect-ratio: 4 / 3;
+}
+
+.feature-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* In a half width column the two column list would be back to 30 characters
+   a line, so these run as one column. */
+.service-list--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 900px) {
+  .feature-split {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    /* The argument beside it runs taller than any photograph, so the picture
+       fills its column rather than sitting at the top of a hole. */
+    align-items: stretch;
+  }
+  .feature-shot {
+    aspect-ratio: auto;
+    min-height: 20rem;
+    max-height: 34rem;
+    position: sticky;
+    top: 7rem;
+  }
+  /* Ordering the picture second leaves the words in the narrow column, which
+     squeezed the rows to about 25 characters a line. Flipped sections get the
+     widths swapped as well as the order. */
+  .feature-split--flip {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  }
+  .feature-split--flip .feature-shot {
+    order: 2;
   }
 }

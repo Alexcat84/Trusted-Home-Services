@@ -1248,6 +1248,29 @@ function HoldingPage({ which }) {
 }
 
 /**
+ * Three figures across, under a hero.
+ *
+ * Put here because two pages were solid text and had nothing for the eye to
+ * stop on. A number is the cheapest thing that is not a paragraph, and the
+ * promise page had already shown it works.
+ */
+function FigureBand({ prefix, keys }) {
+  const { t } = useLang();
+  return (
+    <section className="section section-alt figure-band-section">
+      <div className="container figure-band">
+        {keys.map((k) => (
+          <div className="figure-band-item" key={k}>
+            <p className="figure-band-number">{t(`${prefix}.${k}n`)}</p>
+            <p className="figure-band-label">{t(`${prefix}.${k}t`)}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/**
  * Who we are.
  *
  * Built as the answer to a page of solid text: a figure at the top, one
@@ -1428,17 +1451,24 @@ function FranchisePage() {
           </div>
         </div>
 
-        <section className="section section-alt">
-          <div className="container">
-            <h2 className="section-title">{t('franchise.marketTitle')}</h2>
-            <p className="section-intro">{t('franchise.marketText')}</p>
-            <div className="service-benefit-grid">
-              {market.map((k) => (
-                <article className="service-benefit" key={k}>
-                  <h3>{t(`franchise.${k}Title`)}</h3>
-                  <p>{t(`franchise.${k}Text`)}</p>
-                </article>
-              ))}
+        <FigureBand prefix="franchise" keys={['band1', 'band2', 'band3']} />
+
+        <section className="section">
+          <div className="container feature-split">
+            <figure className="feature-shot">
+              <img src="/images/business/franchise-01.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('franchise.marketTitle')}</h2>
+              <p className="about-lead">{t('franchise.marketText')}</p>
+              <div className="service-benefit-grid">
+                {market.map((k) => (
+                  <article className="service-benefit" key={k}>
+                    <h3>{t(`franchise.${k}Title`)}</h3>
+                    <p>{t(`franchise.${k}Text`)}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -1455,8 +1485,12 @@ function FranchisePage() {
         </section>
 
         <section className="section section-alt">
-          <div className="container">
-            <h2 className="section-title">{t('franchise.demandTitle')}</h2>
+          <div className="container feature-split feature-split--flip">
+            <figure className="feature-shot">
+              <img src="/images/business/franchise-02.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+            <h2 className="about-heading">{t('franchise.demandTitle')}</h2>
             <div className="service-benefit-grid">
               {demand.map((k) => (
                 <article className="service-benefit" key={k}>
@@ -1464,6 +1498,7 @@ function FranchisePage() {
                   <p>{t(`franchise.${k}Text`)}</p>
                 </article>
               ))}
+            </div>
             </div>
           </div>
         </section>
@@ -1480,13 +1515,18 @@ function FranchisePage() {
         </section>
 
         <section className="section section-alt">
-          <div className="container">
-            <h2 className="section-title">{t('franchise.supportTitle')}</h2>
-            <ul className="service-list">
-              {support.map((k) => (
-                <li key={k}>{t(`franchise.${k}`)}</li>
-              ))}
-            </ul>
+          <div className="container feature-split">
+            <figure className="feature-shot">
+              <img src="/images/business/franchise-03.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('franchise.supportTitle')}</h2>
+              <ul className="service-list service-list--single">
+                {support.map((k) => (
+                  <li key={k}>{t(`franchise.${k}`)}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -1647,32 +1687,44 @@ function BecomePartnerPage() {
           </div>
         </div>
 
-        <section className="section section-alt">
-          <div className="container">
-            <h2 className="section-title">{t('partnersPage.tradesTitle')}</h2>
-            <ul className="service-list">
-              {trades.map((k) => (
-                <li key={k}>{t(`partnersPage.${k}`)}</li>
-              ))}
-            </ul>
-          </div>
-        </section>
+        <FigureBand prefix="partnersPage" keys={['band1', 'band2', 'band3']} />
 
         <section className="section">
-          <div className="container">
-            <h2 className="section-title">{t('partnersPage.gainsTitle')}</h2>
-            <div className="service-benefit-grid">
-              {gains.map((k) => (
-                <article className="service-benefit" key={k}>
-                  <h3>{t(`partnersPage.${k}Title`)}</h3>
-                  <p>{t(`partnersPage.${k}Text`)}</p>
-                </article>
-              ))}
+          <div className="container feature-split">
+            <figure className="feature-shot">
+              <img src="/images/business/partner-01.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('partnersPage.tradesTitle')}</h2>
+              <ul className="service-list service-list--single">
+                {trades.map((k) => (
+                  <li key={k}>{t(`partnersPage.${k}`)}</li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
 
         <section className="section section-alt">
+          <div className="container feature-split feature-split--flip">
+            <figure className="feature-shot">
+              <img src="/images/business/partner-02.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('partnersPage.gainsTitle')}</h2>
+              <div className="service-benefit-grid">
+                {gains.map((k) => (
+                  <article className="service-benefit" key={k}>
+                    <h3>{t(`partnersPage.${k}Title`)}</h3>
+                    <p>{t(`partnersPage.${k}Text`)}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section">
           <div className="container">
             <h2 className="section-title">{t('partnersPage.stepsTitle')}</h2>
             <div className="steps-grid">
