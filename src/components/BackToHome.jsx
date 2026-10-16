@@ -24,7 +24,7 @@ export default function BackToHome() {
     <div className="back-home-wrap">
       <a href={`#${homeHash}`} className="back-home" onClick={goHome}>
         <span className="back-home-arrow" aria-hidden="true">&larr;</span>
-        {t('privacy.backToHome')}
+        {t('common.backToHome')}
       </a>
     </div>
   );

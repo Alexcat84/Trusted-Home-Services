@@ -4690,35 +4690,6 @@ h3,
   }
 }
 
-/* ---- Figures under a hero, and a photograph beside an argument ---- */
-.figure-band-section {
-  padding-block: clamp(2rem, 4vw, 3rem);
-}
-
-.figure-band {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-  gap: clamp(1.5rem, 4vw, 3rem);
-  text-align: center;
-}
-
-.figure-band-number {
-  margin: 0 0 0.3rem;
-  font-family: var(--font-display);
-  font-size: clamp(2.6rem, 6vw, 4rem);
-  font-weight: 800;
-  line-height: 1;
-  color: var(--color-accent);
-}
-
-.figure-band-label {
-  margin: 0 auto;
-  max-width: 17rem;
-  font-size: 0.98rem;
-  line-height: 1.45;
-  color: var(--color-text-muted);
-}
-
 /* Photograph one side, argument the other, alternating down the page so the
    reader is not scrolling through the same shape seven times. */
 .feature-split {

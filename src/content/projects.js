@@ -115,50 +115,7 @@ const FR = {
   },
 };
 
-const ES = {
-  p01: {
-    title: 'Planta principal abierta y renovada',
-    place: 'Westboro, Ottawa',
-    text: 'Una casa pareada de los años cuarenta desnudada hasta la estructura. Abrimos el pasillo, conservamos y restauramos la escalera original y colocamos roble blanco en toda la planta. Once días de obra y a la venta la semana siguiente.',
-  },
-  p02: {
-    title: 'Sótano sin terminar convertido en sala',
-    place: 'Alta Vista, Ottawa',
-    text: 'Las vigas seguían a la vista y los bloques desnudos. Estructura, aislamiento, placa y suelo: la familia pasó a enseñar una segunda sala en lugar de un trastero.',
-  },
-  p03: {
-    title: 'Cuarenta años de trastos fuera y la sala en neutro',
-    place: 'Hintonburg, Ottawa',
-    text: 'La habitación no había estado vacía desde la mudanza. Todo fuera, yeso reparado, suelos nivelados y el espacio devuelto a neutro, para que el comprador vea la habitación y no lo que hay dentro.',
-  },
-  p04: {
-    title: 'Sótano de obra terminado para la temporada de primavera',
-    place: 'Barrhaven, Ottawa',
-    text: 'Quedó en bruto cuando se construyó la casa. Estructura cerrada, focos empotrados y moqueta, a juego con el resto para que todo se lea como una sola casa.',
-  },
-  p05: {
-    title: 'Suelo del salón sustituido, molduras conservadas',
-    place: 'The Glebe, Ottawa',
-    text: 'El suelo viejo salió en una mañana. Roble blanco nuevo, rodapiés y pintura, y los marcos de ventana originales rescatados y restaurados porque los propietarios querían mantenerlos.',
-  },
-  p06: {
-    title: 'Cocina montada de paredes desnudas a entrega',
-    place: 'Kanata, Ottawa',
-    text: 'Plásticos, paredes desnudas y el suelo lleno de herramienta al empezar. Muebles, encimeras, iluminación y la hornacina en arco que los propietarios nos habían dibujado, terminada y limpia antes de que llegara el fotógrafo.',
-  },
-  p07: {
-    title: 'Cocina entregada tres días antes del cierre',
-    place: 'Riverside South, Ottawa',
-    text: 'Una fecha ajustada y sin margen para moverla. Muebles oscuros, isla de nogal y techo de lamas, entregada con tres días de adelanto para que la familia se mudara el día previsto.',
-  },
-  p08: {
-    title: 'Baño principal rehecho con la familia en casa',
-    place: 'Orléans, Ottawa',
-    text: 'Desmontado hasta la estructura y rehecho con la familia viviendo allí. Mueble, espejo y grifería nuevos, alicatado y sellado, y la habitación utilizable cada noche.',
-  },
-};
-
-const POR_IDIOMA = { en: EN, fr: FR, es: ES };
+const POR_IDIOMA = { en: EN, fr: FR };
 
 /** The eight jobs, in page order, in the language asked for. */
 export function getProjects(lang) {

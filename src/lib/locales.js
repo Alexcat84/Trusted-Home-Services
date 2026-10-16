@@ -1,10 +1,10 @@
 /**
- * Languages the site offers right now.
+ * Languages the site offers.
  *
- * Spanish is written and kept: the copy still lives in translations.js and in
- * content/services.js, and the Spanish section slugs still resolve so old links
- * do not break. It is switched off here rather than deleted, so turning it back
- * on means adding 'es' to this one list.
+ * Two, and the Spanish that used to sit behind this list has been deleted:
+ * the copy, the service pages and the section slugs. Nothing was published in
+ * it, so no link breaks. Bringing it back means writing it again, not adding
+ * a line here.
  */
 
 export const ACTIVE_LOCALES = ['en', 'fr'];
