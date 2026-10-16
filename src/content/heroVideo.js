@@ -33,18 +33,24 @@ export const ACTIVE = 'proposal';
 /**
  * What the hero plays, in order, before starting again.
  *
- * Only the first is fetched with the page. The rest are left alone until the
- * one before them ends, which matters here: the drone cut is 10.5MB against
- * 832KB for the opener, and nobody should pay for it on arrival.
+ * The drone flight opens, and the renovation sequence follows it.
  *
- * That 10.5MB is deliberate. The cut was first encoded at 960x540 and looked
- * soft on the site, which read as poor footage; the master is 2560x1440 and
- * sharp, so the softness was ours. It is 1280x720 now, matching the opener,
- * at 2.6 Mbps. Thirty four seconds of drone motion over foliage is the worst
- * case for any codec: AV1 and VP9 were tried and neither beat x264 here, and
- * dropping to 24fps saved nothing. The remaining lever is length.
+ * Only the first entry is fetched with the page; the rest are left alone until
+ * the one before them ends. With the drone first, that first fetch is the
+ * 10.5MB file rather than the 832KB one, so the home page now streams a 2.6
+ * Mbps video on arrival. It plays as it arrives rather than waiting for the
+ * whole file, and the poster frame holds the space until it starts, but on a
+ * weak connection that opening will stall where the old one did not.
+ *
+ * The 10.5MB is already the floor for this shot at this length. It was first
+ * encoded at 960x540 and looked soft, which read as poor footage; the master
+ * is 2560x1440 and sharp, so the softness was ours. It is 1280x720 now, the
+ * same frame as the other cut. Thirty four seconds of drone motion over
+ * foliage is the worst case for any codec: AV1 and VP9 were both tried and
+ * neither beat x264 on it, and 24fps saved nothing. Length is the only lever
+ * left, and now that this cut opens the page it is worth pulling.
  */
-export const SEQUENCE = ['proposal', 'drone'];
+export const SEQUENCE = ['drone', 'proposal'];
 
 export function getHeroVideo() {
   return HERO_VIDEOS[ACTIVE] || HERO_VIDEOS.proposal;

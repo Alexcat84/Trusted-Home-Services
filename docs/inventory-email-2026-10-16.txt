@@ -1,0 +1,152 @@
+Subject: Trusted Home Services website, full inventory of what has been built
+
+Hi Darren,
+
+Here is a complete account of what the website contains as it stands today, 16 October 2026. I have written it out in full so you can see the scope of the work rather than just the finished pages. Every figure below was read from the files, not estimated.
+
+PAGES, AND WHAT SEARCH ENGINES SEE
+
+There are two numbers here and they are different from each other, so it is worth separating them now rather than at the end.
+
+Ten addresses are indexable. The home page and the nine trade pages each live at their own web address, with their own tab title and their own description written for the search term that trade is looking for. Those are the pages Google can rank separately. The nine are cleaning, decluttering and removal, curb appeal, flooring, electrical, painting and coatings, home staging, handyman, and home inspection.
+
+Nine more pages are part of the home document. Who we are, Our Promise, Our Projects, FAQ, For Realtors, Become a Partner, Franchises, Privacy Policy and Terms of Service are each a full page to a visitor, with their own heading, their own content and their own place in the menu. Technically they are reached through a fragment of the home address, so a search engine treats them as part of the home page rather than as separate results. That is a build decision and it can be changed, but you should know it before the search work starts.
+
+All nineteen exist in English and in French. The two dictionaries were checked against each other line by line: 494 entries, the same list in both, nothing missing on either side and nothing left in English on a French page.
+
+Search optimisation itself is still on hold by agreement, until the site is signed off and the GoDaddy domain is authorised. Two items will need attention then. The sitemap currently lists four addresses and should list all ten, including the nine trade pages. And the site carries no structured data, which is what puts a local trades business into map results and rich listings.
+
+THE NINE TRADE PAGES
+
+Each one is built to the same shape, so a visitor who reads two of them already knows where to look on the third. Every page opens with its own heading and introduction, then runs a rotating gallery of site photographs, a before and after pair, a film of the crew working, a list of what the work includes, three reasons the work matters at sale time, and two questions with answers.
+
+Where material does not exist for a section yet, that section is removed rather than left standing empty, so no page shows a blank frame.
+
+Cleaning carries seven gallery photographs, a before and after pair, a crew film, eight listed inclusions and two questions.
+
+Decluttering and removal carries nine photographs, a pair, a crew film, six inclusions and two questions.
+
+Curb appeal carries nine photographs, a pair, a crew film, six inclusions and two questions.
+
+Flooring carries eleven photographs, a pair, a crew film, six inclusions and two questions.
+
+Electrical carries fourteen photographs, a pair, eight inclusions and two questions. No crew film yet.
+
+Painting and coatings carries ten photographs, a pair, six inclusions and two questions. No crew film yet.
+
+Home staging carries eight photographs, a pair, six inclusions and two questions. No crew film yet.
+
+Handyman carries six photographs, seven inclusions and two questions. No pair and no film yet.
+
+Home inspection carries four photographs, eight inclusions and two questions. No pair and no film yet.
+
+That comes to 78 gallery photographs and seven before and after pairs across the nine pages, plus 3,066 words written specifically for them, all of it in both languages.
+
+PAGE BY PAGE
+
+Home. The drone flight over a job, followed by the renovation sequence, then the nine trades as a grid, the five step process, and four customer reviews in a carousel. The telephone number sits beside the logo at the top and at the head of the footer, linked so a phone dials it on a tap.
+
+Who we are. The company story, written around trust, workmanship, thirty years in the trades, and the rule that nothing is charged until the owner is satisfied. Laid out with a six photograph mosaic drawn from real job sites, a standout figure, and the story broken into ruled rows rather than running as one block of text.
+
+Our Promise. The no deposit commitment, set out as a figure the eye lands on, followed by two illustrated sections: the zero deposit sign and the planning that sits behind it.
+
+Our Projects. Eight completed jobs, each one a full width before and after pair with the story written underneath, running the full measure of both photographs. Each is placed in a real Ottawa neighbourhood: Westboro, Alta Vista, Hintonburg, Barrhaven, The Glebe, Kanata, Riverside South and Orleans.
+
+For Realtors. The pitch to agents, with four photographs and its own contact form that collects the agent's details and offers to carry straight on into a full quote.
+
+Become a Partner. For trades, crews and suppliers who want regular work. The trades we call on, what a partner gets, and the steps to join, broken up with two photographs so it does not read as a wall of text. It has its own form.
+
+Franchises. The longest page on the site: the market, the demand behind it, what the franchise includes, the support that comes with it, and how to enquire. Seven sections with three photographs set beside the argument. It has its own form.
+
+FAQ. Twelve questions and answers covering pricing, timing, insurance, scope and how a job runs. A further eighteen sit on the trade pages, two to each, so thirty questions are answered across the site.
+
+Privacy Policy. Seven sections: what is collected, why, who it is shared with, cookies, how long it is kept, and the visitor's rights.
+
+Terms of Service. Eleven sections, including the written scope and price requirement for work over fifty dollars under Ontario's Consumer Protection Act.
+
+Locations. The page, its route and its menu entry are all built and tested. It is switched off until there are service areas to list, and turning it back on is a one line change.
+
+PHOTOGRAPHY
+
+There are 158 images prepared for the web, 38 MB in total. Every one was cropped, resized and converted so it loads quickly without going soft.
+
+They come from two sources, and the split is tracked file by file in the code so nothing gets confused later. Sixty are real photographs of real work, shot on site. Fifty six are AI generated stand ins, made deliberately so you could see a complete site rather than a half empty one. Each generated image is a placeholder for a photograph that will replace it, and the record names each one by position, so swapping them out as real photographs arrive is direct with no guesswork.
+
+The real photographs are the cleaning, decluttering, curb appeal and flooring galleries, the first ten electrical shots, the first two handyman and painting shots, the before and after pairs for cleaning, decluttering, curb appeal and electrical, and the two shots on Our Promise.
+
+The generated images are the last four electrical shots, the last four handyman shots, the last eight painting shots, the whole home inspection and home staging galleries, the before and after pairs for flooring, painting and home staging, all sixteen images on Our Projects, and the six on Franchises and Become a Partner.
+
+The remaining forty two are logos, review portraits, trade tiles and page artwork.
+
+Work done on the photographs beyond placing them:
+
+All galleries were recropped to square. They arrived from a phone at nine by sixteen, which left a tall column of empty space beside the text on every trade page. Each crop was checked by eye first, so nothing loses its subject.
+
+Every image was converted to a modern web format at 800 pixels wide, which is what keeps 158 images down to 38 MB.
+
+Orientation was corrected where the camera had recorded it in the file rather than in the pixels, which is what makes phone photographs appear on their side.
+
+Two faults were found and fixed along the way. One before and after pair had been loaded the wrong way round, and two staging images turned out to be identical to each other.
+
+One supplied photograph carried another company's branding, legible on a jacket. It was cropped down to the sign alone, and the full frame still needs a replacement photograph.
+
+VIDEO
+
+There are eight finished clips with a still frame each, 36 MB in total. Every one was edited, re-encoded for the web and stripped of its audio track.
+
+The four crew films. Cleaning, decluttering, curb appeal and flooring each carry a film of the crew on site. None of these existed as a single clip. Each was built from two separate vertical phone recordings, placed side by side into one frame so the pair fills the space exactly with no black bars and nothing invented to fill the gaps. Each runs thirty seconds and loops without a visible join. The flooring pair needed extra work, because the two recordings had been shot at different heights and both had to be cropped to a common frame before they could sit together.
+
+The home page. Two videos play one after the other, fading from one into the next rather than cutting. Neither carries sound.
+
+The opening clip is the real drone flight over the job. The original recording is excellent, 2560 by 1440 and sharp. The copy on the website is 1280 by 720, and it looks a little softer than the clip that follows it. The reason is the footage itself. Thirty four seconds of continuous aerial movement over dense trees and mulch is the hardest thing there is to compress, because almost every pixel changes in every frame. It was first published at 960 by 540, which looked noticeably poor, and has since been re-encoded at double that resolution. At 10.5 MB it is the heaviest file on the site.
+
+The second clip is the renovation sequence, created with AI. It is fifteen seconds at 1280 by 720 and it looks clean, because generated footage of this kind compresses easily. It is not downloaded at all until the drone clip is nearly finished, so it costs the visitor nothing on arrival.
+
+One improvement is worth considering now that the drone clip opens the page. Shortening it from thirty four seconds to about fifteen would roughly halve its weight and sharpen it at the same time, because the quality budget would be spread over half as much footage. It would also mean the home page starts with a 5 MB file instead of a 10.5 MB one, which matters most to someone arriving on mobile data. Nobody watches a looping background video for thirty four seconds. All it needs is a decision on which part of the flight to keep.
+
+FORMS AND THE ENQUIRIES THEY PRODUCE
+
+There are four separate forms, each writing to the same place.
+
+The free quote form is a step by step wizard that asks what needs doing, the type of property, its size, the areas involved and the work wanted, then takes contact details and consent. The other three are shorter and sit on the page they belong to: the agent form on For Realtors, the trade form on Become a Partner, and the territory form on Franchises. Each page shows its own form on the floating button rather than the generic quote form.
+
+All four were tested end to end and each sends the correct type with the fields the administration page reads. Enquiries arrive in a private administration area where each one can be opened, given a status and worked through.
+
+UNDERNEATH
+
+Two complete languages, English and French, switchable anywhere on the site without losing your place on the page.
+
+Around 8,400 words of copy written across the shared pages, plus 3,066 more on the trade pages and 365 on the projects.
+
+Cookie consent, a privacy policy and terms of service, written for Ontario.
+
+Built and measured for phones. Every page was checked at 320 and 390 pixels wide for content running off the screen, unreadable text and controls too small to tap.
+
+Keyboard navigation, skip links, visible focus, labels on every control, and reduced motion respected for visitors who ask for it.
+
+WAITING ON MATERIAL
+
+Everything below is built and ready. It needs content, not work.
+
+Reviews. The four on the home page are samples. Real ones can go in as soon as they exist.
+
+Projects. The eight accounts and their sixteen images are placeholders. None of it may be published as a claim about real work.
+
+Electrical film. Nothing shot yet. The plan is to film the work being done.
+
+Painting film. One clip exists and a second is needed, since the films are built from pairs.
+
+Handyman, home inspection and home staging. Photographs and film still to come. Their empty sections are hidden in the meantime.
+
+Franchise detail. Awards, franchisee quotes, supplier agreements and the investment figure.
+
+Insurance. The FAQ answer needs confirming before it goes live.
+
+Locations. The service areas to list.
+
+Search optimisation. Starts once the site is signed off and the domain is authorised.
+
+If you would like me to go through any section in more detail, or to start on anything in the last list, let me know.
+
+Best regards,
+Alex

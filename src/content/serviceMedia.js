@@ -82,11 +82,14 @@ const film = (key) => ({
  *   inspection    01 to 04   all placeholder
  *   staging       01 to 08   all placeholder, and so is its pair
  *
- * The pairs on painting and flooring are placeholder too: both arrived in the
- * same batch as the rest of the stand ins.
+ * Of the seven before and after pairs, three are placeholder: painting,
+ * flooring and staging all arrived in the same batch as the rest of the stand
+ * ins. The flooring pair was listed in both columns here until it was checked
+ * against the two candidate files; the crew did shoot a flooring pair, but the
+ * one on the site is the generated one.
  *
- * The four pairs on cleaning, declutter, curb and flooring are the crew's own,
- * as are all four films. Everything on the projects page is placeholder: see
+ * The other four pairs, on cleaning, declutter, curb and electrical, are the
+ * crew's own, as are all four films. Everything on the projects page is placeholder: see
  * the warning at the head of content/projects.js.
  */
 export const SERVICE_MEDIA = {
