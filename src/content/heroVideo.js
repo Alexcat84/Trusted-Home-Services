@@ -21,11 +21,30 @@ export const HERO_VIDEOS = {
     src: '/videos/hero-alt.mp4',
     poster: '/videos/hero-alt-poster.jpg',
   },
+  drone: {
+    src: '/videos/hero-drone.mp4',
+    poster: '/videos/hero-drone-poster.jpg',
+  },
 };
 
 /** Which cut is live. Set to any key above to swap what the hero plays. */
 export const ACTIVE = 'proposal';
 
+/**
+ * What the hero plays, in order, before starting again.
+ *
+ * Only the first is fetched with the page. The rest are left alone until the
+ * one before them ends, which matters here: the drone cut is 2.9MB against
+ * 832KB for the opener, and nobody should pay for it on arrival.
+ */
+export const SEQUENCE = ['proposal', 'drone'];
+
 export function getHeroVideo() {
   return HERO_VIDEOS[ACTIVE] || HERO_VIDEOS.proposal;
+}
+
+/** The cuts to play in turn, skipping any key that no longer exists. */
+export function getHeroSequence() {
+  const cortes = SEQUENCE.map((key) => HERO_VIDEOS[key]).filter(Boolean);
+  return cortes.length ? cortes : [getHeroVideo()];
 }

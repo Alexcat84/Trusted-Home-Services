@@ -1993,13 +1993,29 @@ button.nav-link {
   padding: 1.25rem 0 0.5rem;
 }
 
+/* The brand column was taking 813px to hold a 247px logo, which pushed the
+   links into two 118px stacks against the right edge and made the footer
+   334px tall. The mark now hugs its own width and the links take the room. */
 .footer-inner {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 0.8fr);
   align-items: start;
-  gap: 1.75rem;
+  gap: clamp(2rem, 5vw, 4.5rem);
   padding-bottom: 1.25rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Seven entries down one column is a tall column. Two across halves it. */
+.footer-quicklinks .footer-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .footer-quicklinks .footer-nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .footer-brand {
@@ -2198,7 +2214,8 @@ button.nav-link {
 }
 .privacy-hero-intro {
   margin: 0;
-  max-width: 46rem;
+  /* 46rem ran to 78 characters a line. This holds it near 65. */
+  max-width: 38rem;
   font-size: 1.25rem;
   line-height: 1.69;
   color: var(--color-text-muted);
@@ -2882,6 +2899,10 @@ button.nav-link {
 @media (max-width: 600px) {
   .cookie-consent-inner { flex-direction: column; align-items: stretch; text-align: center; }
   .cookie-consent-actions { justify-content: center; }
+  /* The text carries flex: 1 1 280px for the row layout, where 280px is a
+     width. Turned on its side that basis becomes a height, which is why the
+     notice was taking 44% of a phone screen with a hole in the middle. */
+  .cookie-consent-text { flex: 0 0 auto; }
 }
 @media (max-width: 480px) {
   .admin-filters-grid { grid-template-columns: 1fr; }
@@ -2977,49 +2998,87 @@ button.nav-link {
   object-fit: cover;
   aspect-ratio: 4 / 3;
 }
+/* Two columns, not three. At three the items ran 33 characters to the line,
+   half of what reads comfortably, so every entry broke into a ragged stack. */
 .service-list {
   list-style: none;
-  margin: 1.5rem 0 0;
+  margin: 1.75rem 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 0.7rem 2rem;
+  /* The min has to be capped at the container width or the track stays 400px
+     on a 390px screen and pushes the whole page sideways. */
+  grid-template-columns: repeat(auto-fit, minmax(min(25rem, 100%), 1fr));
+  gap: 1rem 3rem;
 }
 .service-list li {
   position: relative;
   padding-left: 1.6rem;
+  max-width: 34rem;
+  font-size: 1.0625rem;
+  line-height: 1.62;
   color: var(--color-text);
 }
+/* A tick, not a bullet. These lists are inventories of what is included, and
+   a row of ticks reads as a checklist instead of as more prose. */
 .service-list li::before {
   content: "";
   position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--color-accent);
+  left: 0.15rem;
+  top: 0.42em;
+  width: 0.38rem;
+  height: 0.68rem;
+  border: solid var(--color-accent);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
+/* These were three boxes side by side, which squeezed running text to 29
+   characters a line and stacked it six deep. As ruled rows the heading sits
+   beside its paragraph and the paragraph gets a readable measure. */
 .service-benefit-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.25rem;
-  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  border-top: 1px solid var(--color-border);
 }
 .service-benefit {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 1.4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  gap: 0.35rem 2.5rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+  background: none;
+  border-radius: 0;
 }
+/* Some of these carry a paragraph and no heading. Without this the paragraph
+   lands in the narrow heading column and reads 26 characters to the line. */
+.service-benefit > p:only-child {
+  grid-column: 1 / -1;
+  max-width: 46rem;
+}
+
+@media (max-width: 760px) {
+  .service-benefit {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+    padding: 1.25rem 0;
+  }
+}
+/* The heading is a label in its own column now, level with the first line of
+   the paragraph beside it rather than stacked above it. */
 .service-benefit h3 {
   color: var(--color-primary);
-  margin: 0 0 0.5rem;
-  font-size: 1.1rem;
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.55;
+  text-wrap: balance;
 }
 .service-benefit p {
   color: var(--color-text-muted);
   margin: 0;
+  max-width: 36rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
 }
 
 @media (max-width: 900px) {
@@ -3551,7 +3610,17 @@ button.nav-link {
   padding-top: 108px;
 }
 
+/* Both cuts occupy the same box and the swap is a fade, so one has to sit on
+   top of the other rather than replace it. */
+.hero-video-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .hero--split .hero-video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -3560,6 +3629,18 @@ button.nav-link {
   border-radius: 0;
   box-shadow: none;
   background: var(--color-primary);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.hero--split .hero-video.is-live {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero--split .hero-video {
+    transition: none;
+  }
 }
 
 /* The curve at the foot, sitting over both halves. */
@@ -3737,8 +3818,8 @@ button.nav-link {
 
 .step-text {
   margin: 0;
-  font-size: clamp(0.94rem, 1.1vw, 1.02rem);
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.62;
   color: var(--color-text-muted);
 }
 
@@ -4026,12 +4107,10 @@ h3,
  * cards and tiles stay smaller, as they are on the reference too. */
 .hero-panel-body,
 .section-intro,
-.step-text,
 .reviews-intro,
 .reviews-lead,
 .holding-text,
 .service-intro,
-.service-benefit p,
 .service-faq-item dd {
   font-size: 1.25rem;
   line-height: 1.69;
@@ -4300,14 +4379,26 @@ h3,
 
 /* The promise reads down the middle: the figure, then what it means, then the
    detail under it. Everything else on the page lines up with that axis. */
-.promise-page .privacy-hero {
+.promise-page .privacy-hero,
+.about-page .privacy-hero,
+.franchise-page .privacy-hero,
+.partner-page .privacy-hero {
   text-align: center;
 }
 
 .promise-page .privacy-hero-title,
-.promise-page .privacy-hero-intro {
+.promise-page .privacy-hero-intro,
+.about-page .privacy-hero-title,
+.about-page .privacy-hero-intro,
+.franchise-page .privacy-hero-title,
+.franchise-page .privacy-hero-intro,
+.partner-page .privacy-hero-title,
+.partner-page .privacy-hero-intro {
   margin-left: auto;
   margin-right: auto;
+  /* The paragraph sets text-align itself, so centring the container is not
+     enough to centre the words inside it. */
+  text-align: center;
 }
 
 .promise-page .service-list {
@@ -4348,7 +4439,7 @@ h3,
    phone photograph. */
 .service-gallery {
   width: 100%;
-  max-width: 22rem;
+  max-width: 28rem;
   margin-inline: auto;
 }
 
@@ -4410,7 +4501,9 @@ h3,
    do not have yet. Tall photographs, so the pair is held narrow enough that
    the two of them do not run past a screen. */
 .ba-pair--filled {
-  max-width: 44rem;
+  /* Two square panels sized to match the gallery frame on the same page, so
+     the proof shot does not read as the smaller picture. */
+  max-width: 56rem;
   margin-inline: auto;
 }
 
@@ -4463,4 +4556,191 @@ h3,
   height: 100%;
   object-fit: contain;
   border-radius: inherit;
+}
+
+/* ---- Our Projects ---- */
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.project-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+/* The pair carries itself here rather than sitting centred in a wider
+   column, since the caption underneath sets the width. */
+
+.project-title {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-primary);
+}
+
+.project-place {
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.project-text {
+  margin: 0;
+  max-width: 100%;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* The two shots run the full width of the page and the words sit underneath.
+   Beside the text they came out at 438px, which reads as a thumbnail of a
+   project rather than as the project. */
+.project-pair {
+  max-width: 100%;
+  margin-inline: 0;
+}
+
+/* The project shots are square files. Without this they inherit the four by
+   three of the empty placeholder frame and lose their top and bottom. */
+.project-pair .ba-panel {
+  aspect-ratio: 1 / 1;
+}
+
+/* One caption, running edge to edge under both photographs. These are two or
+   three sentences, so the full width is two lines rather than the wall a long
+   measure would make of running copy. */
+.project-caption {
+  max-width: 100%;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---- Who we are ---- */
+/* Five of the crew's own photographs across four trades, one large and four
+   small. A page about who does the work should show them doing it, and these
+   are the real shots rather than the stand ins used elsewhere. */
+.about-mosaic-section {
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.about-mosaic {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1.2vw, 0.9rem);
+}
+
+.about-tile {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 6px;
+  aspect-ratio: 1 / 1;
+  background: var(--color-bg-alt);
+}
+
+.about-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-tile--wide {
+  grid-column: span 2;
+  aspect-ratio: 2 / 1;
+}
+
+@media (min-width: 760px) {
+  .about-mosaic {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .about-tile--wide {
+    grid-column: span 2;
+    grid-row: span 2;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+.about-heading {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.about-lead {
+  margin: 0;
+  max-width: 38rem;
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 900px) {
+  .about-split {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: center;
+  }
+}
+
+/* Photograph one side, argument the other, alternating down the page so the
+   reader is not scrolling through the same shape seven times. */
+.feature-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.feature-shot {
+  margin: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  aspect-ratio: 4 / 3;
+}
+
+.feature-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* In a half width column the two column list would be back to 30 characters
+   a line, so these run as one column. */
+.service-list--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 900px) {
+  .feature-split {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    /* The argument beside it runs taller than any photograph, so the picture
+       fills its column rather than sitting at the top of a hole. */
+    align-items: stretch;
+  }
+  .feature-shot {
+    aspect-ratio: auto;
+    min-height: 20rem;
+    max-height: 34rem;
+    position: sticky;
+    top: 7rem;
+  }
+  /* Ordering the picture second leaves the words in the narrow column, which
+     squeezed the rows to about 25 characters a line. Flipped sections get the
+     widths swapped as well as the order. */
+  .feature-split--flip {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  }
+  .feature-split--flip .feature-shot {
+    order: 2;
+  }
 }

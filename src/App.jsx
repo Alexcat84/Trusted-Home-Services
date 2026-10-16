@@ -12,7 +12,8 @@ import Footer from './components/Footer';
 import ServicePage from './components/ServicePage';
 import { getServiceList } from './content/services';
 import BackToHome from './components/BackToHome';
-import { getHeroVideo } from './content/heroVideo';
+import { getProjects } from './content/projects';
+import { getHeroSequence } from './content/heroVideo';
 import { getServiceFromPath, navigateTo, servicePath } from './lib/routing';
 
 /** Base URL for API (same origin if not set). No trailing slash. */
@@ -113,10 +114,97 @@ const REALTORS_PAGE_HASHES = ['for-realtors', 'pour-realtors', 'para-realtors'];
 const PARTNERS_PAGE_HASHES = ['partners', 'partenaires', 'socios'];
 const PROJECTS_PAGE_HASHES = ['our-projects', 'nos-projets', 'nuestros-proyectos'];
 
+/**
+ * The hero reel: one cut fading into the next, then round again.
+ *
+ * Both cuts live in the DOM at once, stacked, and the swap is a change of
+ * opacity rather than a change of source. That removes the jump and the blink
+ * that came with remounting a single element.
+ *
+ * The later cuts still cost nothing until they are needed. A cut has no src at
+ * all until the one before it is four seconds from the end, which is enough to
+ * buffer before the fade begins a second later.
+ */
+function HeroReel({ reduceMotion, label }) {
+  const clips = getHeroSequence();
+  const [live, setLive] = useState(0);
+  const [armed, setArmed] = useState(() => clips.map((_, i) => i === 0));
+  const nodes = useRef([]);
+  const swapping = useRef(false);
+
+  const solo = clips.length < 2;
+  const next = (live + 1) % clips.length;
+
+  const arm = (i) => setArmed((prev) => {
+    if (prev[i]) return prev;
+    // Giving it the src is not enough: preload none means nothing is fetched
+    // until play, which would stall the fade on a slow line. Ask for it now,
+    // while there are still four seconds to buffer.
+    window.setTimeout(() => {
+      const v = nodes.current[i];
+      if (v && v.readyState === 0) v.load();
+    }, 0);
+    return prev.map((v, n) => (n === i ? true : v));
+  });
+
+  const hand = () => {
+    if (swapping.current) return;
+    swapping.current = true;
+    const entrante = nodes.current[next];
+    const saliente = nodes.current[live];
+    if (entrante) {
+      entrante.currentTime = 0;
+      const p = entrante.play();
+      if (p && p.catch) p.catch(() => {});
+    }
+    setLive(next);
+    // Once the fade is over, park the cut that left so it is ready next time.
+    window.setTimeout(() => {
+      if (saliente) {
+        saliente.pause();
+        saliente.currentTime = 0;
+      }
+      swapping.current = false;
+    }, 1000);
+  };
+
+  const onTime = (i) => (e) => {
+    if (reduceMotion || solo || i !== live) return;
+    const v = e.currentTarget;
+    if (!v.duration || Number.isNaN(v.duration)) return;
+    const queda = v.duration - v.currentTime;
+    if (queda < 4) arm(next);
+    if (queda < 1) hand();
+  };
+
+  return (
+    <div className="hero-video-stack">
+      {clips.map((clip, i) => (
+        <video
+          key={clip.src}
+          ref={(el) => { nodes.current[i] = el; }}
+          className={`hero-video ${i === live ? 'is-live' : ''}`}
+          poster={clip.poster}
+          src={armed[i] ? clip.src : undefined}
+          autoPlay={i === 0 && !reduceMotion}
+          controls={i === 0 && reduceMotion}
+          muted
+          loop={solo}
+          playsInline
+          preload={i === 0 ? 'metadata' : 'none'}
+          aria-hidden={i !== live}
+          aria-label={i === live ? label : undefined}
+          onTimeUpdate={onTime(i)}
+          onEnded={() => { if (!reduceMotion && !solo && i === live) hand(); }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
   const { openQuote } = useQuote();
-  const heroVideo = getHeroVideo();
 
   // Autoplay is motion; readers who ask for less of it get the poster and controls instead.
   const [reduceMotion] = useState(() => {
@@ -154,20 +242,7 @@ function Hero({ skipAnimation = false }) {
           </div>
         </div>
         <motion.div className="hero-media" variants={item}>
-          <video
-            key={heroVideo.src}
-            className="hero-video"
-            poster={heroVideo.poster}
-            autoPlay={!reduceMotion}
-            controls={reduceMotion}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-label={t('hero.videoLabel')}
-          >
-            <source src={heroVideo.src} type="video/mp4" />
-          </video>
+          <HeroReel reduceMotion={reduceMotion} label={t('hero.videoLabel')} />
         </motion.div>
       </motion.div>
       {/* The white curve that sweeps across the foot of the reference hero. */}
@@ -1165,8 +1240,17 @@ function FAQPage() {
 
 const REALTOR_THIRD_IMG_INTERVAL_MS = 4000;
 
+/**
+ * Our Projects.
+ *
+ * Eight jobs, each shown as the one shot twice. The captions and the
+ * photographs are both placeholder: see the warning at the head of
+ * content/projects.js before this page goes anywhere public.
+ */
 function ProjectsPage() {
-  const { t } = useLang();  const proofItems = [1, 2, 3, 4];
+  const { t, lang } = useLang();
+  const projects = getProjects(lang);
+
   return (
     <div className="privacy-page projects-page">
       <Header />
@@ -1178,50 +1262,45 @@ function ProjectsPage() {
           </div>
         </div>
         <div className="container privacy-content">
-          <section className="privacy-section realtor-proof-section">
-            <motion.div
-              className="realtor-proof-grid"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-60px' }}
-              variants={{
-                visible: { transition: { staggerChildren: 0.1 } },
-                hidden: {}
-              }}
-            >
-              {proofItems.map((num, i) => (
-                <motion.article
-                  key={i}
-                  className="realtor-proof-card"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  <div className="realtor-proof-card-placeholder">
-                    <span className="realtor-proof-card-placeholder-label">{t('realtorPage.proofProject')} {num}</span>
-                  </div>
-                  <p className="realtor-proof-card-location">{t('realtorPage.proofLocationLabel')}: {t('realtorPage.proofLocationPlaceholder')}</p>
-                  <p className="realtor-proof-card-desc">{t('realtorPage.proofDescLabel')}: {t('realtorPage.proofDescPlaceholder')}</p>
-                </motion.article>
-              ))}
-            </motion.div>
-          </section>
+          <motion.div
+            className="project-list"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-60px' }}
+            variants={{ visible: { transition: { staggerChildren: 0.08 } }, hidden: {} }}
+          >
+            {projects.map((project) => (
+              <motion.article
+                className="project-item"
+                key={project.key}
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                <div className="ba-pair ba-pair--filled project-pair">
+                  <figure className="ba-panel ba-panel--filled">
+                    <img src={project.before} alt={`${project.title}, ${t('services.baBefore')}`} loading="lazy" />
+                    <figcaption className="ba-label ba-label--over">{t('services.baBefore')}</figcaption>
+                  </figure>
+                  <figure className="ba-panel ba-panel--filled">
+                    <img src={project.after} alt={`${project.title}, ${t('services.baAfter')}`} loading="lazy" />
+                    <figcaption className="ba-label ba-label--over ba-label--after">{t('services.baAfter')}</figcaption>
+                  </figure>
+                </div>
+                <div className="project-caption">
+                  <h2 className="project-title">{project.title}</h2>
+                  <p className="project-place">{project.place}</p>
+                  <p className="project-text">{project.text}</p>
+                </div>
+              </motion.article>
+            ))}
+          </motion.div>
+          <BackToHome />
         </div>
       </main>
       <Footer />
     </div>
   );
 }
-
-/**
- * A page the menu reaches but that has nothing in it yet.
- *
- * The cloned navigation carries the reference's full set of entries, and four
- * of those have no content on this side. Rather than a dead link or a missing
- * entry, each answers with this until the real page is written.
- */
 function HoldingPage({ which }) {
   const { t } = useLang();
 
@@ -1234,6 +1313,106 @@ function HoldingPage({ which }) {
           <p className="holding-eyebrow">{t(`nav.${which}`)}</p>
           <h1 className="holding-title">{t('holding.title')}</h1>
           <p className="holding-text">{t('holding.text')}</p>
+          <BackToHome />
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+/**
+ * Who we are.
+ *
+ * Built as the answer to a page of solid text: a figure at the top, one
+ * photograph of the crew, and the argument in ruled rows. The copy is
+ * invented, and the two claims it rests on, thirty years and no invoice
+ * until the owner is satisfied, have to be confirmed before this is public.
+ */
+function AboutPage() {
+  const { t } = useLang();
+  const trust = ['t1', 't2', 't3'];
+  const craft = ['c1', 'c2', 'c3'];
+
+  return (
+    <div className="privacy-page about-page">
+      <a href="#main" className="skip-link">Skip to main content</a>
+      <Header />
+      <main id="main" className="privacy-main">
+        <div className="privacy-hero">
+          <div className="container">
+            <h1 className="privacy-hero-title">{t('about.title')}</h1>
+            <p className="privacy-hero-intro">{t('about.intro')}</p>
+          </div>
+        </div>
+
+        <section className="section about-mosaic-section">
+          <div className="container">
+            <div className="about-mosaic">
+              <figure className="about-tile about-tile--wide">
+                <img src="/images/services/declutter/declutter-01.webp" alt="" loading="lazy" />
+              </figure>
+              <figure className="about-tile">
+                <img src="/images/services/cleaning/cleaning-01.webp" alt="" loading="lazy" />
+              </figure>
+              <figure className="about-tile">
+                <img src="/images/services/flooring/flooring-05.webp" alt="" loading="lazy" />
+              </figure>
+              <figure className="about-tile">
+                <img src="/images/services/curb/curb-09.webp" alt="" loading="lazy" />
+              </figure>
+              <figure className="about-tile">
+                <img src="/images/services/cleaning/cleaning-06.webp" alt="" loading="lazy" />
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        <section className="section section-alt">
+          <div className="container promise-figure-wrap">
+            <p className="promise-figure" aria-hidden="true">{t('about.figure')}</p>
+            <div>
+              <p className="promise-figure-lead">{t('about.figureLead')}</p>
+              <p className="promise-figure-body">{t('about.figureBody')}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container feature-split feature-split--flip">
+            <figure className="feature-shot">
+              <img src="/images/services/curb/curb-02.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('about.trustTitle')}</h2>
+              <p className="about-lead">{t('about.trustLead')}</p>
+              <div className="service-benefit-grid">
+                {trust.map((k) => (
+                  <article className="service-benefit" key={k}>
+                    <h3>{t(`about.${k}Title`)}</h3>
+                    <p>{t(`about.${k}Text`)}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section section-alt">
+          <div className="container">
+            <h2 className="section-title">{t('about.craftTitle')}</h2>
+            <div className="service-benefit-grid">
+              {craft.map((k) => (
+                <article className="service-benefit" key={k}>
+                  <h3>{t(`about.${k}Title`)}</h3>
+                  <p>{t(`about.${k}Text`)}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="container">
           <BackToHome />
         </div>
       </main>
@@ -1278,26 +1457,36 @@ function PromisePage() {
         </section>
 
         <section className="section section-alt">
-          <div className="container">
-            <h2 className="section-title">{t('promisePage.coversTitle')}</h2>
-            <ul className="service-list">
-              {cubre.map((k) => (
-                <li key={k}>{t(`promisePage.${k}`)}</li>
-              ))}
-            </ul>
+          <div className="container feature-split">
+            <figure className="feature-shot">
+              <img src="/images/promise/promise-sign.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('promisePage.coversTitle')}</h2>
+              <ul className="service-list service-list--single">
+                {cubre.map((k) => (
+                  <li key={k}>{t(`promisePage.${k}`)}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
         <section className="section">
-          <div className="container">
-            <h2 className="section-title">{t('promisePage.whyTitle')}</h2>
-            <div className="service-benefit-grid">
-              {porque.map((k) => (
-                <article className="service-benefit" key={k}>
-                  <h3>{t(`promisePage.${k}Title`)}</h3>
-                  <p>{t(`promisePage.${k}Text`)}</p>
-                </article>
-              ))}
+          <div className="container feature-split feature-split--flip">
+            <figure className="feature-shot">
+              <img src="/images/promise/promise-plan.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('promisePage.whyTitle')}</h2>
+              <div className="service-benefit-grid">
+                {porque.map((k) => (
+                  <article className="service-benefit" key={k}>
+                    <h3>{t(`promisePage.${k}Title`)}</h3>
+                    <p>{t(`promisePage.${k}Text`)}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -1345,17 +1534,22 @@ function FranchisePage() {
           </div>
         </div>
 
-        <section className="section section-alt">
-          <div className="container">
-            <h2 className="section-title">{t('franchise.marketTitle')}</h2>
-            <p className="section-intro">{t('franchise.marketText')}</p>
-            <div className="service-benefit-grid">
-              {market.map((k) => (
-                <article className="service-benefit" key={k}>
-                  <h3>{t(`franchise.${k}Title`)}</h3>
-                  <p>{t(`franchise.${k}Text`)}</p>
-                </article>
-              ))}
+        <section className="section">
+          <div className="container feature-split">
+            <figure className="feature-shot">
+              <img src="/images/business/franchise-01.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('franchise.marketTitle')}</h2>
+              <p className="about-lead">{t('franchise.marketText')}</p>
+              <div className="service-benefit-grid">
+                {market.map((k) => (
+                  <article className="service-benefit" key={k}>
+                    <h3>{t(`franchise.${k}Title`)}</h3>
+                    <p>{t(`franchise.${k}Text`)}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -1372,8 +1566,12 @@ function FranchisePage() {
         </section>
 
         <section className="section section-alt">
-          <div className="container">
-            <h2 className="section-title">{t('franchise.demandTitle')}</h2>
+          <div className="container feature-split feature-split--flip">
+            <figure className="feature-shot">
+              <img src="/images/business/franchise-02.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+            <h2 className="about-heading">{t('franchise.demandTitle')}</h2>
             <div className="service-benefit-grid">
               {demand.map((k) => (
                 <article className="service-benefit" key={k}>
@@ -1381,6 +1579,7 @@ function FranchisePage() {
                   <p>{t(`franchise.${k}Text`)}</p>
                 </article>
               ))}
+            </div>
             </div>
           </div>
         </section>
@@ -1397,13 +1596,18 @@ function FranchisePage() {
         </section>
 
         <section className="section section-alt">
-          <div className="container">
-            <h2 className="section-title">{t('franchise.supportTitle')}</h2>
-            <ul className="service-list">
-              {support.map((k) => (
-                <li key={k}>{t(`franchise.${k}`)}</li>
-              ))}
-            </ul>
+          <div className="container feature-split">
+            <figure className="feature-shot">
+              <img src="/images/business/franchise-03.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('franchise.supportTitle')}</h2>
+              <ul className="service-list service-list--single">
+                {support.map((k) => (
+                  <li key={k}>{t(`franchise.${k}`)}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -1554,7 +1758,7 @@ function BecomePartnerPage() {
   const steps = ['step1', 'step2', 'step3'];
 
   return (
-    <div className="privacy-page">
+    <div className="privacy-page partner-page">
       <Header />
       <main id="main" className="privacy-main">
         <div className="privacy-hero">
@@ -1565,31 +1769,41 @@ function BecomePartnerPage() {
         </div>
 
         <section className="section section-alt">
-          <div className="container">
-            <h2 className="section-title">{t('partnersPage.tradesTitle')}</h2>
-            <ul className="service-list">
-              {trades.map((k) => (
-                <li key={k}>{t(`partnersPage.${k}`)}</li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="container">
-            <h2 className="section-title">{t('partnersPage.gainsTitle')}</h2>
-            <div className="service-benefit-grid">
-              {gains.map((k) => (
-                <article className="service-benefit" key={k}>
-                  <h3>{t(`partnersPage.${k}Title`)}</h3>
-                  <p>{t(`partnersPage.${k}Text`)}</p>
-                </article>
-              ))}
+          <div className="container feature-split">
+            <figure className="feature-shot">
+              <img src="/images/business/partner-01.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('partnersPage.tradesTitle')}</h2>
+              <ul className="service-list service-list--single">
+                {trades.map((k) => (
+                  <li key={k}>{t(`partnersPage.${k}`)}</li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
 
         <section className="section section-alt">
+          <div className="container feature-split feature-split--flip">
+            <figure className="feature-shot">
+              <img src="/images/business/partner-02.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('partnersPage.gainsTitle')}</h2>
+              <div className="service-benefit-grid">
+                {gains.map((k) => (
+                  <article className="service-benefit" key={k}>
+                    <h3>{t(`partnersPage.${k}Title`)}</h3>
+                    <p>{t(`partnersPage.${k}Text`)}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section">
           <div className="container">
             <h2 className="section-title">{t('partnersPage.stepsTitle')}</h2>
             <div className="steps-grid">
@@ -2212,7 +2426,7 @@ function AdminPage() {
 }
 
 /** Pages the cloned menu points at that have nothing in them yet. */
-const HOLDING_PAGES = ['about', 'locations'];
+const HOLDING_PAGES = ['locations'];
 
 function getSubPageFromHash(h) {
   if (REALTORS_PAGE_HASHES.includes(h)) return 'realtors';
@@ -2221,6 +2435,7 @@ function getSubPageFromHash(h) {
   if (HOLDING_PAGES.includes(h)) return h;
   if (h === 'franchises') return 'franchises';
   if (h === 'promise') return 'promise';
+  if (h === 'about') return 'about';
   return null;
 }
 
@@ -2290,6 +2505,7 @@ export default function App() {
     if (HOLDING_PAGES.includes(subPage)) return <HoldingPage which={subPage} />;
     if (subPage === 'franchises') return <FranchisePage />;
     if (subPage === 'promise') return <PromisePage />;
+    if (subPage === 'about') return <AboutPage />;
     if (subPage === 'realtors') return <RealtorsPage />;
     if (subPage === 'partners') return <BecomePartnerPage />;
     if (subPage === 'projects') return <ProjectsPage />;
