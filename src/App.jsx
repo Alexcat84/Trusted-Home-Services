@@ -114,14 +114,97 @@ const REALTORS_PAGE_HASHES = ['for-realtors', 'pour-realtors', 'para-realtors'];
 const PARTNERS_PAGE_HASHES = ['partners', 'partenaires', 'socios'];
 const PROJECTS_PAGE_HASHES = ['our-projects', 'nos-projets', 'nuestros-proyectos'];
 
+/**
+ * The hero reel: one cut fading into the next, then round again.
+ *
+ * Both cuts live in the DOM at once, stacked, and the swap is a change of
+ * opacity rather than a change of source. That removes the jump and the blink
+ * that came with remounting a single element.
+ *
+ * The later cuts still cost nothing until they are needed. A cut has no src at
+ * all until the one before it is four seconds from the end, which is enough to
+ * buffer before the fade begins a second later.
+ */
+function HeroReel({ reduceMotion, label }) {
+  const clips = getHeroSequence();
+  const [live, setLive] = useState(0);
+  const [armed, setArmed] = useState(() => clips.map((_, i) => i === 0));
+  const nodes = useRef([]);
+  const swapping = useRef(false);
+
+  const solo = clips.length < 2;
+  const next = (live + 1) % clips.length;
+
+  const arm = (i) => setArmed((prev) => {
+    if (prev[i]) return prev;
+    // Giving it the src is not enough: preload none means nothing is fetched
+    // until play, which would stall the fade on a slow line. Ask for it now,
+    // while there are still four seconds to buffer.
+    window.setTimeout(() => {
+      const v = nodes.current[i];
+      if (v && v.readyState === 0) v.load();
+    }, 0);
+    return prev.map((v, n) => (n === i ? true : v));
+  });
+
+  const hand = () => {
+    if (swapping.current) return;
+    swapping.current = true;
+    const entrante = nodes.current[next];
+    const saliente = nodes.current[live];
+    if (entrante) {
+      entrante.currentTime = 0;
+      const p = entrante.play();
+      if (p && p.catch) p.catch(() => {});
+    }
+    setLive(next);
+    // Once the fade is over, park the cut that left so it is ready next time.
+    window.setTimeout(() => {
+      if (saliente) {
+        saliente.pause();
+        saliente.currentTime = 0;
+      }
+      swapping.current = false;
+    }, 1000);
+  };
+
+  const onTime = (i) => (e) => {
+    if (reduceMotion || solo || i !== live) return;
+    const v = e.currentTarget;
+    if (!v.duration || Number.isNaN(v.duration)) return;
+    const queda = v.duration - v.currentTime;
+    if (queda < 4) arm(next);
+    if (queda < 1) hand();
+  };
+
+  return (
+    <div className="hero-video-stack">
+      {clips.map((clip, i) => (
+        <video
+          key={clip.src}
+          ref={(el) => { nodes.current[i] = el; }}
+          className={`hero-video ${i === live ? 'is-live' : ''}`}
+          poster={clip.poster}
+          src={armed[i] ? clip.src : undefined}
+          autoPlay={i === 0 && !reduceMotion}
+          controls={i === 0 && reduceMotion}
+          muted
+          loop={solo}
+          playsInline
+          preload={i === 0 ? 'metadata' : 'none'}
+          aria-hidden={i !== live}
+          aria-label={i === live ? label : undefined}
+          onTimeUpdate={onTime(i)}
+          onEnded={() => { if (!reduceMotion && !solo && i === live) hand(); }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function Hero({ skipAnimation = false }) {
   const { t, lang } = useLang();
   const { openQuote } = useQuote();
-  // One cut follows the other and then it starts again. Only the first is
-  // fetched with the page; the next is left until the one before it ends.
-  const heroClips = getHeroSequence();
-  const [heroClip, setHeroClip] = useState(0);
-  const heroVideo = heroClips[heroClip] || heroClips[0];
 
   // Autoplay is motion; readers who ask for less of it get the poster and controls instead.
   const [reduceMotion] = useState(() => {
@@ -159,23 +242,7 @@ function Hero({ skipAnimation = false }) {
           </div>
         </div>
         <motion.div className="hero-media" variants={item}>
-          <video
-            key={heroVideo.src}
-            className="hero-video"
-            poster={heroVideo.poster}
-            autoPlay={!reduceMotion}
-            controls={reduceMotion}
-            muted
-            loop={heroClips.length < 2}
-            playsInline
-            preload={heroClip === 0 ? 'metadata' : 'auto'}
-            onEnded={() => {
-              if (!reduceMotion) setHeroClip((i) => (i + 1) % heroClips.length);
-            }}
-            aria-label={t('hero.videoLabel')}
-          >
-            <source src={heroVideo.src} type="video/mp4" />
-          </video>
+          <HeroReel reduceMotion={reduceMotion} label={t('hero.videoLabel')} />
         </motion.div>
       </motion.div>
       {/* The white curve that sweeps across the foot of the reference hero. */}

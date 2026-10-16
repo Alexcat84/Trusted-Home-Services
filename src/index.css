@@ -3604,7 +3604,17 @@ button.nav-link {
   padding-top: 108px;
 }
 
+/* Both cuts occupy the same box and the swap is a fade, so one has to sit on
+   top of the other rather than replace it. */
+.hero-video-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .hero--split .hero-video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -3613,6 +3623,18 @@ button.nav-link {
   border-radius: 0;
   box-shadow: none;
   background: var(--color-primary);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.hero--split .hero-video.is-live {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero--split .hero-video {
+    transition: none;
+  }
 }
 
 /* The curve at the foot, sitting over both halves. */
