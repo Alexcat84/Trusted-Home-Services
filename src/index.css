@@ -2899,6 +2899,10 @@ button.nav-link {
 @media (max-width: 600px) {
   .cookie-consent-inner { flex-direction: column; align-items: stretch; text-align: center; }
   .cookie-consent-actions { justify-content: center; }
+  /* The text carries flex: 1 1 280px for the row layout, where 280px is a
+     width. Turned on its side that basis becomes a height, which is why the
+     notice was taking 44% of a phone screen with a hole in the middle. */
+  .cookie-consent-text { flex: 0 0 auto; }
 }
 @media (max-width: 480px) {
   .admin-filters-grid { grid-template-columns: 1fr; }
@@ -3001,7 +3005,9 @@ button.nav-link {
   margin: 1.75rem 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+  /* The min has to be capped at the container width or the track stays 400px
+     on a 390px screen and pushes the whole page sideways. */
+  grid-template-columns: repeat(auto-fit, minmax(min(25rem, 100%), 1fr));
   gap: 1rem 3rem;
 }
 .service-list li {
@@ -4572,8 +4578,9 @@ h3,
 .project-title {
   margin: 0 0 0.3rem;
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  font-size: 1.15rem;
   font-weight: 700;
+  line-height: 1.3;
   color: var(--color-primary);
 }
 
@@ -4588,7 +4595,9 @@ h3,
 
 .project-text {
   margin: 0;
-  max-width: 44rem;
+  max-width: 100%;
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--color-text-muted);
 }
 
@@ -4606,8 +4615,24 @@ h3,
   aspect-ratio: 1 / 1;
 }
 
+/* The caption runs the width of both photographs, as a caption should, but a
+   single line across 1100px would be 130 characters. So it runs in two
+   columns on the same grid as the pair above it: the name under the before
+   shot, the story under the after. */
 .project-caption {
-  max-width: 46rem;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.6rem 20px;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (min-width: 760px) {
+  .project-caption {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
 }
 
 /* ---- Who we are ---- */

@@ -1287,8 +1287,10 @@ function ProjectsPage() {
                   </figure>
                 </div>
                 <div className="project-caption">
-                  <h2 className="project-title">{project.title}</h2>
-                  <p className="project-place">{project.place}</p>
+                  <div className="project-name">
+                    <h2 className="project-title">{project.title}</h2>
+                    <p className="project-place">{project.place}</p>
+                  </div>
                   <p className="project-text">{project.text}</p>
                 </div>
               </motion.article>
