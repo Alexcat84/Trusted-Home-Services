@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLang } from '../context/useLang';
 import { getSectionHash } from '../translations';
 import { getServiceList } from '../content/services';
-import { navigateTo, servicePath, goToHash } from '../lib/routing';
+import { navigateTo, servicePath, goToHash, goToHome } from '../lib/routing';
 import { ACTIVE_LOCALES } from '../lib/locales';
 import { PHONE_DISPLAY, PHONE_TEL } from '../content/contact';
 
@@ -139,6 +139,10 @@ export default function Header() {
       return;
     }
     const id = hash(key);
+    if (key === 'home') {
+      goToHome(id);
+      return;
+    }
     // From another page, change page first. On the home page, assign the hash,
     // which is what actually scrolls: pushState does not, and neither does it
     // fire hashchange.
@@ -182,10 +186,8 @@ export default function Header() {
           className="header-logo"
           aria-label="Trusted Home Services - Home"
           onClick={(e) => {
-            if (window.location.pathname !== '/') {
-              e.preventDefault();
-              navigateTo('/', hash('home'));
-            }
+            e.preventDefault();
+            goToHome(hash('home'));
           }}
         >
           <img src="/images/Logo v4.0.jpg" alt="Trusted Home Services" />
@@ -290,6 +292,15 @@ export default function Header() {
                   onClick={(e) => {
                     setMenuOpen(false);
                     setOpenMenu(null);
+                    // Home is the one entry that does not want its element.
+                    // Letting the browser follow #home lands on the hero, whose
+                    // top edge is the line under the menu, with the logo already
+                    // scrolled past.
+                    if (key === 'home') {
+                      e.preventDefault();
+                      goToHome(sectionHash);
+                      return;
+                    }
                     if (window.location.pathname !== '/') {
                       e.preventDefault();
                       navigateTo('/', sectionHash);
