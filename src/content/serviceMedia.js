@@ -82,6 +82,9 @@ const film = (key) => ({
  *   inspection    01 to 04   all placeholder
  *   staging       01 to 08   all placeholder, and so is its pair
  *
+ * The pairs on painting and flooring are placeholder too: both arrived in the
+ * same batch as the rest of the stand ins.
+ *
  * The four pairs on cleaning, declutter, curb and flooring are the crew's own,
  * as are all four films. Everything on the projects page is placeholder: see
  * the warning at the head of content/projects.js.
@@ -95,9 +98,11 @@ export const SERVICE_MEDIA = {
   handyman: { gallery: stills('handyman', 6), ...without('beforeAfter', 'reel') },
   // The second clip has not arrived, so the film waits rather than going out
   // half built. The stills go now.
-  painting: { gallery: stills('painting', 10) },
+  painting: { gallery: stills('painting', 10), beforeAfter: pair('painting') },
   // No pair shot for this one yet, so that frame stays open; the film is off.
-  inspection: { gallery: stills('inspection', 4), ...without('reel') },
+  // Nothing shot twice for this one, so the pair comes off rather than
+  // standing open.
+  inspection: { gallery: stills('inspection', 4), ...without('beforeAfter', 'reel') },
   staging: { gallery: stills('staging', 8), beforeAfter: pair('staging'), ...without('reel') },
 };
 

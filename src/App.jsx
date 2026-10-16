@@ -1295,6 +1295,28 @@ function AboutPage() {
           </div>
         </div>
 
+        <section className="section about-mosaic-section">
+          <div className="container">
+            <div className="about-mosaic">
+              <figure className="about-tile about-tile--wide">
+                <img src="/images/services/declutter/declutter-01.webp" alt="" loading="lazy" />
+              </figure>
+              <figure className="about-tile">
+                <img src="/images/services/cleaning/cleaning-01.webp" alt="" loading="lazy" />
+              </figure>
+              <figure className="about-tile">
+                <img src="/images/services/flooring/flooring-05.webp" alt="" loading="lazy" />
+              </figure>
+              <figure className="about-tile">
+                <img src="/images/services/curb/curb-09.webp" alt="" loading="lazy" />
+              </figure>
+              <figure className="about-tile">
+                <img src="/images/services/cleaning/cleaning-06.webp" alt="" loading="lazy" />
+              </figure>
+            </div>
+          </div>
+        </section>
+
         <section className="section section-alt">
           <div className="container promise-figure-wrap">
             <p className="promise-figure" aria-hidden="true">{t('about.figure')}</p>
@@ -1306,9 +1328,9 @@ function AboutPage() {
         </section>
 
         <section className="section">
-          <div className="container about-split">
-            <figure className="about-shot">
-              <img src="/images/services/cleaning/cleaning-01.webp" alt="" loading="lazy" />
+          <div className="container feature-split feature-split--flip">
+            <figure className="feature-shot">
+              <img src="/images/services/curb/curb-02.webp" alt="" loading="lazy" />
             </figure>
             <div>
               <h2 className="about-heading">{t('about.trustTitle')}</h2>
@@ -1384,26 +1406,36 @@ function PromisePage() {
         </section>
 
         <section className="section section-alt">
-          <div className="container">
-            <h2 className="section-title">{t('promisePage.coversTitle')}</h2>
-            <ul className="service-list">
-              {cubre.map((k) => (
-                <li key={k}>{t(`promisePage.${k}`)}</li>
-              ))}
-            </ul>
+          <div className="container feature-split">
+            <figure className="feature-shot">
+              <img src="/images/promise/promise-sign.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('promisePage.coversTitle')}</h2>
+              <ul className="service-list service-list--single">
+                {cubre.map((k) => (
+                  <li key={k}>{t(`promisePage.${k}`)}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
         <section className="section">
-          <div className="container">
-            <h2 className="section-title">{t('promisePage.whyTitle')}</h2>
-            <div className="service-benefit-grid">
-              {porque.map((k) => (
-                <article className="service-benefit" key={k}>
-                  <h3>{t(`promisePage.${k}Title`)}</h3>
-                  <p>{t(`promisePage.${k}Text`)}</p>
-                </article>
-              ))}
+          <div className="container feature-split feature-split--flip">
+            <figure className="feature-shot">
+              <img src="/images/promise/promise-plan.webp" alt="" loading="lazy" />
+            </figure>
+            <div>
+              <h2 className="about-heading">{t('promisePage.whyTitle')}</h2>
+              <div className="service-benefit-grid">
+                {porque.map((k) => (
+                  <article className="service-benefit" key={k}>
+                    <h3>{t(`promisePage.${k}Title`)}</h3>
+                    <p>{t(`promisePage.${k}Text`)}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </section>
