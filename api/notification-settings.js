@@ -1,12 +1,12 @@
 /**
  * GET /api/notification-settings  (Authorization: Bearer JWT or HttpOnly cookie)
- *  -> { email: boolean, sms: boolean }
+ *  -> { email: boolean }
  * PATCH /api/notification-settings
- *  Body: { email?: boolean, sms?: boolean }
+ *  Body: { email?: boolean }
  *  Auth: admin JWT (Bearer or HttpOnly cookie th_admin)
  *
  * Uses Postgres (NotificationSettings table) when available; otherwise falls back
- * to Vercel KV under key "notification_settings". Defaults are email=true, sms=true.
+ * to Vercel KV under key "notification_settings". Default is email=true.
  */
 
 const KV_KEY = 'notification_settings';
@@ -21,7 +21,7 @@ async function auth(req) {
   return verifyAdminRequest(req);
 }
 
-const DEFAULT_FLAGS = { email: true, sms: true };
+const DEFAULT_FLAGS = { email: true };
 
 async function getFlagsFromDb() {
   const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
@@ -30,7 +30,7 @@ async function getFlagsFromDb() {
     const { prisma } = await import('../server-lib/prisma.js');
     const row = await prisma.notificationSettings.findUnique({ where: { id: 'default' } });
     if (!row) return null;
-    return { email: !!row.email, sms: !!row.sms };
+    return { email: !!row.email };
   } catch (e) {
     console.error('NotificationSettings DB read error:', e.message);
     return null;
@@ -44,8 +44,8 @@ async function saveFlagsToDb(flags) {
     const { prisma } = await import('../server-lib/prisma.js');
     await prisma.notificationSettings.upsert({
       where: { id: 'default' },
-      update: { email: flags.email, sms: flags.sms },
-      create: { id: 'default', email: flags.email, sms: flags.sms },
+      update: { email: flags.email },
+      create: { id: 'default', email: flags.email },
     });
     return true;
   } catch (e) {
@@ -65,7 +65,6 @@ async function getFlagsFromKv() {
     const obj = typeof raw === 'string' ? JSON.parse(raw) : raw;
     return {
       email: typeof obj.email === 'boolean' ? obj.email : DEFAULT_FLAGS.email,
-      sms: typeof obj.sms === 'boolean' ? obj.sms : DEFAULT_FLAGS.sms,
     };
   } catch (e) {
     console.error('NotificationSettings KV read error:', e.message);
@@ -131,7 +130,6 @@ export default async function handler(req, res) {
     const current = await getFlags();
     const next = {
       email: typeof body.email === 'boolean' ? body.email : current.email,
-      sms: typeof body.sms === 'boolean' ? body.sms : current.sms,
     };
     await saveFlags(next);
     return res.status(200).json(next);

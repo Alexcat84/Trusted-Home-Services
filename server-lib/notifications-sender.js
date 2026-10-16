@@ -1,8 +1,12 @@
-import { sendAdminSms } from './sms.js';
-import { sendPushToAll } from './push.js';
-import { sendAdminNotifyEvents } from './notify-events.js';
+/**
+ * Telling the office a form came in.
+ *
+ * One channel: email, through Resend. SMS, web push and Notify.Events were
+ * all wired in at one point and none of them was ever configured, so each ran
+ * on every submission, failed and logged it. They are gone.
+ */
 
-const DEFAULT_FLAGS = { email: true, sms: true };
+const DEFAULT_FLAGS = { email: true };
 
 function getStatusCode(err) {
   return err?.statusCode ?? err?.status ?? err?.response?.status ?? null;
@@ -18,10 +22,7 @@ export async function getNotificationFlags() {
       const { prisma } = await import('./prisma.js');
       const row = await prisma.notificationSettings.findUnique({ where: { id: 'default' } });
       if (row) {
-        return {
-          email: typeof row.email === 'boolean' ? row.email : defaults.email,
-          sms: typeof row.sms === 'boolean' ? row.sms : defaults.sms,
-        };
+        return { email: typeof row.email === 'boolean' ? row.email : defaults.email };
       }
     } catch (e) {
       // No PII here; just surface the failure reason.
@@ -37,10 +38,7 @@ export async function getNotificationFlags() {
       const raw = await kv.get('notification_settings');
       if (raw) {
         const obj = typeof raw === 'string' ? JSON.parse(raw) : raw;
-        return {
-          email: typeof obj.email === 'boolean' ? obj.email : defaults.email,
-          sms: typeof obj.sms === 'boolean' ? obj.sms : defaults.sms,
-        };
+        return { email: typeof obj.email === 'boolean' ? obj.email : defaults.email };
       }
     } catch (e) {
       console.error('NotificationFlags KV read error:', e.message);
@@ -113,34 +111,14 @@ export async function sendAdminEmail(type, payload) {
 export async function sendSubmissionNotifications(type, payload) {
   const flags = await getNotificationFlags().catch(() => ({ ...DEFAULT_FLAGS }));
 
-  if (flags.email) {
-    // sendAdminEmail handles its own errors; this is just extra safety.
-    await sendAdminEmail(type, payload).catch((e) => {
-      const status = getStatusCode(e) ?? 'unknown';
-      console.error('[submit] Resend email error type=', type, 'status=', status);
-    });
-  } else {
+  if (!flags.email) {
     console.log('[submit] email skipped type=', type);
+    return;
   }
 
-  if (flags.sms) {
-    await sendAdminSms(type, payload).catch((e) => {
-      const status = getStatusCode(e) ?? 'unknown';
-      console.error('[submit] SMS error type=', type, 'status=', status);
-    });
-  } else {
-    console.log('[submit] SMS skipped type=', type);
-  }
-
-  await sendPushToAll(type, payload).catch((e) => {
+  // sendAdminEmail handles its own errors; this is just extra safety.
+  await sendAdminEmail(type, payload).catch((e) => {
     const status = getStatusCode(e) ?? 'unknown';
-    console.error('[submit] Push error: status=', status);
-  });
-  console.log('[submit] push/Notify.Events invoked');
-
-  await sendAdminNotifyEvents(type, payload).catch((e) => {
-    const status = getStatusCode(e) ?? 'unknown';
-    console.error('[submit] Notify.Events error:', 'status=', status);
+    console.error('[submit] Resend email error type=', type, 'status=', status);
   });
 }
-

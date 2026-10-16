@@ -1931,7 +1931,6 @@ function AdminPage() {
   const [filterSize, setFilterSize] = useState('');
   const [filterMessage, setFilterMessage] = useState('');
   const [notifyEmail, setNotifyEmail] = useState(true);
-  const [notifySms, setNotifySms] = useState(true);
   const [notifyLoading, setNotifyLoading] = useState(false);
   const [notifyError, setNotifyError] = useState(null);
 
@@ -1975,7 +1974,6 @@ function AdminPage() {
       if (!res.ok) return;
       const data = await res.json().catch(() => ({}));
       if (typeof data.email === 'boolean') setNotifyEmail(data.email);
-      if (typeof data.sms === 'boolean') setNotifySms(data.sms);
     } catch {
       // ignore; fall back to defaults
     }
@@ -2096,7 +2094,6 @@ function AdminPage() {
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
         if (typeof data.email === 'boolean') setNotifyEmail(data.email);
-        if (typeof data.sms === 'boolean') setNotifySms(data.sms);
       } else {
         setNotifyError(data.error || 'Failed to update notification settings');
       }
@@ -2108,13 +2105,7 @@ function AdminPage() {
   };
 
   const handleToggleEmail = () => {
-    const next = { email: !notifyEmail, sms: notifySms };
-    updateNotificationSettings(next);
-  };
-
-  const handleToggleSms = () => {
-    const next = { email: notifyEmail, sms: !notifySms };
-    updateNotificationSettings(next);
+    updateNotificationSettings({ email: !notifyEmail });
   };
 
   const filteredSubmissions = submissions.filter((s) => {
@@ -2255,8 +2246,8 @@ function AdminPage() {
             <>
           <p className="admin-install-hint">To add to home screen: open Chrome menu (⋮) and choose <strong>Add to Home screen</strong> (you may need to scroll down in the menu).</p>
           <div className="admin-notify-wrap">
-            <p className="admin-test-push-label"><strong>Notification channels</strong></p>
-            <p className="admin-test-push-hint">Control whether new submissions trigger email and SMS alerts. Changes apply immediately.</p>
+            <p className="admin-test-push-label"><strong>Notifications</strong></p>
+            <p className="admin-test-push-hint">Whether a new submission sends an email. Changes apply immediately.</p>
             <div className="admin-notify-toggles">
               <label className="admin-notify-toggle">
                 <input
@@ -2266,15 +2257,6 @@ function AdminPage() {
                   onChange={handleToggleEmail}
                 />
                 <span>Email notifications</span>
-              </label>
-              <label className="admin-notify-toggle">
-                <input
-                  type="checkbox"
-                  checked={notifySms}
-                  disabled={notifyLoading}
-                  onChange={handleToggleSms}
-                />
-                <span>SMS notifications</span>
               </label>
               {notifyLoading && <span className="admin-push-loading">Saving…</span>}
             </div>
