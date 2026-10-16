@@ -1287,10 +1287,8 @@ function ProjectsPage() {
                   </figure>
                 </div>
                 <div className="project-caption">
-                  <div className="project-name">
-                    <h2 className="project-title">{project.title}</h2>
-                    <p className="project-place">{project.place}</p>
-                  </div>
+                  <h2 className="project-title">{project.title}</h2>
+                  <p className="project-place">{project.place}</p>
                   <p className="project-text">{project.text}</p>
                 </div>
               </motion.article>
@@ -1320,29 +1318,6 @@ function HoldingPage({ which }) {
       </main>
       <Footer />
     </div>
-  );
-}
-
-/**
- * Three figures across, under a hero.
- *
- * Put here because two pages were solid text and had nothing for the eye to
- * stop on. A number is the cheapest thing that is not a paragraph, and the
- * promise page had already shown it works.
- */
-function FigureBand({ prefix, keys }) {
-  const { t } = useLang();
-  return (
-    <section className="section section-alt figure-band-section">
-      <div className="container figure-band">
-        {keys.map((k) => (
-          <div className="figure-band-item" key={k}>
-            <p className="figure-band-number">{t(`${prefix}.${k}n`)}</p>
-            <p className="figure-band-label">{t(`${prefix}.${k}t`)}</p>
-          </div>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -1558,8 +1533,6 @@ function FranchisePage() {
             <p className="privacy-hero-intro">{t('franchise.intro')}</p>
           </div>
         </div>
-
-        <FigureBand prefix="franchise" keys={['band1', 'band2', 'band3']} />
 
         <section className="section">
           <div className="container feature-split">

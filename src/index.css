@@ -4615,24 +4615,13 @@ h3,
   aspect-ratio: 1 / 1;
 }
 
-/* The caption runs the width of both photographs, as a caption should, but a
-   single line across 1100px would be 130 characters. So it runs in two
-   columns on the same grid as the pair above it: the name under the before
-   shot, the story under the after. */
+/* One caption, running edge to edge under both photographs. These are two or
+   three sentences, so the full width is two lines rather than the wall a long
+   measure would make of running copy. */
 .project-caption {
   max-width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0.6rem 20px;
   padding-top: 0.9rem;
   border-top: 1px solid var(--color-border);
-}
-
-@media (min-width: 760px) {
-  .project-caption {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: start;
-  }
 }
 
 /* ---- Who we are ---- */
